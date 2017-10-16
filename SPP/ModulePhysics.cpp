@@ -29,6 +29,7 @@ bool ModulePhysics::Start()
 
 	world = new b2World(b2Vec2(GRAVITY_X, -GRAVITY_Y));
 	// TODO 3: You need to make ModulePhysics class a contact listener
+	world->SetContactListener(this);
 
 	// big static circle as "ground" in the middle of the screen
 	int x = SCREEN_WIDTH / 2;
@@ -84,6 +85,7 @@ PhysBody* ModulePhysics::CreateCircle(int x, int y, int radius)
 
 	// TODO 4: add a pointer to PhysBody as UserData to the body
 	PhysBody* pbody = new PhysBody();
+	//pbody->body->SetUserData = pbody;
 	pbody->body = b;
 	pbody->width = pbody->height = radius;
 
@@ -260,7 +262,20 @@ bool PhysBody::Contains(int x, int y) const
 	// TODO 1: Write the code to return true in case the point
 	// is inside ANY of the shapes contained by this body
 
-	return false;
+	bool ret = false;
+
+	b2Fixture* fixList = this->body->GetFixtureList();
+
+	b2Vec2 vec;
+	vec.x = PIXEL_TO_METERS(x);
+	vec.y = PIXEL_TO_METERS(y);
+
+	while (fixList != NULL && !ret) {
+		ret = fixList->GetShape()->TestPoint(this->body->GetTransform(),vec);
+		fixList = fixList->GetNext();
+	}
+
+	return ret;
 }
 
 int PhysBody::RayCast(int x1, int y1, int x2, int y2, float& normal_x, float& normal_y) const
@@ -268,10 +283,27 @@ int PhysBody::RayCast(int x1, int y1, int x2, int y2, float& normal_x, float& no
 	// TODO 2: Write code to test a ray cast between both points provided. If not hit return -1
 	// if hit, fill normal_x and normal_y and return the distance between x1,y1 and it's colliding point
 	int ret = -1;
+	b2RayCastInput input;
+	b2Vec2 vec1(PIXEL_TO_METERS(x1), PIXEL_TO_METERS(y1));
+	input.p1 = vec1;
+
+	b2Vec2 vec2(PIXEL_TO_METERS(x2), PIXEL_TO_METERS(y2));
+	input.p2 = vec2;
+
+	b2Fixture* fixList = this->body->GetFixtureList();
+	while (fixList != NULL && !ret) {
+		ret = fixList->GetShape()->RayCast(0,input,this->body->GetTransform(),0);
+		fixList = fixList->GetNext();
+	}
+
 
 	return ret;
 }
 
 // TODO 3
+void ModulePhysics::BeginContact(b2Contact* contact) {
+	PhysBody* pbody = (PhysBody*)contact->GetFixtureA()->GetBody()->GetUserData();
+	LOG("PATATA");
+}
 
 // TODO 7: Call the listeners that are not NULL
