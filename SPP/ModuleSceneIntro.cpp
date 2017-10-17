@@ -9,7 +9,6 @@
 
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
-	circle = box = rick = NULL;
 	ray_on = false;
 	sensed = false;
 }
@@ -25,12 +24,28 @@ bool ModuleSceneIntro::Start()
 
 	App->renderer->camera.x = App->renderer->camera.y = 0;
 
-	circle = App->textures->Load("pinball/wheel.png"); 
-	box = App->textures->Load("pinball/crate.png");
-	rick = App->textures->Load("pinball/rick_head.png");
 	bonus_fx = App->audio->LoadFx("pinball/bonus.wav");
 
-	sensor = App->physics->CreateRectangleSensor(SCREEN_WIDTH / 2, SCREEN_HEIGHT, SCREEN_WIDTH, 50);
+
+	// Pivot 0, 0
+	int points_tmp[8] = {
+		20, 20,
+		20, 412,
+		236, 412,
+		236, 20
+	};
+
+	PhysBody* chain_tmp;
+
+	chain_tmp = App->physics->CreateChain(0, 0, points_tmp, 8);
+	chain_tmp->body->SetType(b2_staticBody);
+	chain_tmp->body->GetFixtureList()->SetDensity(0.1f);
+
+
+
+
+	//TODO: we need this to check ball lost
+	//sensor = App->physics->CreateRectangleSensor(SCREEN_WIDTH / 2, SCREEN_HEIGHT, SCREEN_WIDTH, 50);
 
 	return ret;
 }
@@ -55,16 +70,14 @@ update_status ModuleSceneIntro::Update()
 
 	if(App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
 	{
-		circles.add(App->physics->CreateCircle(App->input->GetMouseX(), App->input->GetMouseY(), 25));
-		circles.getLast()->data->listener = this;
+		balls.add(App->physics->CreateCircle(App->input->GetMouseX()*SCREEN_SIZE, App->input->GetMouseY()*SCREEN_SIZE, 25));
+		balls.getLast()->data->listener = this;
 	}
+	
 
-	if(App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN)
-	{
-		boxes.add(App->physics->CreateRectangle(App->input->GetMouseX(), App->input->GetMouseY(), 100, 50));
-	}
 
-	if(App->input->GetKey(SDL_SCANCODE_3) == KEY_DOWN)
+	//Look example for pinball structure down below
+	/*if(App->input->GetKey(SDL_SCANCODE_3) == KEY_DOWN)
 	{
 		// Pivot 0, 0
 		int rick_head[64] = {
@@ -103,7 +116,7 @@ update_status ModuleSceneIntro::Update()
 		};
 
 		ricks.add(App->physics->CreateChain(App->input->GetMouseX(), App->input->GetMouseY(), rick_head, 64));
-	}
+	}*/
 
 	// Prepare for raycast ------------------------------------------------------
 	
@@ -115,18 +128,18 @@ update_status ModuleSceneIntro::Update()
 	fVector normal(0.0f, 0.0f);
 
 	// All draw functions ------------------------------------------------------
-	p2List_item<PhysBody*>* c = circles.getFirst();
+	p2List_item<PhysBody*>* c = balls.getFirst();
 
 	while(c != NULL)
 	{
 		int x, y;
 		c->data->GetPosition(x, y);
 		if(c->data->Contains(App->input->GetMouseX(), App->input->GetMouseY()))
-			App->renderer->Blit(circle, x, y, NULL, 1.0f, c->data->GetRotation());
+			App->renderer->Blit(ball, x, y, NULL, 1.0f, c->data->GetRotation());
 		c = c->next;
 	}
 
-	c = boxes.getFirst();
+	/*c = boxes.getFirst();
 
 	while(c != NULL)
 	{
@@ -150,7 +163,7 @@ update_status ModuleSceneIntro::Update()
 		c->data->GetPosition(x, y);
 		App->renderer->Blit(rick, x, y, NULL, 1.0f, c->data->GetRotation());
 		c = c->next;
-	}
+	}*/
 
 	// ray -----------------
 	if(ray_on == true)
@@ -172,7 +185,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 {
 	int x, y;
 
-	App->audio->PlayFx(bonus_fx);
+	//App->audio->PlayFx(bonus_fx);
 
 	/*
 	if(bodyA)
