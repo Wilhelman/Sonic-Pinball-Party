@@ -29,10 +29,10 @@ bool ModuleSceneIntro::Start()
 
 	// Pivot 0, 0
 	int points_tmp[8] = {
-		20, 20,
-		20, 412,
-		236, 412,
-		236, 20
+		40, 40,
+		40, 824,
+		472, 824,
+		472, 40
 	};
 
 	PhysBody* chain_tmp;
