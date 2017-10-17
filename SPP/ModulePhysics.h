@@ -16,7 +16,7 @@
 class PhysBody
 {
 public:
-	PhysBody() : body(NULL)
+	PhysBody() : listener(NULL), body(NULL)
 	{}
 
 	void GetPosition(int& x, int &y) const;
@@ -27,13 +27,11 @@ public:
 public:
 	int width, height;
 	b2Body* body;
-	// TODO 6: Add a pointer to a module that might want to listen to a collision from this body
+	Module* listener;
 };
 
 // Module --------------------------------------
-// TODO 3: Make module physics inherit from b2ContactListener
-// then override void BeginContact(b2Contact* contact)
-class ModulePhysics : public Module,b2ContactListener
+class ModulePhysics : public Module, public b2ContactListener // TODO
 {
 public:
 	ModulePhysics(Application* app, bool start_enabled = true);
@@ -49,10 +47,13 @@ public:
 	PhysBody* CreateRectangleSensor(int x, int y, int width, int height);
 	PhysBody* CreateChain(int x, int y, int* points, int size);
 
+	// b2ContactListener ---
 	void BeginContact(b2Contact* contact);
 
 private:
 
 	bool debug;
 	b2World* world;
+	b2MouseJoint* mouse_joint;
+	b2Body* ground;
 };
