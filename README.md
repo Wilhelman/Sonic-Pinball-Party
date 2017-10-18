@@ -48,6 +48,6 @@ _Masó Garcia, Víctor's Github account:_
 ## Credits for artwork and music
 
 ### Sprites
-All sprites showed in the game were obtained thanks to the user Mr. C [here](https://www.spriters-resource.com/game_boy_advance/sonicpinball/)
+All sprites showed in the game were obtained [here](https://www.spriters-resource.com/game_boy_advance/sonicpinball/)
 
 ### Music and sound fx
