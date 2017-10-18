@@ -22,6 +22,10 @@ public:
 	p2List<PhysBody*> balls;
 	SDL_Texture* ball;
 
+	//Test
+	SDL_Rect rect_bg;
+	SDL_Texture* bg;
+	//Test
 
 	PhysBody* sensor;
 	bool sensed;

@@ -23,9 +23,13 @@ bool ModuleSceneIntro::Start()
 	bool ret = true;
 
 	App->renderer->camera.x = App->renderer->camera.y = 0;
-
+	bg = App->textures->Load("pinball/pinball_bg.png");
 	bonus_fx = App->audio->LoadFx("pinball/bonus.wav");
 
+	rect_bg.x = SCREEN_WIDTH;
+	rect_bg.y = SCREEN_HEIGHT;
+
+	
 
 	// Pivot 0, 0
 	int points_tmp[8] = {
@@ -61,6 +65,9 @@ bool ModuleSceneIntro::CleanUp()
 // Update: draw background
 update_status ModuleSceneIntro::Update()
 {
+
+	App->renderer->Blit(bg, 0, 0, NULL, 1.0f);
+
 	if(App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
 	{
 		ray_on = !ray_on;
@@ -70,7 +77,7 @@ update_status ModuleSceneIntro::Update()
 
 	if(App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
 	{
-		balls.add(App->physics->CreateCircle(App->input->GetMouseX()*SCREEN_SIZE, App->input->GetMouseY()*SCREEN_SIZE, 25));
+		balls.add(App->physics->CreateCircle(App->input->GetMouseX(), App->input->GetMouseY(), 25));
 		balls.getLast()->data->listener = this;
 	}
 	
