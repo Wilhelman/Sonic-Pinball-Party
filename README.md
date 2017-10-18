@@ -1,4 +1,4 @@
-# Sonic-Pinball-Party
+# SONIC PINBALL PARTY
 
 Project for Physics II subject. The main goal here is to create a pinball game that has:
  - Realistic physics 
@@ -48,6 +48,6 @@ _Masó Garcia, Víctor's Github account:_
 ## Credits for artwork and music
 
 ### Sprites
-All sprites showed in the game were obtained [here](https://www.spriters-resource.com/game_boy_advance/sonicpinball/)
+All sprites showed in the game were obtained [here](https://www.spriters-resource.com/game_boy_advance/sonicpinball/).
 
 ### Music and sound fx
