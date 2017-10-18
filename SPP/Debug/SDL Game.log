@@ -1,10 +1,10 @@
 ﻿  ModuleSceneIntro.cpp
-c:\users\víctor masó\documents\github\sonic-pinball-party\spp\modulesceneintro.cpp(180): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
-c:\users\víctor masó\documents\github\sonic-pinball-party\spp\modulesceneintro.cpp(182): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
-c:\users\víctor masó\documents\github\sonic-pinball-party\spp\modulesceneintro.cpp(184): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
-c:\users\víctor masó\documents\github\sonic-pinball-party\spp\modulesceneintro.cpp(187): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
-c:\users\víctor masó\documents\github\sonic-pinball-party\spp\modulesceneintro.cpp(195): warning C4101: 'y': variable local sin referencia
-c:\users\víctor masó\documents\github\sonic-pinball-party\spp\modulesceneintro.cpp(195): warning C4101: 'x': variable local sin referencia
+c:\users\víctor masó\documents\github\sonic-pinball-party\spp\modulesceneintro.cpp(179): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
+c:\users\víctor masó\documents\github\sonic-pinball-party\spp\modulesceneintro.cpp(181): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
+c:\users\víctor masó\documents\github\sonic-pinball-party\spp\modulesceneintro.cpp(183): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
+c:\users\víctor masó\documents\github\sonic-pinball-party\spp\modulesceneintro.cpp(186): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
+c:\users\víctor masó\documents\github\sonic-pinball-party\spp\modulesceneintro.cpp(194): warning C4101: 'y': variable local sin referencia
+c:\users\víctor masó\documents\github\sonic-pinball-party\spp\modulesceneintro.cpp(194): warning C4101: 'x': variable local sin referencia
 c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.10.25017\include\limits(211): warning C4577: si se usa 'noexcept' sin ningún modo de control de excepciones especificado, la finalización de la excepción no está garantizada. Especifique /EHsc
   SDL Game.vcxproj -> C:\Users\Víctor Masó\Documents\GitHub\Sonic-Pinball-Party\SPP\Debug\2D Physics - class 4.exe
   SDL Game.vcxproj -> C:\Users\Víctor Masó\Documents\GitHub\Sonic-Pinball-Party\SPP\Debug\2D Physics - class 4.pdb (Partial PDB)

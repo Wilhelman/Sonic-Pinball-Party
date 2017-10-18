@@ -24,6 +24,7 @@ public:
 
 	//Test
 	SDL_Rect rect_bg;
+	SDL_Rect rect_ball;
 	SDL_Texture* bg;
 	//Test
 

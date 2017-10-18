@@ -9,8 +9,8 @@
 
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
-	ray_on = false;
-	sensed = false;
+	ray_on = sensed = false;
+	bg = NULL;
 }
 
 ModuleSceneIntro::~ModuleSceneIntro()
@@ -23,17 +23,20 @@ bool ModuleSceneIntro::Start()
 	bool ret = true;
 
 	App->renderer->camera.x = App->renderer->camera.y = 0;
-	bg = App->textures->Load("pinball/pinball_bg.png");
 	bonus_fx = App->audio->LoadFx("pinball/bonus.wav");
 
+	bg = App->textures->Load("pinball/pinball_sonic_spritesheet.png");
 	rect_bg.h = SCREEN_HEIGHT;
 	rect_bg.w = SCREEN_WIDTH;
 	rect_bg.x = 0;
 	rect_bg.y = 0;
 
-	
+	rect_ball.h = 28;
+	rect_ball.w = 28;
+	rect_ball.x = 0;
+	rect_ball.y = 1418;
 
-	// Pivot 0, 0
+	//divide limits maybe
 	int points_tmp[8] = {
 		40, 40,
 		40, 824,
@@ -42,13 +45,9 @@ bool ModuleSceneIntro::Start()
 	};
 
 	PhysBody* chain_tmp;
-
 	chain_tmp = App->physics->CreateChain(0, 0, points_tmp, 8);
 	chain_tmp->body->SetType(b2_staticBody);
 	chain_tmp->body->GetFixtureList()->SetDensity(0.1f);
-
-
-
 
 	//TODO: we need this to check ball lost
 	//sensor = App->physics->CreateRectangleSensor(SCREEN_WIDTH / 2, SCREEN_HEIGHT, SCREEN_WIDTH, 50);
@@ -67,7 +66,7 @@ bool ModuleSceneIntro::CleanUp()
 // Update: draw background
 update_status ModuleSceneIntro::Update()
 {
-
+	//Blitting background
 	App->renderer->Blit(bg, 0, 0, &rect_bg, 1.0f);
 
 	if(App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
@@ -79,7 +78,7 @@ update_status ModuleSceneIntro::Update()
 
 	if(App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
 	{
-		balls.add(App->physics->CreateCircle(App->input->GetMouseX(), App->input->GetMouseY(), 25));
+		balls.add(App->physics->CreateCircle(App->input->GetMouseX(), App->input->GetMouseY(), 14));
 		balls.getLast()->data->listener = this;
 	}
 	
@@ -144,7 +143,7 @@ update_status ModuleSceneIntro::Update()
 		int x, y;
 		c->data->GetPosition(x, y);
 		if(c->data->Contains(App->input->GetMouseX(), App->input->GetMouseY()))
-			App->renderer->Blit(ball, x, y, NULL, 1.0f, c->data->GetRotation());
+			App->renderer->Blit(bg, x, y, &rect_ball, 1.0f, c->data->GetRotation());
 		c = c->next;
 	}
 

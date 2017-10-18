@@ -14,5 +14,6 @@ public:
 	bool CleanUp();
 
 public:
-
+	PhysBody* player_ball;
+	//SDL_Texture* ball_tex;
 };
