@@ -8,7 +8,7 @@ Project for Physics II subject. The main goal here is to create a pinball game t
  
 This project has been done by two catalan students of CITM - UPC (Terrasa, Spain).  
 
-* [Github repository](https://github.com/Wilhelman/Warchainer)  
+* [Github repository](https://github.com/Wilhelman/Sonic-Pinball-Party)  
 
 ## About the game
 
