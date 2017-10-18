@@ -26,8 +26,10 @@ bool ModuleSceneIntro::Start()
 	bg = App->textures->Load("pinball/pinball_bg.png");
 	bonus_fx = App->audio->LoadFx("pinball/bonus.wav");
 
-	rect_bg.x = SCREEN_WIDTH;
-	rect_bg.y = SCREEN_HEIGHT;
+	rect_bg.h = SCREEN_HEIGHT;
+	rect_bg.w = SCREEN_WIDTH;
+	rect_bg.x = 0;
+	rect_bg.y = 0;
 
 	
 
@@ -66,7 +68,7 @@ bool ModuleSceneIntro::CleanUp()
 update_status ModuleSceneIntro::Update()
 {
 
-	App->renderer->Blit(bg, 0, 0, NULL, 1.0f);
+	App->renderer->Blit(bg, 0, 0, &rect_bg, 1.0f);
 
 	if(App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
 	{
