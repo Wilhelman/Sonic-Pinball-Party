@@ -52,7 +52,7 @@ bool ModulePhysics::Start()
 	b2FixtureDef fixture;
 	fixture.shape = &shape;
 	big_ball->CreateFixture(&fixture);*/
-
+	
 	return true;
 }
 
@@ -128,9 +128,10 @@ PhysBody* ModulePhysics::CreateRightFlipper()
 
 	b2FixtureDef rectangleFixtureDef;
 	rectangleFixtureDef.shape = &rectangleShape;
-	rectangleFixtureDef.density = 2;
+	rectangleFixtureDef.density = 1;
 	rectangleFixtureDef.friction = 0.0f;
 	rectangleFixtureDef.restitution = 0.1f;
+	rectangleFixtureDef.filter.groupIndex = -1;
 	rectangleBody->CreateFixture(&rectangleFixtureDef);
 
 	b2Vec2 centerRectangle = rectangleBody->GetWorldCenter();
@@ -144,6 +145,7 @@ PhysBody* ModulePhysics::CreateRightFlipper()
 	circleToRotate.m_radius = PIXEL_TO_METERS(0.5f);
 	b2FixtureDef circleToRotateFixtureDef;
 	circleToRotateFixtureDef.shape = &circleToRotate;
+	circleToRotateFixtureDef.filter.groupIndex = -1;
 
 	b2Body *circleToRotateBody = world->CreateBody(&circleBodyDef);
 
@@ -197,7 +199,9 @@ PhysBody* ModulePhysics::CreateLeftFlipper()
 	rectangleFixtureDef.density = 1;
 	//rectangleFixtureDef.friction = 0.0f;
 	//rectangleFixtureDef.restitution = 0.1f;
+	rectangleFixtureDef.filter.groupIndex = -1;
 	rectangleBody->CreateFixture(&rectangleFixtureDef);
+
 
 	b2Vec2 centerRectangle = rectangleBody->GetWorldCenter();
 	centerRectangle += (b2Vec2(PIXEL_TO_METERS(-20), 0));
@@ -210,6 +214,7 @@ PhysBody* ModulePhysics::CreateLeftFlipper()
 	circleToRotate.m_radius = PIXEL_TO_METERS(0.5f);
 	b2FixtureDef circleToRotateFixtureDef;
 	circleToRotateFixtureDef.shape = &circleToRotate;
+	circleToRotateFixtureDef.filter.groupIndex = -1;
 
 	b2Body *circleToRotateBody = world->CreateBody(&circleBodyDef);
 
@@ -245,10 +250,14 @@ PhysBody* ModulePhysics::CreateBall(int x, int y, int radius)
 	shape.m_radius = PIXEL_TO_METERS(radius);
 	b2FixtureDef fixture;
 	fixture.shape = &shape;
+	fixture.density = 20.0f;
+	fixture.friction = 0.0f;
+	fixture.restitution = 0.2f;
+	fixture.filter.groupIndex = 1;
 	
 	//TODO: Set proper density, mass and e
 	fixture.density = 1.0f;
-	//fixture.restitution = 0.1f;
+	//fixture.restitution = 5.1f;
 
 	b->CreateFixture(&fixture);
 
@@ -256,8 +265,6 @@ PhysBody* ModulePhysics::CreateBall(int x, int y, int radius)
 	pbody->body = b;
 	b->SetUserData(pbody);
 	pbody->width = pbody->height = radius;
-
-	pbody->body->SetBullet(true);
 
 	return pbody;
 }
@@ -335,10 +342,10 @@ PhysBody* ModulePhysics::CreateChain(int x, int y, int* points, int size)
 	delete p;
 	b2FixtureDef fixture;
 	fixture.shape = &shape;
+	fixture.filter.groupIndex = -1;
+	fixture.restitution = 0.01f;
 
 	b->CreateFixture(&fixture);
-
-	
 
 	PhysBody* pbody = new PhysBody();
 	pbody->body = b;

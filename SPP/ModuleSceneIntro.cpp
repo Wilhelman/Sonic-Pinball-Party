@@ -234,7 +234,7 @@ bool ModuleSceneIntro::Start()
 	l_left->body->GetFixtureList()->SetDensity(0.1f);
 
 	//TODO: we need this to check ball lost
-	//sensor = App->physics->CreateRectangleSensor(SCREEN_WIDTH / 2, SCREEN_HEIGHT, SCREEN_WIDTH, 50);
+	sensor = App->physics->CreateRectangleSensor(SCREEN_WIDTH / 2 - 20, SCREEN_HEIGHT + 80, 150, 80);
 
 	return ret;
 }
@@ -379,16 +379,15 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 
 	//App->audio->PlayFx(bonus_fx);
 
-	/*
+	
 	if(bodyA)
 	{
-		bodyA->GetPosition(x, y);
-		App->renderer->DrawCircle(x, y, 50, 100, 100, 100);
+		LOG("mimi");
 	}
 
 	if(bodyB)
 	{
 		bodyB->GetPosition(x, y);
 		App->renderer->DrawCircle(x, y, 50, 100, 100, 100);
-	}*/
+	}
 }
