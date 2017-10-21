@@ -15,5 +15,6 @@ public:
 
 public:
 	PhysBody* player_ball;
-	//SDL_Texture* ball_tex;
+	PhysBody* left_flipper;
+	PhysBody* right_flipper;
 };

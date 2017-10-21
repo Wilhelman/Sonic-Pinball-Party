@@ -126,6 +126,113 @@ bool ModuleSceneIntro::Start()
 	chain_tmp->body->SetType(b2_staticBody);
 	chain_tmp->body->GetFixtureList()->SetDensity(0.1f);
 
+	int pinball_sonic_spritesheet_bot[108] = {
+		29, 412,
+		37, 428,
+		50, 459,
+		50, 472,
+		44, 472,
+		36, 480,
+		36, 559,
+		38, 565,
+		43, 568,
+		47, 572,
+		47, 580,
+		33, 595,
+		31, 600,
+		29, 614,
+		27, 632,
+		25, 659,
+		24, 665,
+		24, 832,
+		34, 840,
+		54, 840,
+		64, 832,
+		64, 774,
+		71, 775,
+		184, 832,
+		184, 962,
+		296, 962,
+		296, 832,
+		408, 776,
+		416, 774,
+		416, 834,
+		427, 840,
+		446, 840,
+		456, 834,
+		456, 668,
+		453, 638,
+		451, 617,
+		447, 595,
+		433, 579,
+		433, 574,
+		457, 517,
+		457, 511,
+		449, 504,
+		472, 484,
+		472, 825,
+		477, 832,
+		499, 832,
+		504, 825,
+		504, 433,
+		500, 425,
+		494, 420,
+		482, 417,
+		468, 427,
+		465, 426,
+		475, 411
+	};
+
+	PhysBody* chain_tmp2;
+	chain_tmp2 = App->physics->CreateChain(0, 0, pinball_sonic_spritesheet_bot, 108);
+	chain_tmp2->body->SetType(b2_staticBody);
+	chain_tmp2->body->GetFixtureList()->SetDensity(0.1f);
+
+
+	int right_L[28] = {
+		310, 758,
+		310, 774,
+		320, 774,
+		407, 730,
+		416, 722,
+		416, 643,
+		413, 636,
+		408, 636,
+		408, 691,
+		403, 704,
+		394, 715,
+		367, 731,
+		327, 750,
+		310, 758
+	};
+
+	PhysBody* l_right;
+	l_right = App->physics->CreateChain(0, 0, right_L, 28);
+	l_right->body->SetType(b2_staticBody);
+	l_right->body->GetFixtureList()->SetDensity(0.1f);
+
+	int left_L[28] = {
+		170, 758,
+		169, 774,
+		160, 774,
+		108, 748,
+		72, 730,
+		63, 721,
+		64, 642,
+		66, 636,
+		72, 636,
+		72, 691,
+		80, 708,
+		89, 718,
+		97, 722,
+		170, 758
+	};
+
+	PhysBody* l_left;
+	l_left = App->physics->CreateChain(0, 0, left_L, 28);
+	l_left->body->SetType(b2_staticBody);
+	l_left->body->GetFixtureList()->SetDensity(0.1f);
+
 	//TODO: we need this to check ball lost
 	//sensor = App->physics->CreateRectangleSensor(SCREEN_WIDTH / 2, SCREEN_HEIGHT, SCREEN_WIDTH, 50);
 
@@ -144,7 +251,7 @@ bool ModuleSceneIntro::CleanUp()
 update_status ModuleSceneIntro::Update()
 {
 	//Blitting background
-	App->renderer->Blit(bg, 0, 0, &rect_bg, 1.0f);
+	//App->renderer->Blit(bg, 0, 0, &rect_bg, 1.0f);
 
 	if(App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
 	{

@@ -100,6 +100,138 @@ PhysBody* ModulePhysics::CreateCircle(int x, int y, int radius)
 	return pbody;
 }
 
+PhysBody* ModulePhysics::CreateRightFlipper()
+{
+	b2BodyDef bodyDef;
+	bodyDef.type = b2_dynamicBody;
+	bodyDef.position.Set(PIXEL_TO_METERS(0) , PIXEL_TO_METERS(0));
+
+	b2Body *rectangleBody = world->CreateBody(&bodyDef);
+
+	b2PolygonShape rectangleShape;
+
+	int rightFlipperCoords[10] = {
+		313, 761,
+		257, 761,
+		258, 766,
+		300, 778,
+		313, 778
+	};
+
+	b2Vec2 rightFlipperVec[10 / 2];
+	for (uint i = 0; i < 10 / 2; ++i)
+	{
+		rightFlipperVec[i].Set(PIXEL_TO_METERS(rightFlipperCoords[i * 2 + 0]), PIXEL_TO_METERS(rightFlipperCoords[i * 2 + 1]));
+	}
+
+	rectangleShape.Set(rightFlipperVec, 5);
+
+	b2FixtureDef rectangleFixtureDef;
+	rectangleFixtureDef.shape = &rectangleShape;
+	rectangleFixtureDef.density = 2;
+	rectangleFixtureDef.friction = 0.0f;
+	rectangleFixtureDef.restitution = 0.1f;
+	rectangleBody->CreateFixture(&rectangleFixtureDef);
+
+	b2Vec2 centerRectangle = rectangleBody->GetWorldCenter();
+	centerRectangle +=(b2Vec2(PIXEL_TO_METERS(20), 0));
+
+	b2BodyDef circleBodyDef;
+	circleBodyDef.type = b2_staticBody;
+	circleBodyDef.position.Set(centerRectangle.x, centerRectangle.y);
+
+	b2CircleShape circleToRotate;
+	circleToRotate.m_radius = PIXEL_TO_METERS(0.5f);
+	b2FixtureDef circleToRotateFixtureDef;
+	circleToRotateFixtureDef.shape = &circleToRotate;
+
+	b2Body *circleToRotateBody = world->CreateBody(&circleBodyDef);
+
+	circleToRotateBody->CreateFixture(&circleToRotateFixtureDef);
+
+	b2RevoluteJointDef revoluteJointFlipper;
+	revoluteJointFlipper.Initialize(rectangleBody, circleToRotateBody, centerRectangle);
+	revoluteJointFlipper.upperAngle = 0.6f;
+	revoluteJointFlipper.lowerAngle = -0.6f;
+	revoluteJointFlipper.enableLimit = true;
+	revoluteJointFlipper.maxMotorTorque = 10.0;
+	revoluteJointFlipper.motorSpeed = 0.0;
+	revoluteJointFlipper.enableMotor = true;
+	b2Joint *jointToReturn = world->CreateJoint(&revoluteJointFlipper);
+
+	PhysBody* rbody = new PhysBody();
+	rbody->body = rectangleBody;
+	rectangleBody->SetUserData(rbody);
+
+	return rbody;
+}
+
+PhysBody* ModulePhysics::CreateLeftFlipper()
+{
+	b2BodyDef bodyDef;
+	bodyDef.type = b2_dynamicBody;
+	bodyDef.position.Set(PIXEL_TO_METERS(0), PIXEL_TO_METERS(0));
+
+	b2Body *rectangleBody = world->CreateBody(&bodyDef);
+
+	b2PolygonShape rectangleShape;
+
+	int leftFlipperCoords[10] = {
+		166, 761,
+		223, 761,
+		221, 766,
+		180, 778,
+		166, 778
+	};
+
+	b2Vec2 leftFlipperVec[10 / 2];
+	for (uint i = 0; i < 10 / 2; ++i)
+	{
+		leftFlipperVec[i].Set(PIXEL_TO_METERS(leftFlipperCoords[i * 2 + 0]), PIXEL_TO_METERS(leftFlipperCoords[i * 2 + 1]));
+	}
+
+	rectangleShape.Set(leftFlipperVec, 5);
+
+	b2FixtureDef rectangleFixtureDef;
+	rectangleFixtureDef.shape = &rectangleShape;
+	rectangleFixtureDef.density = 1;
+	//rectangleFixtureDef.friction = 0.0f;
+	//rectangleFixtureDef.restitution = 0.1f;
+	rectangleBody->CreateFixture(&rectangleFixtureDef);
+
+	b2Vec2 centerRectangle = rectangleBody->GetWorldCenter();
+	centerRectangle += (b2Vec2(PIXEL_TO_METERS(-20), 0));
+
+	b2BodyDef circleBodyDef;
+	circleBodyDef.type = b2_staticBody;
+	circleBodyDef.position.Set(centerRectangle.x, centerRectangle.y);
+
+	b2CircleShape circleToRotate;
+	circleToRotate.m_radius = PIXEL_TO_METERS(0.5f);
+	b2FixtureDef circleToRotateFixtureDef;
+	circleToRotateFixtureDef.shape = &circleToRotate;
+
+	b2Body *circleToRotateBody = world->CreateBody(&circleBodyDef);
+
+	circleToRotateBody->CreateFixture(&circleToRotateFixtureDef);
+
+	b2RevoluteJointDef revoluteJointFlipper;
+	revoluteJointFlipper.Initialize(rectangleBody, circleToRotateBody, centerRectangle);
+	revoluteJointFlipper.upperAngle = 0.6f;
+	revoluteJointFlipper.lowerAngle = -0.6f;
+	revoluteJointFlipper.enableLimit = true;
+	revoluteJointFlipper.maxMotorTorque = 10.0;
+	revoluteJointFlipper.motorSpeed = 0.0;
+	revoluteJointFlipper.enableMotor = true;
+	b2Joint *jointToReturn = world->CreateJoint(&revoluteJointFlipper);
+
+	PhysBody* rbody = new PhysBody();
+	rbody->body = rectangleBody;
+	rectangleBody->SetUserData(rbody);
+
+	return rbody;
+}
+
 PhysBody* ModulePhysics::CreateBall(int x, int y, int radius)
 {
 	b2BodyDef body;
@@ -115,8 +247,8 @@ PhysBody* ModulePhysics::CreateBall(int x, int y, int radius)
 	fixture.shape = &shape;
 	
 	//TODO: Set proper density, mass and e
-	fixture.density = 7.75f;
-	fixture.restitution = 0.8f;
+	fixture.density = 1.0f;
+	//fixture.restitution = 0.1f;
 
 	b->CreateFixture(&fixture);
 
@@ -124,6 +256,8 @@ PhysBody* ModulePhysics::CreateBall(int x, int y, int radius)
 	pbody->body = b;
 	b->SetUserData(pbody);
 	pbody->width = pbody->height = radius;
+
+	pbody->body->SetBullet(true);
 
 	return pbody;
 }
