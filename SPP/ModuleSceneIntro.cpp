@@ -16,7 +16,6 @@ ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Modul
 ModuleSceneIntro::~ModuleSceneIntro()
 {}
 
-// Load assets
 bool ModuleSceneIntro::Start()
 {
 	LOG("Loading Intro assets");
@@ -24,21 +23,18 @@ bool ModuleSceneIntro::Start()
 
 	App->renderer->camera.x = App->renderer->camera.y = 0;
 	bonus_fx = App->audio->LoadFx("pinball/bonus.wav");
-
 	bg = App->textures->Load("pinball/pinball_sonic_spritesheet.png");
+
 	rect_bg.h = SCREEN_HEIGHT;
 	rect_bg.w = SCREEN_WIDTH;
 	rect_bg.x = 0;
 	rect_bg.y = 0;
 
-	rect_ball.h = 28;
-	rect_ball.w = 28;
-	rect_ball.x = 0;
-	rect_ball.y = 1418;
+	
 
-	//divide limits maybe
+	// ------- Setting up wall chains -------
 
-	int pinball_sonic_spritesheet[160] = {
+	int points_top_wall[160] = {
 		440, 401,
 		438, 407,
 		430, 412,
@@ -121,12 +117,10 @@ bool ModuleSceneIntro::Start()
 		62, 401
 	};
 
-	PhysBody* chain_tmp;
-	chain_tmp = App->physics->CreateChain(0, 0, pinball_sonic_spritesheet, 160);
-	chain_tmp->body->SetType(b2_staticBody);
-	chain_tmp->body->GetFixtureList()->SetDensity(0.1f);
+	pinball_walls.add(App->physics->CreateChain(0, 0, points_top_wall, 160));
+	
 
-	int pinball_sonic_spritesheet_bot[108] = {
+	int points_bottom_wall[108] = {
 		29, 412,
 		37, 428,
 		50, 459,
@@ -183,13 +177,10 @@ bool ModuleSceneIntro::Start()
 		475, 411
 	};
 
-	PhysBody* chain_tmp2;
-	chain_tmp2 = App->physics->CreateChain(0, 0, pinball_sonic_spritesheet_bot, 108);
-	chain_tmp2->body->SetType(b2_staticBody);
-	chain_tmp2->body->GetFixtureList()->SetDensity(0.1f);
+	pinball_walls.add(App->physics->CreateChain(0, 0, points_bottom_wall, 108));
 
 
-	int right_L[28] = {
+	int points_right_L[28] = {
 		310, 758,
 		310, 774,
 		320, 774,
@@ -206,12 +197,10 @@ bool ModuleSceneIntro::Start()
 		310, 758
 	};
 
-	PhysBody* l_right;
-	l_right = App->physics->CreateChain(0, 0, right_L, 28);
-	l_right->body->SetType(b2_staticBody);
-	l_right->body->GetFixtureList()->SetDensity(0.1f);
+	pinball_walls.add(App->physics->CreateChain(0, 0, points_right_L, 28));
 
-	int left_L[28] = {
+
+	int points_left_L[28] = {
 		170, 758,
 		169, 774,
 		160, 774,
@@ -228,13 +217,12 @@ bool ModuleSceneIntro::Start()
 		170, 758
 	};
 
-	PhysBody* l_left;
-	l_left = App->physics->CreateChain(0, 0, left_L, 28);
-	l_left->body->SetType(b2_staticBody);
-	l_left->body->GetFixtureList()->SetDensity(0.1f);
+	pinball_walls.add(App->physics->CreateChain(0, 0, points_left_L, 28));
 
-	//TODO: we need this to check ball lost
-	sensor = App->physics->CreateRectangleSensor(SCREEN_WIDTH / 2 - 20, SCREEN_HEIGHT + 80, 150, 80);
+
+	// ----- Dead sensor for lost balls -----
+
+	sensors.add(App->physics->CreateRectangleSensor(SCREEN_WIDTH / 2 - 20, SCREEN_HEIGHT + 80, 150, 80));
 
 	return ret;
 }
@@ -244,6 +232,11 @@ bool ModuleSceneIntro::CleanUp()
 {
 	LOG("Unloading Intro scene");
 
+	// ---- Freeing PhysBodies from respectives lists ----
+
+	pinball_walls.clear();
+	sensors.clear();
+
 	return true;
 }
 
@@ -251,7 +244,7 @@ bool ModuleSceneIntro::CleanUp()
 update_status ModuleSceneIntro::Update()
 {
 	//Blitting background
-	//App->renderer->Blit(bg, 0, 0, &rect_bg, 1.0f);
+	App->renderer->Blit(bg, 0, 0, &rect_bg, 1.0f);
 
 	if(App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
 	{
@@ -260,56 +253,8 @@ update_status ModuleSceneIntro::Update()
 		ray.y = App->input->GetMouseY();
 	}
 
-	if(App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
-	{
-		balls.add(App->physics->CreateCircle(App->input->GetMouseX(), App->input->GetMouseY(), 14));
-		balls.getLast()->data->listener = this;
-	}
 	
-
-
-	//Look example for pinball structure down below
-	/*if(App->input->GetKey(SDL_SCANCODE_3) == KEY_DOWN)
-	{
-		// Pivot 0, 0
-		int rick_head[64] = {
-			14, 36,
-			42, 40,
-			40, 0,
-			75, 30,
-			88, 4,
-			94, 39,
-			111, 36,
-			104, 58,
-			107, 62,
-			117, 67,
-			109, 73,
-			110, 85,
-			106, 91,
-			109, 99,
-			103, 104,
-			100, 115,
-			106, 121,
-			103, 125,
-			98, 126,
-			95, 137,
-			83, 147,
-			67, 147,
-			53, 140,
-			46, 132,
-			34, 136,
-			38, 126,
-			23, 123,
-			30, 114,
-			10, 102,
-			29, 90,
-			0, 75,
-			30, 62
-		};
-
-		ricks.add(App->physics->CreateChain(App->input->GetMouseX(), App->input->GetMouseY(), rick_head, 64));
-	}*/
-
+	
 	// Prepare for raycast ------------------------------------------------------
 	
 	iPoint mouse;
@@ -320,16 +265,7 @@ update_status ModuleSceneIntro::Update()
 	fVector normal(0.0f, 0.0f);
 
 	// All draw functions ------------------------------------------------------
-	p2List_item<PhysBody*>* c = balls.getFirst();
 
-	while(c != NULL)
-	{
-		int x, y;
-		c->data->GetPosition(x, y);
-		if(c->data->Contains(App->input->GetMouseX(), App->input->GetMouseY()))
-			App->renderer->Blit(bg, x, y, &rect_ball, 1.0f, c->data->GetRotation());
-		c = c->next;
-	}
 
 	/*c = boxes.getFirst();
 

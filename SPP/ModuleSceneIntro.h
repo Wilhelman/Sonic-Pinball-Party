@@ -18,13 +18,11 @@ public:
 	void OnCollision(PhysBody* bodyA, PhysBody* bodyB);
 
 public:
-	p2List<PhysBody*> pinball_struct;
-	p2List<PhysBody*> balls;
+	p2List<PhysBody*> pinball_walls;
+	p2List<PhysBody*> sensors;
 	SDL_Texture* ball;
 
-	//Test
 	SDL_Rect rect_bg;
-	SDL_Rect rect_ball;
 	SDL_Texture* bg;
 	//Test
 

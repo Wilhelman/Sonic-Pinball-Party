@@ -1,17 +1,7 @@
-﻿  ModuleSceneIntro.cpp
-j:\github\sonic-pinball-party\spp\modulesceneintro.cpp(363): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
-j:\github\sonic-pinball-party\spp\modulesceneintro.cpp(365): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
-j:\github\sonic-pinball-party\spp\modulesceneintro.cpp(367): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
-j:\github\sonic-pinball-party\spp\modulesceneintro.cpp(370): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
-c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.11.25503\include\limits(211): warning C4577: si se usa 'noexcept' sin ningún modo de control de excepciones especificado, la finalización de la excepción no está garantizada. Especifique /EHsc
-  ModulePhysics.cpp
-j:\github\sonic-pinball-party\spp\modulephysics.cpp(291): warning C4244: '=': conversión de 'float' a 'int'; posible pérdida de datos
-j:\github\sonic-pinball-party\spp\modulephysics.cpp(292): warning C4244: '=': conversión de 'float' a 'int'; posible pérdida de datos
-j:\github\sonic-pinball-party\spp\modulephysics.cpp(335): warning C4018: '<': no coinciden signed/unsigned
-j:\github\sonic-pinball-party\spp\modulephysics.cpp(539): warning C4244: 'inicializando': conversión de 'int' a 'float'; posible pérdida de datos
-j:\github\sonic-pinball-party\spp\modulephysics.cpp(540): warning C4244: 'inicializando': conversión de 'int' a 'float'; posible pérdida de datos
-j:\github\sonic-pinball-party\spp\modulephysics.cpp(546): warning C4244: 'return': conversión de 'float32' a 'int'; posible pérdida de datos
-c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.11.25503\include\cmath(113): warning C4577: si se usa 'noexcept' sin ningún modo de control de excepciones especificado, la finalización de la excepción no está garantizada. Especifique /EHsc
+﻿  ModulePlayer.cpp
+c:\users\víctor masó\documents\github\sonic-pinball-party\spp\moduleplayer.h(26): error C2079: 'ModulePlayer::rect_ball' utiliza struct 'SDL_Rect' sin definir
   Generando código...
-  SDL Game.vcxproj -> J:\Github\Sonic-Pinball-Party\SPP\Debug\2D Physics - class 4.exe
-  SDL Game.vcxproj -> J:\Github\Sonic-Pinball-Party\SPP\Debug\2D Physics - class 4.pdb (Partial PDB)
+  Compilando...
+  Application.cpp
+c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.10.25017\include\limits(211): warning C4577: si se usa 'noexcept' sin ningún modo de control de excepciones especificado, la finalización de la excepción no está garantizada. Especifique /EHsc
+  Generando código...

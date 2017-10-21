@@ -2,6 +2,9 @@
 #include "Module.h"
 #include "Globals.h"
 #include "p2Point.h"
+#include "p2List.h"
+
+class PhysBody;
 
 class ModulePlayer : public Module
 {
@@ -14,7 +17,11 @@ public:
 	bool CleanUp();
 
 public:
-	PhysBody* player_ball;
+	p2List<PhysBody*> balls;
 	PhysBody* left_flipper;
 	PhysBody* right_flipper;
+
+
+	//SDL_Rect rect_ball;
+	//SDL_Texture* bg;
 };

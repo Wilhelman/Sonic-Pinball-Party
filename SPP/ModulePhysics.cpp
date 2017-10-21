@@ -34,29 +34,10 @@ bool ModulePhysics::Start()
 	// needed to create joints like mouse joint
 	b2BodyDef bd;
 	ground = world->CreateBody(&bd);
-
-	// big static circle as "ground" in the middle of the screen
-	/*int x = SCREEN_WIDTH / 2;
-	int y = SCREEN_HEIGHT / 1.5f;
-	int diameter = SCREEN_WIDTH / 2;
-
-	b2BodyDef body;
-	body.type = b2_staticBody;
-	body.position.Set(PIXEL_TO_METERS(x), PIXEL_TO_METERS(y));
-
-	b2Body* big_ball = world->CreateBody(&body);
-
-	b2CircleShape shape;
-	shape.m_radius = PIXEL_TO_METERS(diameter) * 0.5f;
-
-	b2FixtureDef fixture;
-	fixture.shape = &shape;
-	big_ball->CreateFixture(&fixture);*/
 	
 	return true;
 }
 
-// 
 update_status ModulePhysics::PreUpdate()
 {
 	world->Step(1.0f / 60.0f, 6, 2);
@@ -75,31 +56,7 @@ update_status ModulePhysics::PreUpdate()
 	return UPDATE_CONTINUE;
 }
 
-PhysBody* ModulePhysics::CreateCircle(int x, int y, int radius)
-{
-	b2BodyDef body;
-	body.type = b2_dynamicBody;
-	body.position.Set(PIXEL_TO_METERS(x), PIXEL_TO_METERS(y));
-
-	b2Body* b = world->CreateBody(&body);
-
-	b2CircleShape shape;
-	shape.m_radius = PIXEL_TO_METERS(radius);
-	b2FixtureDef fixture;
-	fixture.shape = &shape;
-	fixture.density = 1.0f;
-	fixture.restitution = 0.8f;
-
-	b->CreateFixture(&fixture);
-
-	PhysBody* pbody = new PhysBody();
-	pbody->body = b;
-	b->SetUserData(pbody);
-	pbody->width = pbody->height = radius;
-
-	return pbody;
-}
-
+// ---- Create functions ----
 PhysBody* ModulePhysics::CreateRightFlipper()
 {
 	b2BodyDef bodyDef;
@@ -108,7 +65,7 @@ PhysBody* ModulePhysics::CreateRightFlipper()
 
 	b2Body *rectangleBody = world->CreateBody(&bodyDef);
 
-	b2PolygonShape rectangleShape;
+	b2PolygonShape flipperShape;
 
 	int rightFlipperCoords[10] = {
 		313, 761,
@@ -119,24 +76,28 @@ PhysBody* ModulePhysics::CreateRightFlipper()
 	};
 
 	b2Vec2 rightFlipperVec[10 / 2];
+
 	for (uint i = 0; i < 10 / 2; ++i)
 	{
 		rightFlipperVec[i].Set(PIXEL_TO_METERS(rightFlipperCoords[i * 2 + 0]), PIXEL_TO_METERS(rightFlipperCoords[i * 2 + 1]));
 	}
 
-	rectangleShape.Set(rightFlipperVec, 5);
+	flipperShape.Set(rightFlipperVec, 5);
 
+	// ----- Setting up flipper body ------
 	b2FixtureDef rectangleFixtureDef;
-	rectangleFixtureDef.shape = &rectangleShape;
+	rectangleFixtureDef.shape = &flipperShape;
 	rectangleFixtureDef.density = 1;
 	rectangleFixtureDef.friction = 0.0f;
 	rectangleFixtureDef.restitution = 0.1f;
 	rectangleFixtureDef.filter.groupIndex = -1;
 	rectangleBody->CreateFixture(&rectangleFixtureDef);
 
+	// ------ Settting joint point -------
 	b2Vec2 centerRectangle = rectangleBody->GetWorldCenter();
 	centerRectangle +=(b2Vec2(PIXEL_TO_METERS(20), 0));
 
+	// ------ Setting up circle body ----- 
 	b2BodyDef circleBodyDef;
 	circleBodyDef.type = b2_staticBody;
 	circleBodyDef.position.Set(centerRectangle.x, centerRectangle.y);
@@ -148,9 +109,9 @@ PhysBody* ModulePhysics::CreateRightFlipper()
 	circleToRotateFixtureDef.filter.groupIndex = -1;
 
 	b2Body *circleToRotateBody = world->CreateBody(&circleBodyDef);
-
 	circleToRotateBody->CreateFixture(&circleToRotateFixtureDef);
 
+	// ----- Setting up joint between flipper and circle ------
 	b2RevoluteJointDef revoluteJointFlipper;
 	revoluteJointFlipper.Initialize(rectangleBody, circleToRotateBody, centerRectangle);
 	revoluteJointFlipper.upperAngle = 0.6f;
@@ -187,6 +148,7 @@ PhysBody* ModulePhysics::CreateLeftFlipper()
 	};
 
 	b2Vec2 leftFlipperVec[10 / 2];
+
 	for (uint i = 0; i < 10 / 2; ++i)
 	{
 		leftFlipperVec[i].Set(PIXEL_TO_METERS(leftFlipperCoords[i * 2 + 0]), PIXEL_TO_METERS(leftFlipperCoords[i * 2 + 1]));
@@ -194,18 +156,18 @@ PhysBody* ModulePhysics::CreateLeftFlipper()
 
 	rectangleShape.Set(leftFlipperVec, 5);
 
+	// ----- Setting up flipper body ------
 	b2FixtureDef rectangleFixtureDef;
 	rectangleFixtureDef.shape = &rectangleShape;
 	rectangleFixtureDef.density = 1;
-	//rectangleFixtureDef.friction = 0.0f;
-	//rectangleFixtureDef.restitution = 0.1f;
 	rectangleFixtureDef.filter.groupIndex = -1;
 	rectangleBody->CreateFixture(&rectangleFixtureDef);
 
-
+	// ------ Settting joint point -------
 	b2Vec2 centerRectangle = rectangleBody->GetWorldCenter();
 	centerRectangle += (b2Vec2(PIXEL_TO_METERS(-20), 0));
 
+	// ------ Setting up circle body ----- 
 	b2BodyDef circleBodyDef;
 	circleBodyDef.type = b2_staticBody;
 	circleBodyDef.position.Set(centerRectangle.x, centerRectangle.y);
@@ -220,6 +182,7 @@ PhysBody* ModulePhysics::CreateLeftFlipper()
 
 	circleToRotateBody->CreateFixture(&circleToRotateFixtureDef);
 
+	// ----- Setting up joint between flipper and circle ------
 	b2RevoluteJointDef revoluteJointFlipper;
 	revoluteJointFlipper.Initialize(rectangleBody, circleToRotateBody, centerRectangle);
 	revoluteJointFlipper.upperAngle = 0.6f;
@@ -252,12 +215,11 @@ PhysBody* ModulePhysics::CreateBall(int x, int y, int radius)
 	fixture.shape = &shape;
 	fixture.density = 20.0f;
 	fixture.friction = 0.0f;
-	fixture.restitution = 0.2f;
+	fixture.restitution = 0.3f;
 	fixture.filter.groupIndex = 1;
 	
 	//TODO: Set proper density, mass and e
 	fixture.density = 1.0f;
-	//fixture.restitution = 5.1f;
 
 	b->CreateFixture(&fixture);
 
@@ -324,7 +286,7 @@ PhysBody* ModulePhysics::CreateRectangleSensor(int x, int y, int width, int heig
 PhysBody* ModulePhysics::CreateChain(int x, int y, int* points, int size)
 {
 	b2BodyDef body;
-	body.type = b2_dynamicBody;
+	body.type = b2_staticBody;
 	body.position.Set(PIXEL_TO_METERS(x), PIXEL_TO_METERS(y));
 
 	b2Body* b = world->CreateBody(&body);
@@ -337,13 +299,14 @@ PhysBody* ModulePhysics::CreateChain(int x, int y, int* points, int size)
 		p[i].x = PIXEL_TO_METERS(points[i * 2 + 0]);
 		p[i].y = PIXEL_TO_METERS(points[i * 2 + 1]);
 	}
+
 	shape.CreateChain(p, size / 2);
-	//shape.CreateLoop(p, size / 2);
 	delete p;
 	b2FixtureDef fixture;
 	fixture.shape = &shape;
 	fixture.filter.groupIndex = -1;
 	fixture.restitution = 0.01f;
+	fixture.density = 1.0f;
 
 	b->CreateFixture(&fixture);
 
@@ -354,8 +317,8 @@ PhysBody* ModulePhysics::CreateChain(int x, int y, int* points, int size)
 
 	return pbody;
 }
+// --------------------------
 
-// 
 update_status ModulePhysics::PostUpdate()
 {
 	if(App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
@@ -476,7 +439,6 @@ update_status ModulePhysics::PostUpdate()
 
 	return UPDATE_CONTINUE;
 }
-
 
 // Called before quitting
 bool ModulePhysics::CleanUp()
