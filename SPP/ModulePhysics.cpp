@@ -57,6 +57,8 @@ update_status ModulePhysics::PreUpdate()
 }
 
 // ---- Create functions ----
+
+//TODO: flipper functions may recieve some parametres to create new ones in difrerent angles (watch demo yt)
 PhysBody* ModulePhysics::CreateRightFlipper()
 {
 	b2BodyDef bodyDef;
@@ -229,6 +231,12 @@ PhysBody* ModulePhysics::CreateBall(int x, int y, int radius)
 	pbody->width = pbody->height = radius;
 
 	return pbody;
+}
+
+PhysBody * ModulePhysics::CreatePlunge()
+{
+	//TODO: here we will create the launcher of the ball
+	return nullptr;
 }
 
 PhysBody* ModulePhysics::CreateRectangle(int x, int y, int width, int height)

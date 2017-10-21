@@ -2,7 +2,8 @@
 #include "Module.h"
 #include "Globals.h"
 #include "p2Point.h"
-#include "p2List.h"
+#include "ModuleTextures.h"
+#include "ModulePhysics.h"
 
 class PhysBody;
 
@@ -21,7 +22,8 @@ public:
 	PhysBody* left_flipper;
 	PhysBody* right_flipper;
 
-
-	//SDL_Rect rect_ball;
-	//SDL_Texture* bg;
+	SDL_Rect rect_ball;
+	SDL_Rect rect_rFlipper;
+	SDL_Rect rect_lFlipper;
+	SDL_Texture* player_tex;
 };
