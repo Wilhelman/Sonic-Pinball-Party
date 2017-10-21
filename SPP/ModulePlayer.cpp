@@ -23,6 +23,7 @@ bool ModulePlayer::Start()
 	player_tex = App->textures->Load("pinball/pinball_sonic_spritesheet.png");
 	right_flipper = App->physics->CreateRightFlipper();
 	left_flipper = App->physics->CreateLeftFlipper();
+	plunge = App->physics->CreatePlunge();
 	
 	
 	rect_ball.h = 28;

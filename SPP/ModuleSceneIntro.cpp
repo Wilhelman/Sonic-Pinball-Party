@@ -244,7 +244,7 @@ bool ModuleSceneIntro::CleanUp()
 update_status ModuleSceneIntro::Update()
 {
 	//Blitting background
-	App->renderer->Blit(bg, 0, 0, &rect_bg, 1.0f);
+	//App->renderer->Blit(bg, 0, 0, &rect_bg, 1.0f);
 
 	if(App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
 	{

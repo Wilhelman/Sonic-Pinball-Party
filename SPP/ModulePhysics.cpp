@@ -236,6 +236,23 @@ PhysBody* ModulePhysics::CreateBall(int x, int y, int radius)
 PhysBody * ModulePhysics::CreatePlunge()
 {
 	//TODO: here we will create the launcher of the ball
+	PhysBody* testPlunge = CreateRectangle(250, 300, 80, 50);
+	testPlunge->body->SetType(b2_staticBody);
+	PhysBody* testPlunge2 = CreateRectangle(250, 370, 80, 50);
+	testPlunge2->body->SetType(b2_staticBody);
+
+	b2PrismaticJointDef jointDef; 
+	b2Vec2 worldAxis(1.0f, 0.0f); 
+	jointDef.Initialize(testPlunge->body, testPlunge2->body, testPlunge->body->GetWorldCenter(), worldAxis);
+	jointDef.lowerTranslation = -5.0f; 
+	jointDef.upperTranslation = 2.5f; 
+	jointDef.enableLimit = true; 
+	jointDef.maxMotorForce = 1.0f; 
+	jointDef.motorSpeed = 0.0f; 
+	jointDef.enableMotor = true;
+
+	
+
 	return nullptr;
 }
 
