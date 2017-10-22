@@ -23,6 +23,9 @@ _IMPORTANT: do not modify, change or add any folder or file as you might not be 
 ## Controls
 
 Player controls:
+- RIGHT FLIPPER: Right arrow key
+- LEFT FLIPPER: Right left key
+- LAUNCH BALL: Up arrow key (hold to charge plunger)
 
 General/developer controls:
 - EXIT GAME: ESC key
