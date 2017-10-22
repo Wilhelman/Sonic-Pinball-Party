@@ -20,6 +20,7 @@ bool ModuleSceneIntro::Start()
 {
 	LOG("Loading Intro assets");
 	bool ret = true;
+	ball_lost = false;
 
 	App->renderer->camera.x = App->renderer->camera.y = 0;
 	bonus_fx = App->audio->LoadFx("pinball/bonus.wav");
@@ -29,6 +30,11 @@ bool ModuleSceneIntro::Start()
 	rect_bg.w = SCREEN_WIDTH;
 	rect_bg.x = 0;
 	rect_bg.y = 0;
+
+	rect_ball.h = 28;
+	rect_ball.w = 28;
+	rect_ball.x = 0;
+	rect_ball.y = 1418;
 
 	
 
@@ -231,7 +237,10 @@ bool ModuleSceneIntro::Start()
 bool ModuleSceneIntro::CleanUp()
 {
 	LOG("Unloading Intro scene");
-
+	for (p2List_item<PhysBody*>* bc = balls.getFirst(); bc != NULL; bc = bc->next) {
+		App->physics->world->DestroyBody(bc->data->body);
+	}
+	balls.clear();
 	// ---- Freeing PhysBodies from respectives lists ----
 
 	pinball_walls.clear();
@@ -246,6 +255,14 @@ update_status ModuleSceneIntro::Update()
 	//Blitting background
 	//App->renderer->Blit(bg, 0, 0, &rect_bg, 1.0f);
 
+	// ----- Ball creation -----
+	//TODO: balls we'll be created at Start() and every time you lose one
+	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
+	{
+		balls.add(App->physics->CreateBall(App->input->GetMouseX(), App->input->GetMouseY(), 14));
+		balls.getLast()->data->listener = this;
+	}
+
 	if(App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
 	{
 		ray_on = !ray_on;
@@ -253,7 +270,21 @@ update_status ModuleSceneIntro::Update()
 		ray.y = App->input->GetMouseY();
 	}
 
-	
+	// ----- Blitting ------
+	p2List_item<PhysBody*>* ball_item = balls.getFirst();
+
+	while (ball_item != NULL)
+	{
+		int x, y;
+		ball_item->data->GetPosition(x, y);
+
+		//TODO: control sprite according to ball velocity
+		float vel = ball_item->data->body->GetAngularVelocity();
+
+		App->renderer->Blit(bg, x, y, &rect_ball, 1.0f, ball_item->data->GetRotation());
+
+		ball_item = ball_item->next;
+	}
 	
 	// Prepare for raycast ------------------------------------------------------
 	
@@ -266,6 +297,17 @@ update_status ModuleSceneIntro::Update()
 
 	// All draw functions ------------------------------------------------------
 
+
+	if (ball_lost) {
+		for (p2List_item<PhysBody*>* bc = balls.getFirst(); bc != NULL; bc = bc->next) {
+			App->physics->world->DestroyBody(bc->data->body);
+		}
+		balls.clear();
+
+		balls.add(App->physics->CreateBall(488, 800, 14));
+		balls.getLast()->data->listener = this;
+		ball_lost = false;
+	}
 
 	/*c = boxes.getFirst();
 
@@ -315,10 +357,20 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 
 	//App->audio->PlayFx(bonus_fx);
 
-	
-	if(bodyA)
-	{
-		LOG("mimi");
+	if (bodyA == sensor || bodyB == sensor) {
+		
+	}
+	for (p2List_item<PhysBody*>* bc = balls.getFirst(); bc != NULL; bc = bc->next) {
+		if (bodyA == bc->data)
+		{
+			
+			if (bodyB->physType == DEAD_SENSOR) {
+				ball_lost = true;
+				break;
+				
+				//balls.getLast()->data->listener = this;
+			}
+		}
 	}
 
 	if(bodyB)

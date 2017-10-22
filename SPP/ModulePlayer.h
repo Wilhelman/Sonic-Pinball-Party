@@ -18,13 +18,12 @@ public:
 	bool CleanUp();
 
 public:
-	p2List<PhysBody*> balls;
+	
 	PhysBody* left_flipper;
 	PhysBody* right_flipper;
 	PhysBody* plunge;
-
-	SDL_Rect rect_ball;
+	
 	SDL_Rect rect_rFlipper;
 	SDL_Rect rect_lFlipper;
-	SDL_Texture* player_tex;
+	
 };

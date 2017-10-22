@@ -215,7 +215,7 @@ PhysBody* ModulePhysics::CreateBall(int x, int y, int radius)
 	shape.m_radius = PIXEL_TO_METERS(radius);
 	b2FixtureDef fixture;
 	fixture.shape = &shape;
-	fixture.density = 5.0f;
+	//fixture.density = 5.0f;
 	fixture.friction = 0.0f;
 	fixture.restitution = 0.3f;
 	fixture.filter.groupIndex = groupIndex::BALL;
@@ -229,6 +229,7 @@ PhysBody* ModulePhysics::CreateBall(int x, int y, int radius)
 	pbody->body = b;
 	b->SetUserData(pbody);
 	pbody->width = pbody->height = radius;
+	pbody->physType = BALL_;
 
 	return pbody;
 }
@@ -358,6 +359,7 @@ PhysBody* ModulePhysics::CreateRectangleSensor(int x, int y, int width, int heig
 	b->SetUserData(pbody);
 	pbody->width = width;
 	pbody->height = height;
+	pbody->physType = DEAD_SENSOR;
 
 	return pbody;
 }

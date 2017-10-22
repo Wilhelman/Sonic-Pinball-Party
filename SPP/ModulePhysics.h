@@ -24,6 +24,12 @@ enum groupIndex {
 	NO_DEF
 };
 
+enum PhysBody_Type {
+	DEAD_SENSOR,
+	BALL_,
+	NO_DEF_
+};
+
 class PhysBody
 {
 public:
@@ -35,10 +41,12 @@ public:
 	bool Contains(int x, int y) const;
 	int RayCast(int x1, int y1, int x2, int y2, float& normal_x, float& normal_y) const;
 
+
 public:
 	int width, height;
 	b2Body* body;
 	Module* listener;
+	PhysBody_Type physType = NO_DEF_;
 };
 
 // Module --------------------------------------
@@ -65,11 +73,12 @@ public:
 
 	// b2ContactListener ---
 	void BeginContact(b2Contact* contact);
+	b2World* world;
 
 private:
 
 	bool debug;
-	b2World* world;
+	
 	b2MouseJoint* mouse_joint;
 	b2Body* ground;
 };

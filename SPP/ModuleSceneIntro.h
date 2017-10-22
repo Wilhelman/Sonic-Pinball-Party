@@ -18,9 +18,11 @@ public:
 	void OnCollision(PhysBody* bodyA, PhysBody* bodyB);
 
 public:
+	p2List<PhysBody*> balls;
 	p2List<PhysBody*> pinball_walls;
 	p2List<PhysBody*> sensors;
-	SDL_Texture* ball;
+
+	SDL_Rect rect_ball;
 
 	SDL_Rect rect_bg;
 	SDL_Texture* bg;
@@ -32,4 +34,5 @@ public:
 	uint bonus_fx;
 	p2Point<int> ray;
 	bool ray_on;
+	bool ball_lost;
 };

@@ -1,10 +1,10 @@
 ﻿  ModulePhysics.cpp
-j:\github\sonic-pinball-party\spp\modulephysics.cpp(332): warning C4244: '=': conversión de 'float' a 'int'; posible pérdida de datos
 j:\github\sonic-pinball-party\spp\modulephysics.cpp(333): warning C4244: '=': conversión de 'float' a 'int'; posible pérdida de datos
-j:\github\sonic-pinball-party\spp\modulephysics.cpp(376): warning C4018: '<': no coinciden signed/unsigned
-j:\github\sonic-pinball-party\spp\modulephysics.cpp(580): warning C4244: 'inicializando': conversión de 'int' a 'float'; posible pérdida de datos
-j:\github\sonic-pinball-party\spp\modulephysics.cpp(581): warning C4244: 'inicializando': conversión de 'int' a 'float'; posible pérdida de datos
-j:\github\sonic-pinball-party\spp\modulephysics.cpp(587): warning C4244: 'return': conversión de 'float32' a 'int'; posible pérdida de datos
+j:\github\sonic-pinball-party\spp\modulephysics.cpp(334): warning C4244: '=': conversión de 'float' a 'int'; posible pérdida de datos
+j:\github\sonic-pinball-party\spp\modulephysics.cpp(378): warning C4018: '<': no coinciden signed/unsigned
+j:\github\sonic-pinball-party\spp\modulephysics.cpp(582): warning C4244: 'inicializando': conversión de 'int' a 'float'; posible pérdida de datos
+j:\github\sonic-pinball-party\spp\modulephysics.cpp(583): warning C4244: 'inicializando': conversión de 'int' a 'float'; posible pérdida de datos
+j:\github\sonic-pinball-party\spp\modulephysics.cpp(589): warning C4244: 'return': conversión de 'float32' a 'int'; posible pérdida de datos
 c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.11.25503\include\cmath(113): warning C4577: si se usa 'noexcept' sin ningún modo de control de excepciones especificado, la finalización de la excepción no está garantizada. Especifique /EHsc
   SDL Game.vcxproj -> J:\Github\Sonic-Pinball-Party\SPP\Debug\2D Physics - class 4.exe
   SDL Game.vcxproj -> J:\Github\Sonic-Pinball-Party\SPP\Debug\2D Physics - class 4.pdb (Partial PDB)
