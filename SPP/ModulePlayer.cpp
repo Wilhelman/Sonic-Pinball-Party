@@ -102,6 +102,13 @@ update_status ModulePlayer::Update()
 
 	//TODO: control sprite according to ball velocity
 
+	if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
+	{
+		
+		plunge->body->ApplyForceToCenter(b2Vec2(0, 250),true);
+	}
+	else {
+	}
 
 	// ----- Flipper input control -----
 

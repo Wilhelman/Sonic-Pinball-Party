@@ -92,7 +92,7 @@ PhysBody* ModulePhysics::CreateRightFlipper()
 	rectangleFixtureDef.density = 1;
 	rectangleFixtureDef.friction = 0.0f;
 	rectangleFixtureDef.restitution = 0.1f;
-	rectangleFixtureDef.filter.groupIndex = -1;
+	rectangleFixtureDef.filter.groupIndex = groupIndex::RIGID_PINBALL;
 	rectangleBody->CreateFixture(&rectangleFixtureDef);
 
 	// ------ Settting joint point -------
@@ -108,7 +108,7 @@ PhysBody* ModulePhysics::CreateRightFlipper()
 	circleToRotate.m_radius = PIXEL_TO_METERS(0.5f);
 	b2FixtureDef circleToRotateFixtureDef;
 	circleToRotateFixtureDef.shape = &circleToRotate;
-	circleToRotateFixtureDef.filter.groupIndex = -1;
+	circleToRotateFixtureDef.filter.groupIndex = groupIndex::RIGID_PINBALL;
 
 	b2Body *circleToRotateBody = world->CreateBody(&circleBodyDef);
 	circleToRotateBody->CreateFixture(&circleToRotateFixtureDef);
@@ -162,7 +162,7 @@ PhysBody* ModulePhysics::CreateLeftFlipper()
 	b2FixtureDef rectangleFixtureDef;
 	rectangleFixtureDef.shape = &rectangleShape;
 	rectangleFixtureDef.density = 1;
-	rectangleFixtureDef.filter.groupIndex = -1;
+	rectangleFixtureDef.filter.groupIndex = groupIndex::RIGID_PINBALL;
 	rectangleBody->CreateFixture(&rectangleFixtureDef);
 
 	// ------ Settting joint point -------
@@ -178,7 +178,7 @@ PhysBody* ModulePhysics::CreateLeftFlipper()
 	circleToRotate.m_radius = PIXEL_TO_METERS(0.5f);
 	b2FixtureDef circleToRotateFixtureDef;
 	circleToRotateFixtureDef.shape = &circleToRotate;
-	circleToRotateFixtureDef.filter.groupIndex = -1;
+	circleToRotateFixtureDef.filter.groupIndex = groupIndex::RIGID_PINBALL;
 
 	b2Body *circleToRotateBody = world->CreateBody(&circleBodyDef);
 
@@ -215,10 +215,10 @@ PhysBody* ModulePhysics::CreateBall(int x, int y, int radius)
 	shape.m_radius = PIXEL_TO_METERS(radius);
 	b2FixtureDef fixture;
 	fixture.shape = &shape;
-	fixture.density = 20.0f;
+	fixture.density = 5.0f;
 	fixture.friction = 0.0f;
 	fixture.restitution = 0.3f;
-	fixture.filter.groupIndex = 1;
+	fixture.filter.groupIndex = groupIndex::BALL;
 	
 	//TODO: Set proper density, mass and e
 	fixture.density = 1.0f;
@@ -235,25 +235,79 @@ PhysBody* ModulePhysics::CreateBall(int x, int y, int radius)
 
 PhysBody * ModulePhysics::CreatePlunge()
 {
+
+	int copyToTest[8] = {
+		472, 819,
+		504, 819,
+		504, 823,
+		472, 823
+	};
+	b2BodyDef bodyA;
+	bodyA.type = b2_dynamicBody;
+	bodyA.position.Set(PIXEL_TO_METERS(488), PIXEL_TO_METERS(815));
+
+	b2Body* b1 = world->CreateBody(&bodyA);
+	b2PolygonShape box;
+	box.SetAsBox(PIXEL_TO_METERS(20) * 0.5f, PIXEL_TO_METERS(4) * 0.5f);
+
+	b2FixtureDef fixture;
+	fixture.shape = &box;
+	fixture.density = 20.0f;
+	fixture.restitution = 0.1f;
+	fixture.filter.groupIndex = groupIndex::PLUNGE_BOTTOM;
+
+	b1->CreateFixture(&fixture);
+
+	b2BodyDef bodyB;
+	bodyB.type = b2_staticBody;
+	bodyB.position.Set(PIXEL_TO_METERS(488), PIXEL_TO_METERS(796));
+
+	b2Body* b2 = world->CreateBody(&bodyB);
+	b2PolygonShape box1;
+	box1.SetAsBox(PIXEL_TO_METERS(20) * 0.5f, PIXEL_TO_METERS(20) * 0.5f);
+
+	b2FixtureDef fixture2;
+	fixture2.shape = &box1;
+	fixture2.density = 1.0f;
+	fixture2.filter.groupIndex = groupIndex::BALL;
+
+	b2->CreateFixture(&fixture2);
+
+	/*
+
 	//TODO: here we will create the launcher of the ball
 	PhysBody* testPlunge = CreateRectangle(250, 300, 80, 50);
 	testPlunge->body->SetType(b2_staticBody);
 	PhysBody* testPlunge2 = CreateRectangle(250, 370, 80, 50);
 	testPlunge2->body->SetType(b2_staticBody);
 
-	b2PrismaticJointDef jointDef; 
-	b2Vec2 worldAxis(1.0f, 0.0f); 
-	jointDef.Initialize(testPlunge->body, testPlunge2->body, testPlunge->body->GetWorldCenter(), worldAxis);
-	jointDef.lowerTranslation = -5.0f; 
-	jointDef.upperTranslation = 2.5f; 
-	jointDef.enableLimit = true; 
-	jointDef.maxMotorForce = 1.0f; 
-	jointDef.motorSpeed = 0.0f; 
-	jointDef.enableMotor = true;
+	*/
+
+	b2PrismaticJointDef jointDef;
+	jointDef.bodyA = b2;
+	jointDef.bodyB = b1;
+	jointDef.collideConnected = true;
+
+
+	jointDef.localAxisA.Set(0, 1);
+	jointDef.localAxisA.Normalize();
+	jointDef.localAnchorA.Set(0, 0);//a little outside the bottom right corner
+	jointDef.localAnchorB.Set(0, 0);//bottom left corner
 
 	
+	jointDef.lowerTranslation = -1.0f;
+	jointDef.upperTranslation = 1.0f;
+	jointDef.enableLimit = true;
+	jointDef.maxMotorForce = 200.0f;
+	jointDef.motorSpeed = -200.0f;
+	jointDef.enableMotor = true;
+	world->CreateJoint(&jointDef);
 
-	return nullptr;
+	PhysBody* pbody = new PhysBody();
+	pbody->body = b1;
+	b1->SetUserData(pbody);
+
+	return pbody;
 }
 
 PhysBody* ModulePhysics::CreateRectangle(int x, int y, int width, int height)
@@ -329,7 +383,7 @@ PhysBody* ModulePhysics::CreateChain(int x, int y, int* points, int size)
 	delete p;
 	b2FixtureDef fixture;
 	fixture.shape = &shape;
-	fixture.filter.groupIndex = -1;
+	fixture.filter.groupIndex = groupIndex::RIGID_PINBALL;
 	fixture.restitution = 0.01f;
 	fixture.density = 1.0f;
 

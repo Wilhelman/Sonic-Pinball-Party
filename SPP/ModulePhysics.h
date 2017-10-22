@@ -14,6 +14,15 @@
 
 // Small class to return to other modules to track position and rotation of physics bodies
 
+enum groupIndex {
+	BALL = -2,
+	RIGID_PINBALL = -1,
+	FLIPPERS,
+	PLUNGE_TOP,
+	PLUNGE_BOTTOM,
+
+	NO_DEF
+};
 
 class PhysBody
 {
