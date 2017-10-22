@@ -20,6 +20,8 @@ public:
 public:
 	p2List<PhysBody*> balls;
 	p2List<PhysBody*> pinball_walls;
+	p2List<PhysBody*> tunel_walls;
+	p2List<PhysBody*> rail_walls;
 	p2List<PhysBody*> sensors;
 
 	SDL_Rect rect_ball;

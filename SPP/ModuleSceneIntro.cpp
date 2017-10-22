@@ -123,7 +123,7 @@ bool ModuleSceneIntro::Start()
 		62, 401
 	};
 
-	pinball_walls.add(App->physics->CreateChain(0, 0, points_top_wall, 160));
+	pinball_walls.add(App->physics->CreateChain(0, 0, points_top_wall, 160, groupIndex::RIGID_PINBALL));
 	
 
 	int points_bottom_wall[108] = {
@@ -183,7 +183,7 @@ bool ModuleSceneIntro::Start()
 		475, 411
 	};
 
-	pinball_walls.add(App->physics->CreateChain(0, 0, points_bottom_wall, 108));
+	pinball_walls.add(App->physics->CreateChain(0, 0, points_bottom_wall, 108, groupIndex::RIGID_PINBALL));
 
 
 	int points_right_L[28] = {
@@ -203,7 +203,7 @@ bool ModuleSceneIntro::Start()
 		310, 758
 	};
 
-	pinball_walls.add(App->physics->CreateChain(0, 0, points_right_L, 28));
+	pinball_walls.add(App->physics->CreateChain(0, 0, points_right_L, 28, groupIndex::RIGID_PINBALL));
 
 
 	int points_left_L[28] = {
@@ -223,7 +223,99 @@ bool ModuleSceneIntro::Start()
 		170, 758
 	};
 
-	pinball_walls.add(App->physics->CreateChain(0, 0, points_left_L, 28));
+	pinball_walls.add(App->physics->CreateChain(0, 0, points_left_L, 28, groupIndex::RIGID_PINBALL));
+
+
+	//upper map
+	int upper_tunnel[68] = {
+		27, 412,
+		13, 382,
+		2, 354,
+		-4, 323,
+		-11, 280,
+		-14, 242,
+		-17, 199,
+		-16, 157,
+		-6, 113,
+		17, 72,
+		38, 51,
+		65, 33,
+		94, 20,
+		132, 8,
+		175, 0,
+		219, -5,
+		254, -5,
+		301, -3,
+		343, 3,
+		380, 14,
+		418, 27,
+		453, 48,
+		474, 67,
+		488, 86,
+		500, 110,
+		508, 136,
+		508, 169,
+		508, 217,
+		509, 252,
+		506, 282,
+		500, 320,
+		492, 358,
+		480, 392,
+		471, 417
+	};
+
+	tunel_walls.add(App->physics->CreateChain(0, 0, upper_tunnel, 68, groupIndex::BALL));
+
+	int bottom_tunnel1[44] = {
+		58, 392,
+		48, 364,
+		39, 330,
+		31, 292,
+		25, 252,
+		23, 210,
+		23, 173,
+		29, 140,
+		44, 108,
+		63, 84,
+		80, 68,
+		107, 56,
+		143, 46,
+		184, 39,
+		229, 38,
+		272, 38,
+		312, 42,
+		338, 56,
+		355, 75,
+		366, 92,
+		374, 113,
+		381, 133
+	};
+
+	tunel_walls.add(App->physics->CreateChain(0, 0, bottom_tunnel1, 44,groupIndex::BALL));
+
+	int bottom_tunnel2[38] = {
+		413, 121,
+		407, 100,
+		399, 78,
+		392, 59,
+		410, 63,
+		424, 74,
+		440, 90,
+		450, 106,
+		461, 125,
+		467, 146,
+		472, 173,
+		471, 198,
+		470, 226,
+		470, 252,
+		466, 284,
+		458, 324,
+		447, 359,
+		439, 385,
+		432, 406
+	};
+	tunel_walls.add(App->physics->CreateChain(0, 0, bottom_tunnel2, 38,groupIndex::BALL));
+
 
 
 	// ----- Dead sensor for lost balls -----
@@ -366,6 +458,20 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 			
 			if (bodyB->physType == DEAD_SENSOR) {
 				ball_lost = true;
+
+				for (p2List_item<PhysBody*>* t_w = tunel_walls.getFirst(); t_w != NULL; t_w = t_w->next) {
+					
+					b2Fixture* fixture = t_w->data->body->GetFixtureList();
+
+					while (fixture != NULL)
+					{
+						b2Filter newFilter;
+						newFilter.groupIndex = groupIndex::RIGID_PINBALL;
+						fixture->SetFilterData(newFilter);
+						fixture = fixture->GetNext();
+					}
+				}
+
 				break;
 				
 				//balls.getLast()->data->listener = this;

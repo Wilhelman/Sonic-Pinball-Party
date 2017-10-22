@@ -14,7 +14,7 @@
 
 // Small class to return to other modules to track position and rotation of physics bodies
 
-enum groupIndex {
+enum groupIndex { 
 	BALL = -2,
 	RIGID_PINBALL = -1,
 	FLIPPERS,
@@ -67,7 +67,7 @@ public:
 	PhysBody* CreateBall(int x, int y, int radius);
 	PhysBody* CreateRectangle(int x, int y, int width, int height);
 	PhysBody* CreateRectangleSensor(int x, int y, int width, int height);
-	PhysBody* CreateChain(int x, int y, int* points, int size);
+	PhysBody* CreateChain(int x, int y, int* points, int size, groupIndex index);
 
 
 
