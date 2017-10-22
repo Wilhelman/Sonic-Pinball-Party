@@ -227,7 +227,7 @@ bool ModuleSceneIntro::Start()
 
 
 	//upper map
-	int upper_tunnel[68] = {
+	int points_upper_tunnel[68] = {
 		27, 412,
 		13, 382,
 		2, 354,
@@ -264,9 +264,10 @@ bool ModuleSceneIntro::Start()
 		471, 417
 	};
 
-	tunel_walls.add(App->physics->CreateChain(0, 0, upper_tunnel, 68, groupIndex::BALL));
+	tunnel_walls.add(App->physics->CreateChain(0, 0, points_upper_tunnel, 68, groupIndex::BALL));
 
-	int bottom_tunnel1[44] = {
+
+	int points_bottom_tunnel_1[44] = {
 		58, 392,
 		48, 364,
 		39, 330,
@@ -291,9 +292,10 @@ bool ModuleSceneIntro::Start()
 		381, 133
 	};
 
-	tunel_walls.add(App->physics->CreateChain(0, 0, bottom_tunnel1, 44,groupIndex::BALL));
+	tunnel_walls.add(App->physics->CreateChain(0, 0, points_bottom_tunnel_1, 44, groupIndex::BALL));
 
-	int bottom_tunnel2[38] = {
+
+	int points_bottom_tunnel_2[38] = {
 		413, 121,
 		407, 100,
 		399, 78,
@@ -314,9 +316,92 @@ bool ModuleSceneIntro::Start()
 		439, 385,
 		432, 406
 	};
-	tunel_walls.add(App->physics->CreateChain(0, 0, bottom_tunnel2, 38,groupIndex::BALL));
+
+	tunnel_walls.add(App->physics->CreateChain(0, 0, points_bottom_tunnel_2, 38, groupIndex::BALL));
 
 
+	int points_rail[156] = {
+		138, 282,
+		113, 257,
+		101, 244,
+		85, 228,
+		71, 211,
+		63, 184,
+		63, 130,
+		73, 97,
+		85, 77,
+		111, 52,
+		139, 40,
+		161, 35,
+		199, 34,
+		232, 40,
+		242, 45,
+		256, 47,
+		266, 49,
+		273, 53,
+		279, 59,
+		285, 75,
+		296, 101,
+		301, 128,
+		301, 175,
+		289, 219,
+		272, 254,
+		230, 298,
+		148, 340,
+		59, 384,
+		33, 409,
+		32, 534,
+		34, 539,
+		39, 544,
+		66, 557,
+		82, 564,
+		94, 575,
+		102, 590,
+		103, 621,
+		108, 629,
+		108, 636,
+		107, 644,
+		103, 649,
+		96, 652,
+		85, 653,
+		76, 647,
+		72, 639,
+		72, 632,
+		76, 623,
+		76, 602,
+		73, 595,
+		66, 589,
+		47, 580,
+		25, 570,
+		9, 558,
+		2, 546,
+		2, 404,
+		11, 390,
+		35, 367,
+		210, 280,
+		245, 244,
+		259, 216,
+		270, 185,
+		270, 115,
+		265, 101,
+		253, 88,
+		244, 80,
+		240, 74,
+		227, 67,
+		203, 62,
+		160, 62,
+		135, 69,
+		119, 79,
+		104, 96,
+		96, 115,
+		92, 132,
+		92, 178,
+		100, 204,
+		117, 224,
+		154, 261
+	};
+
+	tunnel_walls.add(App->physics->CreateChain(0, 0, points_rail, 156, groupIndex::BALL));
 
 	// ----- Dead sensor for lost balls -----
 
@@ -329,14 +414,32 @@ bool ModuleSceneIntro::Start()
 bool ModuleSceneIntro::CleanUp()
 {
 	LOG("Unloading Intro scene");
-	for (p2List_item<PhysBody*>* bc = balls.getFirst(); bc != NULL; bc = bc->next) {
-		App->physics->world->DestroyBody(bc->data->body);
-	}
-	balls.clear();
-	// ---- Freeing PhysBodies from respectives lists ----
 
+	for (p2List_item<PhysBody*>* ball_item = balls.getFirst(); ball_item != NULL; ball_item = ball_item->next)
+	{
+		App->physics->world->DestroyBody(ball_item->data->body);
+	}
+
+	for (p2List_item<PhysBody*>* wall_item = pinball_walls.getFirst(); wall_item != NULL; wall_item = wall_item->next)
+	{
+		App->physics->world->DestroyBody(wall_item->data->body);
+	}
+
+	for (p2List_item<PhysBody*>* tunnel_item = tunnel_walls.getFirst(); tunnel_item != NULL; tunnel_item = tunnel_item->next)
+	{
+		App->physics->world->DestroyBody(tunnel_item->data->body);
+	}
+
+	for (p2List_item<PhysBody*>* rail_item = rail_walls.getFirst(); rail_item != NULL; rail_item = rail_item->next)
+	{
+		App->physics->world->DestroyBody(rail_item->data->body);
+	}
+
+	balls.clear();
 	pinball_walls.clear();
 	sensors.clear();
+	tunnel_walls.clear();
+	rail_walls.clear();
 
 	return true;
 }
@@ -345,7 +448,7 @@ bool ModuleSceneIntro::CleanUp()
 update_status ModuleSceneIntro::Update()
 {
 	//Blitting background
-	//App->renderer->Blit(bg, 0, 0, &rect_bg, 1.0f);
+	App->renderer->Blit(bg, 0, 0, &rect_bg, 1.0f);
 
 	// ----- Ball creation -----
 	//TODO: balls we'll be created at Start() and every time you lose one
@@ -459,7 +562,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 			if (bodyB->physType == DEAD_SENSOR) {
 				ball_lost = true;
 
-				for (p2List_item<PhysBody*>* t_w = tunel_walls.getFirst(); t_w != NULL; t_w = t_w->next) {
+				for (p2List_item<PhysBody*>* t_w = tunnel_walls.getFirst(); t_w != NULL; t_w = t_w->next) {
 					
 					b2Fixture* fixture = t_w->data->body->GetFixtureList();
 
