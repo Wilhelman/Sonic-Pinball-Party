@@ -6,11 +6,12 @@
 #include "ModuleTextures.h"
 #include "ModuleAudio.h"
 #include "ModulePhysics.h"
+#include "ModulePlayer.h"
 
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 	ray_on = sensed = false;
-	bg = NULL;
+	pinball_spritesheet = NULL;
 }
 
 ModuleSceneIntro::~ModuleSceneIntro()
@@ -24,7 +25,9 @@ bool ModuleSceneIntro::Start()
 
 	App->renderer->camera.x = App->renderer->camera.y = 0;
 	bonus_fx = App->audio->LoadFx("pinball/bonus.wav");
-	bg = App->textures->Load("pinball/pinball_sonic_spritesheet.png");
+	pinball_spritesheet = App->textures->Load("pinball/pinball_sonic_spritesheet.png");
+
+	// ---- Setting up SDL_Rect attributes ----
 
 	rect_bg.h = SCREEN_HEIGHT;
 	rect_bg.w = SCREEN_WIDTH;
@@ -36,9 +39,15 @@ bool ModuleSceneIntro::Start()
 	rect_ball.x = 0;
 	rect_ball.y = 1418;
 
+	rect_triangle_R.h = 80;
+	rect_triangle_R.w = 42;
+	rect_triangle_R.x = 578;
+	rect_triangle_R.y = 1100;
 
-
-
+	rect_triangle_L.h = 80;
+	rect_triangle_L.w = 42;
+	rect_triangle_L.x = 474;
+	rect_triangle_L.y = 1100;
 
 	// ------- Setting up wall chains -------
 
@@ -440,9 +449,31 @@ bool ModuleSceneIntro::Start()
 	tunnel_walls.add(App->physics->CreateChain(0, 0, points_rail, 156, groupIndex::BALL, 0.01f));
 
 
-	// ----- Dead sensor for lost balls -----
+	// ----- Creating sensors for the ball -----
 
-	sensors.add(App->physics->CreateRectangleSensor(SCREEN_WIDTH / 2 - 20, SCREEN_HEIGHT + 80, 150, 80));
+	sensors.add(App->physics->CreateRectangleSensor(SCREEN_WIDTH / 2 - 20, SCREEN_HEIGHT + 80, 150, 80, DEAD_SENSOR));
+
+	int points_exit_right[8] = 
+	{
+		429, 419,
+		423, 431,
+		449, 443,
+		458, 430
+	};
+
+	sensors.add(App->physics->CreateRectangleSensor(0, 0, 150, 80, DEAD_SENSOR));
+
+	//sensors.add(App->physics->CreateChainSensor(0, 0, points_exit_right, 8, EXIT_TUNNEL));
+
+	int points_entry_right[8] =
+	{
+		436, 404,
+		432, 415,
+		460, 426,
+		466, 415
+	};
+
+	//sensors.add(App->physics->CreateChainSensor(0, 0, points_entry_right , 8, ENTRY_TUNNEL));
 
 	return ret;
 }
@@ -469,13 +500,13 @@ bool ModuleSceneIntro::CleanUp()
 
 	if (triangle_L != NULL)
 	{
-		delete triangle_L;
+		App->physics->world->DestroyBody(triangle_L->body);
 		triangle_L = NULL;
 	}
 
 	if (triangle_R != NULL)
 	{
-		delete triangle_R;
+		App->physics->world->DestroyBody(triangle_R->body);
 		triangle_R = NULL;
 	}
 
@@ -490,8 +521,14 @@ bool ModuleSceneIntro::CleanUp()
 // Update: draw background
 update_status ModuleSceneIntro::Update()
 {
-	//Blitting background
-	App->renderer->Blit(bg, 0, 0, &rect_bg, 1.0f);
+	//Blitting 
+
+	//BG
+	App->renderer->Blit(pinball_spritesheet, 0, 0, &rect_bg, 1.0f);
+	
+	// Bouncing triangles
+	App->renderer->Blit(pinball_spritesheet, 113, 621, &rect_triangle_L, 1.0f);
+	App->renderer->Blit(pinball_spritesheet, 325, 621, &rect_triangle_R, 1.0f);
 
 	// ----- Ball creation -----
 	//TODO: balls we'll be created at Start() and every time you lose one
@@ -519,7 +556,7 @@ update_status ModuleSceneIntro::Update()
 		//TODO: control sprite according to ball velocity
 		float vel = ball_item->data->body->GetAngularVelocity();
 
-		App->renderer->Blit(bg, x, y, &rect_ball, 1.0f, ball_item->data->GetRotation());
+		App->renderer->Blit(pinball_spritesheet, x, y, &rect_ball, 1.0f, ball_item->data->GetRotation());
 
 		ball_item = ball_item->next;
 	}
@@ -539,8 +576,10 @@ update_status ModuleSceneIntro::Update()
 	// All draw functions ------------------------------------------------------
 
 
-	if (ball_lost) {
-		for (p2List_item<PhysBody*>* bc = balls.getFirst(); bc != NULL; bc = bc->next) {
+	if (ball_lost) 
+	{
+		for (p2List_item<PhysBody*>* bc = balls.getFirst(); bc != NULL; bc = bc->next) 
+		{
 			App->physics->world->DestroyBody(bc->data->body);
 		}
 		balls.clear();
@@ -598,18 +637,14 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 
 	//App->audio->PlayFx(bonus_fx);
 
-	if (bodyA == sensor || bodyB == sensor) {
-		
-	}
-	for (p2List_item<PhysBody*>* bc = balls.getFirst(); bc != NULL; bc = bc->next) {
+	for (p2List_item<PhysBody*>* bc = balls.getFirst(); bc != NULL; bc = bc->next) 
+	{
 		if (bodyA == bc->data)
 		{
-			
-			if (bodyB->physType == DEAD_SENSOR) {
-				ball_lost = true;
-
-				for (p2List_item<PhysBody*>* t_w = tunnel_walls.getFirst(); t_w != NULL; t_w = t_w->next) {
-					
+			if (bodyB->physType == ENTRY_TUNNEL)
+			{
+				for (p2List_item<PhysBody*>* t_w = tunnel_walls.getFirst(); t_w != NULL; t_w = t_w->next)
+				{
 					b2Fixture* fixture = t_w->data->body->GetFixtureList();
 
 					while (fixture != NULL)
@@ -621,8 +656,95 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 					}
 				}
 
+				b2Fixture* r_flipper_fixture = App->player->right_flipper->body->GetFixtureList();
+
+				while (r_flipper_fixture != NULL)
+				{
+					b2Filter newFilter;
+					newFilter.groupIndex = groupIndex::BALL;
+					r_flipper_fixture->SetFilterData(newFilter);
+					r_flipper_fixture = r_flipper_fixture->GetNext();
+				}
+
+				b2Fixture* l_flipper_fixture = App->player->left_flipper->body->GetFixtureList();
+
+				while (l_flipper_fixture != NULL)
+				{
+					b2Filter newFilter;
+					newFilter.groupIndex = groupIndex::BALL;
+					l_flipper_fixture->SetFilterData(newFilter);
+					l_flipper_fixture = l_flipper_fixture->GetNext();
+				}
+
+				for (p2List_item<PhysBody*>* p_w = pinball_walls.getFirst(); p_w != NULL; p_w = p_w->next)
+				{
+					b2Fixture* fixture = p_w->data->body->GetFixtureList();
+
+					while (fixture != NULL)
+					{
+						b2Filter newFilter;
+						newFilter.groupIndex = groupIndex::BALL;
+						fixture->SetFilterData(newFilter);
+						fixture = fixture->GetNext();
+					}
+				}
 				break;
-				
+			}
+
+			/*if (bodyB->physType == EXIT_TUNNEL)
+			{
+				for (p2List_item<PhysBody*>* t_w = tunnel_walls.getFirst(); t_w != NULL; t_w = t_w->next)
+				{
+					b2Fixture* fixture = t_w->data->body->GetFixtureList();
+
+					while (fixture != NULL)
+					{
+						b2Filter newFilter;
+						newFilter.groupIndex = groupIndex::BALL;
+						fixture->SetFilterData(newFilter);
+						fixture = fixture->GetNext();
+					}
+				}
+
+				b2Fixture* r_flipper_fixture = App->player->right_flipper->body->GetFixtureList();
+
+				while (r_flipper_fixture != NULL)
+				{
+					b2Filter newFilter;
+					newFilter.groupIndex = groupIndex::RIGID_PINBALL;
+					r_flipper_fixture->SetFilterData(newFilter);
+					r_flipper_fixture = r_flipper_fixture->GetNext();
+				}
+
+				b2Fixture* l_flipper_fixture = App->player->left_flipper->body->GetFixtureList();
+
+				while (l_flipper_fixture != NULL)
+				{
+					b2Filter newFilter;
+					newFilter.groupIndex = groupIndex::RIGID_PINBALL;
+					l_flipper_fixture->SetFilterData(newFilter);
+					l_flipper_fixture = l_flipper_fixture->GetNext();
+				}
+
+				for (p2List_item<PhysBody*>* p_w = pinball_walls.getFirst(); p_w != NULL; p_w = p_w->next)
+				{
+					b2Fixture* fixture = p_w->data->body->GetFixtureList();
+
+					while (fixture != NULL)
+					{
+						b2Filter newFilter;
+						newFilter.groupIndex = groupIndex::RIGID_PINBALL;
+						fixture->SetFilterData(newFilter);
+						fixture = fixture->GetNext();
+					}
+				}
+				break;
+			}*/
+
+			if (bodyB->physType == DEAD_SENSOR) 
+			{
+				ball_lost = true;
+
 				//balls.getLast()->data->listener = this;
 			}
 		}

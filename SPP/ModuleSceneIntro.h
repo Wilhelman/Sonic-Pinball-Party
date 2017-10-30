@@ -18,6 +18,9 @@ public:
 	void OnCollision(PhysBody* bodyA, PhysBody* bodyB);
 
 public:
+
+	//PhysBody variables
+
 	p2List<PhysBody*> balls;
 	p2List<PhysBody*> pinball_walls;
 	p2List<PhysBody*> tunnel_walls;
@@ -25,17 +28,21 @@ public:
 	PhysBody* triangle_L;
 	PhysBody* triangle_R;
 
+	//Textures and SDL_Rects
+
+	SDL_Texture* pinball_spritesheet;
+
 	SDL_Rect rect_ball;
-
 	SDL_Rect rect_bg;
-	SDL_Texture* bg;
-	//Test
-
-	PhysBody* sensor;
-	bool sensed;
+	SDL_Rect rect_triangle_R;
+	SDL_Rect rect_triangle_L;
+	
+	// Controls and other stuff
 
 	uint bonus_fx;
 	p2Point<int> ray;
+
 	bool ray_on;
+	bool sensed;
 	bool ball_lost;
 };

@@ -27,6 +27,8 @@ enum groupIndex {
 enum PhysBody_Type {
 	DEAD_SENSOR,
 	BALL_,
+	ENTRY_TUNNEL,
+	EXIT_TUNNEL,
 	NO_DEF_
 };
 
@@ -66,8 +68,9 @@ public:
 	PhysBody* CreatePlunge();
 	PhysBody* CreateBall(int x, int y, int radius);
 	PhysBody* CreateRectangle(int x, int y, int width, int height);
-	PhysBody* CreateRectangleSensor(int x, int y, int width, int height);
+	PhysBody* CreateRectangleSensor(int x, int y, int width, int height, PhysBody_Type sensor_type);
 	PhysBody* CreateChain(int x, int y, int* points, int size, groupIndex index, float restitution);
+	PhysBody* CreateChainSensor(int x, int y, int* points, int size, PhysBody_Type sensor_type);
 
 
 
