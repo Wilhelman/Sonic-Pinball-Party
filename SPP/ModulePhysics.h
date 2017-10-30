@@ -70,7 +70,7 @@ public:
 	PhysBody* CreateRectangle(int x, int y, int width, int height);
 	PhysBody* CreateRectangleSensor(int x, int y, int width, int height, PhysBody_Type sensor_type);
 	PhysBody* CreateChain(int x, int y, int* points, int size, groupIndex index, float restitution);
-	PhysBody* CreateChainSensor(int x, int y, int* points, int size, PhysBody_Type sensor_type);
+	PhysBody* CreatePolygonSensor(int x, int y, int size, b2Vec2* vec, PhysBody_Type sensor_type);
 
 
 

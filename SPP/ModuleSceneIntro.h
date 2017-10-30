@@ -25,6 +25,7 @@ public:
 	p2List<PhysBody*> pinball_walls;
 	p2List<PhysBody*> tunnel_walls;
 	p2List<PhysBody*> sensors;
+	PhysBody* rail;
 	PhysBody* triangle_L;
 	PhysBody* triangle_R;
 
@@ -36,6 +37,7 @@ public:
 	SDL_Rect rect_bg;
 	SDL_Rect rect_triangle_R;
 	SDL_Rect rect_triangle_L;
+	SDL_Rect rect_tunnel;
 	
 	// Controls and other stuff
 
@@ -45,4 +47,5 @@ public:
 	bool ray_on;
 	bool sensed;
 	bool ball_lost;
+	bool blit_tunnel_control;
 };

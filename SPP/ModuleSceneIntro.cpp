@@ -22,6 +22,7 @@ bool ModuleSceneIntro::Start()
 	LOG("Loading Intro assets");
 	bool ret = true;
 	ball_lost = false;
+	blit_tunnel_control = false;
 
 	App->renderer->camera.x = App->renderer->camera.y = 0;
 	bonus_fx = App->audio->LoadFx("pinball/bonus.wav");
@@ -48,6 +49,11 @@ bool ModuleSceneIntro::Start()
 	rect_triangle_L.w = 42;
 	rect_triangle_L.x = 474;
 	rect_triangle_L.y = 1100;
+
+	rect_tunnel.h = 428;
+	rect_tunnel.w = 512;
+	rect_tunnel.x = 522;
+	rect_tunnel.y = 0;
 
 	// ------- Setting up wall chains -------
 
@@ -268,6 +274,34 @@ bool ModuleSceneIntro::Start()
 
 	pinball_walls.add(App->physics->CreateChain(0, 0, points_left_L, 28, groupIndex::RIGID_PINBALL, 0.01f));
 
+	int points_top_U[46]
+	{
+		415, 127,
+		422, 170,
+		420, 202,
+		434, 197,
+		449, 183,
+		455, 163,
+		455, 145,
+		450, 132,
+		443, 122,
+		434, 113,
+		418, 107,
+		403, 106,
+		390, 109,
+		379, 115,
+		369, 123,
+		360, 135,
+		356, 151,
+		356, 167,
+		363, 179,
+		369, 188,
+		373, 192,
+		382, 166,
+		380, 135
+	};
+
+	pinball_walls.add(App->physics->CreateChain(0, 0, points_top_U, 46, groupIndex::RIGID_PINBALL, 0.01f));
 
 	// Tunnel walls
 
@@ -446,7 +480,7 @@ bool ModuleSceneIntro::Start()
 		154, 261
 	};
 
-	tunnel_walls.add(App->physics->CreateChain(0, 0, points_rail, 156, groupIndex::BALL, 0.01f));
+	rail = App->physics->CreateChain(0, 0, points_rail, 156, groupIndex::BALL, 0.01f);
 
 
 	// ----- Creating sensors for the ball -----
@@ -455,25 +489,103 @@ bool ModuleSceneIntro::Start()
 
 	int points_exit_right[8] = 
 	{
-		429, 419,
-		423, 431,
-		449, 443,
-		458, 430
+		406, 438,
+		461, 462,
+		462, 445,
+		419, 428
 	};
 
-	sensors.add(App->physics->CreateRectangleSensor(0, 0, 150, 80, DEAD_SENSOR));
+	b2Vec2 exit_vec_R[4];
+	
+	for (uint i = 0; i < 8 / 2; ++i)
+	{
+		exit_vec_R[i].Set(PIXEL_TO_METERS(points_exit_right[i * 2 + 0]), PIXEL_TO_METERS(points_exit_right[i * 2 + 1]));
+	}
 
-	//sensors.add(App->physics->CreateChainSensor(0, 0, points_exit_right, 8, EXIT_TUNNEL));
+	sensors.add(App->physics->CreatePolygonSensor(0, 0, 4, exit_vec_R, EXIT_TUNNEL));
 
 	int points_entry_right[8] =
 	{
-		436, 404,
-		432, 415,
-		460, 426,
-		466, 415
+		438, 391,
+		473, 399,
+		476, 386,
+		444, 378
 	};
 
-	//sensors.add(App->physics->CreateChainSensor(0, 0, points_entry_right , 8, ENTRY_TUNNEL));
+	b2Vec2 entry_vec_R[4];
+
+	for (uint i = 0; i < 8 / 2; ++i)
+	{
+		entry_vec_R[i].Set(PIXEL_TO_METERS(points_entry_right[i * 2 + 0]), PIXEL_TO_METERS(points_entry_right[i * 2 + 1]));
+	}
+
+	sensors.add(App->physics->CreatePolygonSensor(0, 0, 4, entry_vec_R, ENTRY_TUNNEL));
+
+	int points_entry_left[8] = {
+		23, 401,
+		56, 393,
+		49, 379,
+		16, 388
+	};
+
+	b2Vec2 entry_vec_L[4];
+
+	for (uint i = 0; i < 8 / 2; ++i)
+	{
+		entry_vec_L[i].Set(PIXEL_TO_METERS(points_entry_left[i * 2 + 0]), PIXEL_TO_METERS(points_entry_left[i * 2 + 1]));
+	}
+
+	sensors.add(App->physics->CreatePolygonSensor(0, 0, 4, entry_vec_L, ENTRY_TUNNEL));
+
+	int points_exit_left[8] = {
+		42, 459,
+		104, 435,
+		80, 427,
+		43, 441
+	};
+
+	b2Vec2 exit_vec_L[4];
+
+	for (uint i = 0; i < 8 / 2; ++i)
+	{
+		exit_vec_L[i].Set(PIXEL_TO_METERS(points_exit_left[i * 2 + 0]), PIXEL_TO_METERS(points_exit_left[i * 2 + 1]));
+	}
+
+	sensors.add(App->physics->CreatePolygonSensor(0, 0, 4, exit_vec_L, EXIT_TUNNEL));
+
+	int points_entry_center[8] = {
+		378, 124,
+		410, 112,
+		412, 120,
+		380, 131
+	};
+
+	b2Vec2 entry_vec_center[4];
+
+	for (uint i = 0; i < 8 / 2; ++i)
+	{
+		entry_vec_center[i].Set(PIXEL_TO_METERS(points_entry_center[i * 2 + 0]), PIXEL_TO_METERS(points_entry_center[i * 2 + 1]));
+	}
+
+	sensors.add(App->physics->CreatePolygonSensor(0, 0, 4, entry_vec_center, ENTRY_TUNNEL));
+
+
+	int points_exit_center[8] = {
+		381, 168,
+		426, 158,
+		430, 177,
+		375, 178
+	};
+
+	b2Vec2 exit_vec_center[4];
+
+	for (uint i = 0; i < 8 / 2; ++i)
+	{
+		exit_vec_center[i].Set(PIXEL_TO_METERS(points_exit_center[i * 2 + 0]), PIXEL_TO_METERS(points_exit_center[i * 2 + 1]));
+	}
+
+	sensors.add(App->physics->CreatePolygonSensor(0, 0, 4, exit_vec_center, EXIT_TUNNEL));
+
 
 	return ret;
 }
@@ -510,6 +622,12 @@ bool ModuleSceneIntro::CleanUp()
 		triangle_R = NULL;
 	}
 
+	if (rail = NULL)
+	{
+		App->physics->world->DestroyBody(rail->body);
+		rail = NULL;
+	}
+
 	balls.clear();
 	pinball_walls.clear();
 	sensors.clear();
@@ -530,6 +648,46 @@ update_status ModuleSceneIntro::Update()
 	App->renderer->Blit(pinball_spritesheet, 113, 621, &rect_triangle_L, 1.0f);
 	App->renderer->Blit(pinball_spritesheet, 325, 621, &rect_triangle_R, 1.0f);
 
+	//Tunnels
+	if (blit_tunnel_control)
+	{
+		App->renderer->Blit(pinball_spritesheet, 0, 0, &rect_tunnel, 1.0f);
+
+		p2List_item<PhysBody*>* ball_item = balls.getFirst();
+
+		while (ball_item != NULL)
+		{
+			int x, y;
+			ball_item->data->GetPosition(x, y);
+
+			//TODO: control sprite according to ball velocity
+			float vel = ball_item->data->body->GetAngularVelocity();
+
+			App->renderer->Blit(pinball_spritesheet, x, y, &rect_ball, 1.0f, ball_item->data->GetRotation());
+
+			ball_item = ball_item->next;
+		}
+	}
+	else
+	{
+		p2List_item<PhysBody*>* ball_item = balls.getFirst();
+
+		while (ball_item != NULL)
+		{
+			int x, y;
+			ball_item->data->GetPosition(x, y);
+
+			//TODO: control sprite according to ball velocity
+			float vel = ball_item->data->body->GetAngularVelocity();
+
+			App->renderer->Blit(pinball_spritesheet, x, y, &rect_ball, 1.0f, ball_item->data->GetRotation());
+
+			ball_item = ball_item->next;
+		}
+		App->renderer->Blit(pinball_spritesheet, 0, 0, &rect_tunnel, 1.0f);
+	}
+		
+
 	// ----- Ball creation -----
 	//TODO: balls we'll be created at Start() and every time you lose one
 	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
@@ -546,20 +704,7 @@ update_status ModuleSceneIntro::Update()
 	}
 
 	// ----- Blitting ------
-	p2List_item<PhysBody*>* ball_item = balls.getFirst();
-
-	while (ball_item != NULL)
-	{
-		int x, y;
-		ball_item->data->GetPosition(x, y);
-
-		//TODO: control sprite according to ball velocity
-		float vel = ball_item->data->body->GetAngularVelocity();
-
-		App->renderer->Blit(pinball_spritesheet, x, y, &rect_ball, 1.0f, ball_item->data->GetRotation());
-
-		ball_item = ball_item->next;
-	}
+	
 	
 	
 
@@ -643,6 +788,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 		{
 			if (bodyB->physType == ENTRY_TUNNEL)
 			{
+				blit_tunnel_control = true;
 				for (p2List_item<PhysBody*>* t_w = tunnel_walls.getFirst(); t_w != NULL; t_w = t_w->next)
 				{
 					b2Fixture* fixture = t_w->data->body->GetFixtureList();
@@ -691,8 +837,9 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 				break;
 			}
 
-			/*if (bodyB->physType == EXIT_TUNNEL)
+			if (bodyB->physType == EXIT_TUNNEL)
 			{
+				blit_tunnel_control = false;
 				for (p2List_item<PhysBody*>* t_w = tunnel_walls.getFirst(); t_w != NULL; t_w = t_w->next)
 				{
 					b2Fixture* fixture = t_w->data->body->GetFixtureList();
@@ -739,7 +886,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 					}
 				}
 				break;
-			}*/
+			}
 
 			if (bodyB->physType == DEAD_SENSOR) 
 			{
