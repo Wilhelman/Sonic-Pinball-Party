@@ -38,7 +38,11 @@ bool ModuleSceneIntro::Start()
 
 
 
+
+
 	// ------- Setting up wall chains -------
+
+	// Bouncing triangles
 
 	int points_triangle_L[14] =
 	{
@@ -66,6 +70,8 @@ bool ModuleSceneIntro::Start()
 
 	triangle_R = App->physics->CreateChain(0, 0, points_triangle_R, 14, groupIndex::RIGID_PINBALL, 1.0f);
 
+
+	// Static walls
 
 	int points_top_wall[160] = 
 	{
@@ -211,7 +217,6 @@ bool ModuleSceneIntro::Start()
 		475, 411
 	};
 
-
 	pinball_walls.add(App->physics->CreateChain(0, 0, points_bottom_wall, 108, groupIndex::RIGID_PINBALL, 0.01f));
 
 	int points_right_L[28] = 
@@ -255,7 +260,8 @@ bool ModuleSceneIntro::Start()
 	pinball_walls.add(App->physics->CreateChain(0, 0, points_left_L, 28, groupIndex::RIGID_PINBALL, 0.01f));
 
 
-	//upper map
+	// Tunnel walls
+
 	int points_upper_tunnel[68] = 
 	{
 		27, 412,
@@ -296,7 +302,6 @@ bool ModuleSceneIntro::Start()
 
 	tunnel_walls.add(App->physics->CreateChain(0, 0, points_upper_tunnel, 68, groupIndex::BALL, 0.01f));
 
-
 	int points_bottom_tunnel_1[44] = 
 	{
 		58, 392,
@@ -325,7 +330,6 @@ bool ModuleSceneIntro::Start()
 
 	tunnel_walls.add(App->physics->CreateChain(0, 0, points_bottom_tunnel_1, 44, groupIndex::BALL, 0.01f));
 
-
 	int points_bottom_tunnel_2[38] = 
 	{
 		413, 121,
@@ -350,7 +354,6 @@ bool ModuleSceneIntro::Start()
 	};
 
 	tunnel_walls.add(App->physics->CreateChain(0, 0, points_bottom_tunnel_2, 38, groupIndex::BALL, 0.01f));
-
 
 	int points_rail[156] = 
 	{
@@ -464,22 +467,22 @@ bool ModuleSceneIntro::CleanUp()
 		App->physics->world->DestroyBody(tunnel_item->data->body);
 	}
 
-	for (p2List_item<PhysBody*>* rail_item = rail_walls.getFirst(); rail_item != NULL; rail_item = rail_item->next)
-	{
-		App->physics->world->DestroyBody(rail_item->data->body);
-	}
-
 	if (triangle_L != NULL)
 	{
 		delete triangle_L;
 		triangle_L = NULL;
 	}
 
+	if (triangle_R != NULL)
+	{
+		delete triangle_R;
+		triangle_R = NULL;
+	}
+
 	balls.clear();
 	pinball_walls.clear();
 	sensors.clear();
 	tunnel_walls.clear();
-	rail_walls.clear();
 
 	return true;
 }
@@ -521,6 +524,9 @@ update_status ModuleSceneIntro::Update()
 		ball_item = ball_item->next;
 	}
 	
+	
+
+
 	// Prepare for raycast ------------------------------------------------------
 	
 	iPoint mouse;
