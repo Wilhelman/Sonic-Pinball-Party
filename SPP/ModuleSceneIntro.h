@@ -38,6 +38,10 @@ public:
 	SDL_Rect rect_triangle_R;
 	SDL_Rect rect_triangle_L;
 	SDL_Rect rect_tunnel;
+	SDL_Rect rect_plunge_struct;
+	SDL_Rect rect_rail;
+	SDL_Rect rect_piece_rail;
+	SDL_Rect rect_central_piece;
 	
 	// Controls and other stuff
 

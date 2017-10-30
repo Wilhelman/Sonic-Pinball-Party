@@ -55,6 +55,26 @@ bool ModuleSceneIntro::Start()
 	rect_tunnel.x = 522;
 	rect_tunnel.y = 0;
 
+	rect_plunge_struct.h = 384;
+	rect_plunge_struct.w = 48;
+	rect_plunge_struct.x = 990;
+	rect_plunge_struct.y = 464;
+
+	rect_rail.h = 632;
+	rect_rail.w = 308;
+	rect_rail.x = 1248;
+	rect_rail.y = 138;
+
+	rect_piece_rail.h = 84;
+	rect_piece_rail.w = 64;
+	rect_piece_rail.x = 1147;
+	rect_piece_rail.y = 458;
+
+	rect_central_piece.h = 110;
+	rect_central_piece.w = 112;
+	rect_central_piece.x = 872;
+	rect_central_piece.y = 1348;
+
 	// ------- Setting up wall chains -------
 
 	// Bouncing triangles
@@ -194,8 +214,8 @@ bool ModuleSceneIntro::Start()
 		25, 659,
 		24, 665,
 		24, 832,
-		34, 840,
-		54, 840,
+		34, 835,
+		54, 835,
 		64, 832,
 		64, 774,
 		71, 775,
@@ -220,8 +240,8 @@ bool ModuleSceneIntro::Start()
 		449, 504,
 		472, 484,
 		472, 825,
-		477, 832,
-		499, 832,
+		477, 840,
+		499, 840,
 		504, 825,
 		504, 433,
 		500, 425,
@@ -639,6 +659,7 @@ bool ModuleSceneIntro::CleanUp()
 // Update: draw background
 update_status ModuleSceneIntro::Update()
 {
+
 	//Blitting 
 
 	//BG
@@ -647,6 +668,8 @@ update_status ModuleSceneIntro::Update()
 	// Bouncing triangles
 	App->renderer->Blit(pinball_spritesheet, 113, 621, &rect_triangle_L, 1.0f);
 	App->renderer->Blit(pinball_spritesheet, 325, 621, &rect_triangle_R, 1.0f);
+
+	App->renderer->Blit(pinball_spritesheet, 0, 27, &rect_rail, 1.0f);
 
 	//Tunnels
 	if (blit_tunnel_control)
@@ -677,6 +700,9 @@ update_status ModuleSceneIntro::Update()
 			int x, y;
 			ball_item->data->GetPosition(x, y);
 
+			//TODO: use this to impulse ball at start
+			//ball_item->data->body->ApplyLinearImpulse(b2Vec2(-0.1f, -0.1f), b2Vec2(x, y), true);
+			
 			//TODO: control sprite according to ball velocity
 			float vel = ball_item->data->body->GetAngularVelocity();
 
@@ -686,7 +712,15 @@ update_status ModuleSceneIntro::Update()
 		}
 		App->renderer->Blit(pinball_spritesheet, 0, 0, &rect_tunnel, 1.0f);
 	}
-		
+
+	// Plunge
+	App->renderer->Blit(pinball_spritesheet, 467, 463, &rect_plunge_struct, 1.0f);
+	
+	// Rail piece
+	App->renderer->Blit(pinball_spritesheet, 0, 347, &rect_piece_rail, 1.0f);
+
+	// Central piece
+	App->renderer->Blit(pinball_spritesheet, 184, 327, &rect_central_piece, 1.0f);
 
 	// ----- Ball creation -----
 	//TODO: balls we'll be created at Start() and every time you lose one

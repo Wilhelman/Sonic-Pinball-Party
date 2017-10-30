@@ -234,7 +234,7 @@ PhysBody* ModulePhysics::CreateBall(int x, int y, int radius)
 	return pbody;
 }
 
-PhysBody * ModulePhysics::CreatePlunge()
+PhysBody* ModulePhysics::CreatePlunge()
 {
 
 	int copyToTest[8] = {
@@ -245,7 +245,7 @@ PhysBody * ModulePhysics::CreatePlunge()
 	};
 	b2BodyDef bodyA;
 	bodyA.type = b2_dynamicBody;
-	bodyA.position.Set(PIXEL_TO_METERS(488), PIXEL_TO_METERS(815));
+	bodyA.position.Set(PIXEL_TO_METERS(487), PIXEL_TO_METERS(830));
 
 	b2Body* b1 = world->CreateBody(&bodyA);
 	b2PolygonShape box;
@@ -261,7 +261,7 @@ PhysBody * ModulePhysics::CreatePlunge()
 
 	b2BodyDef bodyB;
 	bodyB.type = b2_staticBody;
-	bodyB.position.Set(PIXEL_TO_METERS(488), PIXEL_TO_METERS(796));
+	bodyB.position.Set(PIXEL_TO_METERS(487), PIXEL_TO_METERS(811));
 
 	b2Body* b2 = world->CreateBody(&bodyB);
 	b2PolygonShape box1;
