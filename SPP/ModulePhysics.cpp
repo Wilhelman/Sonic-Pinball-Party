@@ -364,7 +364,7 @@ PhysBody* ModulePhysics::CreateRectangleSensor(int x, int y, int width, int heig
 	return pbody;
 }
 
-PhysBody* ModulePhysics::CreateChain(int x, int y, int* points, int size, groupIndex index)
+PhysBody* ModulePhysics::CreateChain(int x, int y, int* points, int size, groupIndex index, float restitution)
 {
 	b2BodyDef body;
 	body.type = b2_staticBody;
@@ -386,7 +386,7 @@ PhysBody* ModulePhysics::CreateChain(int x, int y, int* points, int size, groupI
 	b2FixtureDef fixture;
 	fixture.shape = &shape;
 	fixture.filter.groupIndex = index;
-	fixture.restitution = 0.01f;
+	fixture.restitution = restitution;
 	fixture.density = 1.0f;
 
 	b->CreateFixture(&fixture);

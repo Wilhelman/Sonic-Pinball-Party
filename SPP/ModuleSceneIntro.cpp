@@ -36,11 +36,39 @@ bool ModuleSceneIntro::Start()
 	rect_ball.x = 0;
 	rect_ball.y = 1418;
 
-	
+
 
 	// ------- Setting up wall chains -------
 
-	int points_top_wall[160] = {
+	int points_triangle_L[14] =
+	{
+		114, 679,
+		114, 624,
+		119, 624,
+		150, 690,
+		150, 696,
+		144, 696,
+		116, 681
+	};
+
+	triangle_L = App->physics->CreateChain(0, 0, points_triangle_L, 14, groupIndex::RIGID_PINBALL, 1.0f);
+
+	int points_triangle_R[14] =
+	{
+		366, 624,
+		367, 678,
+		365, 681,
+		336, 696,
+		330, 696,
+		330, 690,
+		362, 624
+	};
+
+	triangle_R = App->physics->CreateChain(0, 0, points_triangle_R, 14, groupIndex::RIGID_PINBALL, 1.0f);
+
+
+	int points_top_wall[160] = 
+	{
 		440, 401,
 		438, 407,
 		430, 412,
@@ -123,10 +151,10 @@ bool ModuleSceneIntro::Start()
 		62, 401
 	};
 
-	pinball_walls.add(App->physics->CreateChain(0, 0, points_top_wall, 160, groupIndex::RIGID_PINBALL));
+	pinball_walls.add(App->physics->CreateChain(0, 0, points_top_wall, 160, groupIndex::RIGID_PINBALL, 0.01f));
 	
-
-	int points_bottom_wall[108] = {
+	int points_bottom_wall[108] = 
+	{
 		29, 412,
 		37, 428,
 		50, 459,
@@ -183,10 +211,11 @@ bool ModuleSceneIntro::Start()
 		475, 411
 	};
 
-	pinball_walls.add(App->physics->CreateChain(0, 0, points_bottom_wall, 108, groupIndex::RIGID_PINBALL));
 
+	pinball_walls.add(App->physics->CreateChain(0, 0, points_bottom_wall, 108, groupIndex::RIGID_PINBALL, 0.01f));
 
-	int points_right_L[28] = {
+	int points_right_L[28] = 
+	{
 		310, 758,
 		310, 774,
 		320, 774,
@@ -203,10 +232,10 @@ bool ModuleSceneIntro::Start()
 		310, 758
 	};
 
-	pinball_walls.add(App->physics->CreateChain(0, 0, points_right_L, 28, groupIndex::RIGID_PINBALL));
+	pinball_walls.add(App->physics->CreateChain(0, 0, points_right_L, 28, groupIndex::RIGID_PINBALL, 0.01f));
 
-
-	int points_left_L[28] = {
+	int points_left_L[28] = 
+	{
 		170, 758,
 		169, 774,
 		160, 774,
@@ -223,11 +252,12 @@ bool ModuleSceneIntro::Start()
 		170, 758
 	};
 
-	pinball_walls.add(App->physics->CreateChain(0, 0, points_left_L, 28, groupIndex::RIGID_PINBALL));
+	pinball_walls.add(App->physics->CreateChain(0, 0, points_left_L, 28, groupIndex::RIGID_PINBALL, 0.01f));
 
 
 	//upper map
-	int points_upper_tunnel[68] = {
+	int points_upper_tunnel[68] = 
+	{
 		27, 412,
 		13, 382,
 		2, 354,
@@ -264,10 +294,11 @@ bool ModuleSceneIntro::Start()
 		471, 417
 	};
 
-	tunnel_walls.add(App->physics->CreateChain(0, 0, points_upper_tunnel, 68, groupIndex::BALL));
+	tunnel_walls.add(App->physics->CreateChain(0, 0, points_upper_tunnel, 68, groupIndex::BALL, 0.01f));
 
 
-	int points_bottom_tunnel_1[44] = {
+	int points_bottom_tunnel_1[44] = 
+	{
 		58, 392,
 		48, 364,
 		39, 330,
@@ -292,10 +323,11 @@ bool ModuleSceneIntro::Start()
 		381, 133
 	};
 
-	tunnel_walls.add(App->physics->CreateChain(0, 0, points_bottom_tunnel_1, 44, groupIndex::BALL));
+	tunnel_walls.add(App->physics->CreateChain(0, 0, points_bottom_tunnel_1, 44, groupIndex::BALL, 0.01f));
 
 
-	int points_bottom_tunnel_2[38] = {
+	int points_bottom_tunnel_2[38] = 
+	{
 		413, 121,
 		407, 100,
 		399, 78,
@@ -317,10 +349,11 @@ bool ModuleSceneIntro::Start()
 		432, 406
 	};
 
-	tunnel_walls.add(App->physics->CreateChain(0, 0, points_bottom_tunnel_2, 38, groupIndex::BALL));
+	tunnel_walls.add(App->physics->CreateChain(0, 0, points_bottom_tunnel_2, 38, groupIndex::BALL, 0.01f));
 
 
-	int points_rail[156] = {
+	int points_rail[156] = 
+	{
 		138, 282,
 		113, 257,
 		101, 244,
@@ -401,7 +434,8 @@ bool ModuleSceneIntro::Start()
 		154, 261
 	};
 
-	tunnel_walls.add(App->physics->CreateChain(0, 0, points_rail, 156, groupIndex::BALL));
+	tunnel_walls.add(App->physics->CreateChain(0, 0, points_rail, 156, groupIndex::BALL, 0.01f));
+
 
 	// ----- Dead sensor for lost balls -----
 
@@ -433,6 +467,12 @@ bool ModuleSceneIntro::CleanUp()
 	for (p2List_item<PhysBody*>* rail_item = rail_walls.getFirst(); rail_item != NULL; rail_item = rail_item->next)
 	{
 		App->physics->world->DestroyBody(rail_item->data->body);
+	}
+
+	if (triangle_L != NULL)
+	{
+		delete triangle_L;
+		triangle_L = NULL;
 	}
 
 	balls.clear();

@@ -67,7 +67,7 @@ public:
 	PhysBody* CreateBall(int x, int y, int radius);
 	PhysBody* CreateRectangle(int x, int y, int width, int height);
 	PhysBody* CreateRectangleSensor(int x, int y, int width, int height);
-	PhysBody* CreateChain(int x, int y, int* points, int size, groupIndex index);
+	PhysBody* CreateChain(int x, int y, int* points, int size, groupIndex index, float restitution);
 
 
 

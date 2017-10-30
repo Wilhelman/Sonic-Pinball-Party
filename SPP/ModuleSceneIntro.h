@@ -23,6 +23,8 @@ public:
 	p2List<PhysBody*> tunnel_walls;
 	p2List<PhysBody*> rail_walls;
 	p2List<PhysBody*> sensors;
+	PhysBody* triangle_L;
+	PhysBody* triangle_R;
 
 	SDL_Rect rect_ball;
 
