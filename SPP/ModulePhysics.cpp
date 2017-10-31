@@ -16,7 +16,7 @@ ModulePhysics::ModulePhysics(Application* app, bool start_enabled) : Module(app,
 {
 	world = NULL;
 	mouse_joint = NULL;
-	debug = true;
+	debug = false;
 }
 
 // Destructor
@@ -366,7 +366,7 @@ PhysBody* ModulePhysics::CreateRectangleSensor(int x, int y, int width, int heig
 	return pbody;
 }
 
-PhysBody* ModulePhysics::CreateChain(int x, int y, int* points, int size, groupIndex index, float restitution)
+PhysBody* ModulePhysics::CreateChain(int x, int y, int* points, int size, groupIndex index, float restitution, PhysBody_Type type)
 {
 	b2BodyDef body;
 	body.type = b2_staticBody;
@@ -395,6 +395,7 @@ PhysBody* ModulePhysics::CreateChain(int x, int y, int* points, int size, groupI
 
 	PhysBody* pbody = new PhysBody();
 	pbody->body = b;
+	pbody->physType = type;
 	b->SetUserData(pbody);
 	pbody->width = pbody->height = 0;
 

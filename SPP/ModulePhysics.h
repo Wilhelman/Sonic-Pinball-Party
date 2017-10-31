@@ -29,6 +29,8 @@ enum PhysBody_Type {
 	BALL_,
 	ENTRY_TUNNEL,
 	EXIT_TUNNEL,
+	TRIANGLE,
+
 	NO_DEF_
 };
 
@@ -70,7 +72,7 @@ public:
 	PhysBody* CreateBall(int x, int y, int radius);
 	PhysBody* CreateRectangle(int x, int y, int width, int height);
 	PhysBody* CreateRectangleSensor(int x, int y, int width, int height, PhysBody_Type sensor_type);
-	PhysBody* CreateChain(int x, int y, int* points, int size, groupIndex index, float restitution);
+	PhysBody* CreateChain(int x, int y, int* points, int size, groupIndex index, float restitution, PhysBody_Type type);
 	PhysBody* CreatePolygonSensor(int x, int y, int size, b2Vec2* vec, PhysBody_Type sensor_type);
 
 

@@ -22,15 +22,26 @@ ModuleSceneIntro::~ModuleSceneIntro()
 bool ModuleSceneIntro::Start()
 {
 	balls_left = 3;
-	App->ui->score = 125645;
+	App->ui->score = 0;
 	LOG("Loading Intro assets");
 	bool ret = true;
 	ball_lost = false;
 	blit_tunnel_control = false;
 
 	App->renderer->camera.x = App->renderer->camera.y = 0;
-	bonus_fx = App->audio->LoadFx("pinball/bonus.wav");
+
+	bonus_fx = App->audio->LoadFx("pinball/bonus.wav"); // TODO : this is not being UNLOAD in Cleanup!
+
+	triangle_fx = App->audio->LoadFx("audio/sound_fx/bouncing_triangle.wav");
+
+	if (!App->audio->PlayMusic("audio/music/Nightmaren.ogg"))
+		ret = false;
+
 	pinball_spritesheet = App->textures->Load("pinball/pinball_sonic_spritesheet.png");
+	if (pinball_spritesheet == nullptr) {
+		LOG("Cannot load the animations spritesheet in SceneIntro");
+		ret = false;
+	}
 
 	// Animations settings
 	m_icon.PushBack({ 344,1144,60,36 });
@@ -100,7 +111,7 @@ bool ModuleSceneIntro::Start()
 		116, 681
 	};
 
-	triangle_L = App->physics->CreateChain(0, 0, points_triangle_L, 14, groupIndex::RIGID_PINBALL, 1.0f);
+	triangle_L = App->physics->CreateChain(0, 0, points_triangle_L, 14, groupIndex::RIGID_PINBALL, 1.0f, TRIANGLE);
 
 	int points_triangle_R[14] =
 	{
@@ -113,7 +124,7 @@ bool ModuleSceneIntro::Start()
 		362, 624
 	};
 
-	triangle_R = App->physics->CreateChain(0, 0, points_triangle_R, 14, groupIndex::RIGID_PINBALL, 1.0f);
+	triangle_R = App->physics->CreateChain(0, 0, points_triangle_R, 14, groupIndex::RIGID_PINBALL, 1.0f, TRIANGLE);
 
 
 	// Static walls
@@ -202,7 +213,7 @@ bool ModuleSceneIntro::Start()
 		62, 401
 	};
 
-	pinball_walls.add(App->physics->CreateChain(0, 0, points_top_wall, 160, groupIndex::RIGID_PINBALL, 0.01f));
+	pinball_walls.add(App->physics->CreateChain(0, 0, points_top_wall, 160, groupIndex::RIGID_PINBALL, 0.01f, NO_DEF_));
 	
 	int points_bottom_wall[108] = 
 	{
@@ -262,7 +273,7 @@ bool ModuleSceneIntro::Start()
 		475, 411
 	};
 
-	pinball_walls.add(App->physics->CreateChain(0, 0, points_bottom_wall, 108, groupIndex::RIGID_PINBALL, 0.01f));
+	pinball_walls.add(App->physics->CreateChain(0, 0, points_bottom_wall, 108, groupIndex::RIGID_PINBALL, 0.01f, NO_DEF_));
 
 	int points_right_L[28] = 
 	{
@@ -282,7 +293,7 @@ bool ModuleSceneIntro::Start()
 		310, 758
 	};
 
-	pinball_walls.add(App->physics->CreateChain(0, 0, points_right_L, 28, groupIndex::RIGID_PINBALL, 0.01f));
+	pinball_walls.add(App->physics->CreateChain(0, 0, points_right_L, 28, groupIndex::RIGID_PINBALL, 0.01f, NO_DEF_));
 
 	int points_left_L[28] = 
 	{
@@ -302,7 +313,7 @@ bool ModuleSceneIntro::Start()
 		170, 758
 	};
 
-	pinball_walls.add(App->physics->CreateChain(0, 0, points_left_L, 28, groupIndex::RIGID_PINBALL, 0.01f));
+	pinball_walls.add(App->physics->CreateChain(0, 0, points_left_L, 28, groupIndex::RIGID_PINBALL, 0.01f, NO_DEF_));
 
 	int points_top_U[46]
 	{
@@ -331,7 +342,7 @@ bool ModuleSceneIntro::Start()
 		380, 135
 	};
 
-	pinball_walls.add(App->physics->CreateChain(0, 0, points_top_U, 46, groupIndex::RIGID_PINBALL, 0.01f));
+	pinball_walls.add(App->physics->CreateChain(0, 0, points_top_U, 46, groupIndex::RIGID_PINBALL, 0.01f, NO_DEF_));
 
 	// Tunnel walls
 
@@ -373,7 +384,7 @@ bool ModuleSceneIntro::Start()
 		471, 417
 	};
 
-	tunnel_walls.add(App->physics->CreateChain(0, 0, points_upper_tunnel, 68, groupIndex::BALL, 0.01f));
+	tunnel_walls.add(App->physics->CreateChain(0, 0, points_upper_tunnel, 68, groupIndex::BALL, 0.01f, NO_DEF_));
 
 	int points_bottom_tunnel_1[44] = 
 	{
@@ -401,7 +412,7 @@ bool ModuleSceneIntro::Start()
 		381, 133
 	};
 
-	tunnel_walls.add(App->physics->CreateChain(0, 0, points_bottom_tunnel_1, 44, groupIndex::BALL, 0.01f));
+	tunnel_walls.add(App->physics->CreateChain(0, 0, points_bottom_tunnel_1, 44, groupIndex::BALL, 0.01f, NO_DEF_));
 
 	int points_bottom_tunnel_2[38] = 
 	{
@@ -426,7 +437,7 @@ bool ModuleSceneIntro::Start()
 		432, 406
 	};
 
-	tunnel_walls.add(App->physics->CreateChain(0, 0, points_bottom_tunnel_2, 38, groupIndex::BALL, 0.01f));
+	tunnel_walls.add(App->physics->CreateChain(0, 0, points_bottom_tunnel_2, 38, groupIndex::BALL, 0.01f, NO_DEF_));
 
 	int points_rail[156] = 
 	{
@@ -510,7 +521,7 @@ bool ModuleSceneIntro::Start()
 		154, 261
 	};
 
-	rail = App->physics->CreateChain(0, 0, points_rail, 156, groupIndex::BALL, 0.01f);
+	rail = App->physics->CreateChain(0, 0, points_rail, 156, groupIndex::BALL, 0.01f, NO_DEF_);
 
 
 	// ----- Creating sensors for the ball -----
@@ -788,7 +799,7 @@ update_status ModuleSceneIntro::Update()
 	}
 
 	if (balls_left == 0 && App->fade->FadeIsOver()) {
-		App->fade->FadeToBlack(this, this, 5.0f);
+		App->fade->FadeToBlack(this, this, 7.0f);
 	}
 
 	/*c = boxes.getFirst();
@@ -843,6 +854,12 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	{
 		if (bodyA == bc->data)
 		{
+			if (bodyB->physType == TRIANGLE)
+			{
+				App->ui->score += 200;
+				App->audio->PlayFx(triangle_fx);
+			}
+
 			if (bodyB->physType == ENTRY_TUNNEL)
 			{
 				blit_tunnel_control = true;

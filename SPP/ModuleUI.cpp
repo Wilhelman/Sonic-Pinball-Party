@@ -1,11 +1,13 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleTextures.h"
+#include "ModuleWindow.h"
 #include "ModuleRender.h"
 #include "ModuleUI.h"
 #include "ModulePlayer.h"
 #include "ModuleSceneIntro.h"
 #include "ModuleFadeToBlack.h"
+#include "p2SString.h"
 
 #include <string.h>
 #include<stdio.h>
@@ -34,7 +36,7 @@ update_status ModuleUI::Update()
 {
 
 	update_status status = UPDATE_CONTINUE;
-	if (App->scene_intro->IsEnabled() && !App->fade->FadeIsOver()) {
+	if (App->scene_intro->IsEnabled() && App->fade->current_step == ModuleFadeToBlack::fade_step::fade_to_black) {
 		char str[10];
 		sprintf_s(str, "%i", score);
 
@@ -48,6 +50,10 @@ update_status ModuleUI::Update()
 		this->BlitText(x_correction, SCREEN_HEIGHT / 2 - fonts[font_score].char_h / 2, font_score, str);
 
 	}
+
+	p2SString title("SONIC PINBALL PARTY - SCORE: %i", App->ui->score);
+
+	App->window->SetTitle(title.GetString());
 
 	return status;
 }

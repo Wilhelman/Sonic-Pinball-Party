@@ -44,7 +44,10 @@ public:
 	
 	// Controls and other stuff
 
+	//Pinball sounds
 	uint bonus_fx;
+	uint triangle_fx;
+
 	p2Point<int> ray;
 
 	bool ray_on;

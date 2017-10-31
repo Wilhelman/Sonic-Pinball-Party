@@ -65,6 +65,12 @@
     <ClInclude Include="ModuleUI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="p2SString.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="p2Defs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
