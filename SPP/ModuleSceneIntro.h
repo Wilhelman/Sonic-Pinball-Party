@@ -3,6 +3,7 @@
 #include "p2List.h"
 #include "p2Point.h"
 #include "Globals.h"
+#include "Animation.h"
 
 class PhysBody;
 
@@ -52,4 +53,7 @@ public:
 	bool sensed;
 	bool ball_lost;
 	bool blit_tunnel_control;
+
+	//Animations
+	Animation m_icon;
 };

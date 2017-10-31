@@ -25,5 +25,7 @@ public:
 	
 	SDL_Rect rect_rFlipper;
 	SDL_Rect rect_lFlipper;
+
+	SDL_Texture * flippers_tex;
 	
 };

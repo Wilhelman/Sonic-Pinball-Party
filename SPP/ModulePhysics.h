@@ -47,6 +47,7 @@ public:
 public:
 	int width, height;
 	b2Body* body;
+	b2Joint* joint;
 	Module* listener;
 	PhysBody_Type physType = NO_DEF_;
 };

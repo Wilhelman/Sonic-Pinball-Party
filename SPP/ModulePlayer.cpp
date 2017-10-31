@@ -25,7 +25,7 @@ bool ModulePlayer::Start()
 	left_flipper = App->physics->CreateLeftFlipper();
 	plunge = App->physics->CreatePlunge();
 	
-	
+	flippers_tex = App->textures->Load("pinball/pinball_sonic_spritesheet.png");
 	
 
 	rect_rFlipper.h = 20;
@@ -69,12 +69,12 @@ update_status ModulePlayer::Update()
 
 
 	//TODO: postions are not well obtained for some reason
-	//int right_flipper_x, right_flipper_y;
-	//right_flipper->GetPosition(right_flipper_x, right_flipper_y);
+	/*int right_flipper_x, right_flipper_y;
+	right_flipper->GetPosition(right_flipper_x, right_flipper_y);
+	App->renderer->Blit(flippers_tex, 450, 500, &rect_rFlipper);*/
 
-	//App->renderer->Blit(player_tex, 450, 500, &rect_rFlipper);
-
-	
+	b2Vec2 anchorVec = right_flipper->joint->GetAnchorB();
+	App->renderer->Blit(flippers_tex, 258, 760 ,&rect_rFlipper, 1.0f, right_flipper->GetRotation(), anchorVec.x + 48, anchorVec.y-4);
 
 
 	//TODO: control sprite according to ball velocity

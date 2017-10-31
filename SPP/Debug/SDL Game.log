@@ -1,8 +1,5 @@
-﻿  ModuleSceneIntro.cpp
-c:\users\víctor masó\documents\github\sonic-pinball-party\spp\modulesceneintro.cpp(800): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
-c:\users\víctor masó\documents\github\sonic-pinball-party\spp\modulesceneintro.cpp(802): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
-c:\users\víctor masó\documents\github\sonic-pinball-party\spp\modulesceneintro.cpp(804): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
-c:\users\víctor masó\documents\github\sonic-pinball-party\spp\modulesceneintro.cpp(807): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
-c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.10.25017\include\limits(211): warning C4577: si se usa 'noexcept' sin ningún modo de control de excepciones especificado, la finalización de la excepción no está garantizada. Especifique /EHsc
-  SDL Game.vcxproj -> C:\Users\Víctor Masó\Documents\GitHub\Sonic-Pinball-Party\SPP\Debug\2D Physics - class 4.exe
-  SDL Game.vcxproj -> C:\Users\Víctor Masó\Documents\GitHub\Sonic-Pinball-Party\SPP\Debug\2D Physics - class 4.pdb (Partial PDB)
+﻿  ModulePlayer.cpp
+c:\users\guillermogs2\documents\github\sonic-pinball-party\spp\moduleplayer.cpp(77): warning C4244: 'argument': conversion from 'float32' to 'int', possible loss of data
+c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.11.25503\include\limits(211): warning C4577: 'noexcept' used with no exception handling mode specified; termination on exception is not guaranteed. Specify /EHsc
+  SDL Game.vcxproj -> C:\Users\guillermogs2\Documents\GitHub\Sonic-Pinball-Party\SPP\Debug\2D Physics - class 4.exe
+  SDL Game.vcxproj -> C:\Users\guillermogs2\Documents\GitHub\Sonic-Pinball-Party\SPP\Debug\2D Physics - class 4.pdb (Partial PDB)

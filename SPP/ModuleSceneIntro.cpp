@@ -28,6 +28,12 @@ bool ModuleSceneIntro::Start()
 	bonus_fx = App->audio->LoadFx("pinball/bonus.wav");
 	pinball_spritesheet = App->textures->Load("pinball/pinball_sonic_spritesheet.png");
 
+	// Animations settings
+	m_icon.PushBack({ 344,1144,60,36 });
+	m_icon.PushBack({ 1826,555,60,36 });
+	m_icon.loop = true;
+	m_icon.speed = 0.06f;
+
 	// ---- Setting up SDL_Rect attributes ----
 
 	rect_bg.h = SCREEN_HEIGHT;
@@ -721,6 +727,9 @@ update_status ModuleSceneIntro::Update()
 
 	// Central piece
 	App->renderer->Blit(pinball_spritesheet, 184, 327, &rect_central_piece, 1.0f);
+
+	//Animations
+	App->renderer->Blit(pinball_spritesheet, 210, 722, &m_icon.GetCurrentFrame(), 1.0f);
 
 	// ----- Ball creation -----
 	//TODO: balls we'll be created at Start() and every time you lose one

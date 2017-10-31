@@ -123,9 +123,10 @@ PhysBody* ModulePhysics::CreateRightFlipper()
 	revoluteJointFlipper.motorSpeed = 0.0;
 	revoluteJointFlipper.enableMotor = true;
 	b2Joint *jointToReturn = world->CreateJoint(&revoluteJointFlipper);
-
+	
 	PhysBody* rbody = new PhysBody();
 	rbody->body = rectangleBody;
+	rbody->joint = jointToReturn;
 	rectangleBody->SetUserData(rbody);
 
 	return rbody;
