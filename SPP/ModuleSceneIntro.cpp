@@ -27,6 +27,8 @@ bool ModuleSceneIntro::Start()
 	bool ret = true;
 	ball_lost = false;
 	blit_tunnel_control = false;
+	inside_start_canon = false;
+	ball_created = false;
 
 	App->renderer->camera.x = App->renderer->camera.y = 0;
 
@@ -44,10 +46,18 @@ bool ModuleSceneIntro::Start()
 	}
 
 	// Animations settings
-	m_icon.PushBack({ 344,1144,60,36 });
-	m_icon.PushBack({ 1826,555,60,36 });
+
+	m_icon.PushBack({ 344, 1144, 60, 36 });
+	m_icon.PushBack({ 1826, 555, 60, 36 });
 	m_icon.loop = true;
 	m_icon.speed = 0.06f;
+
+	start_canon.PushBack({ 575, 1499, 62, 64 });
+	start_canon.PushBack({ 676, 1499, 62, 64 });
+	start_canon.PushBack({ 801, 1499, 62, 64 });
+	start_canon.PushBack({ 575, 1499, 62, 64 });
+	start_canon.loop = false;
+	start_canon.speed = 0.0f;
 
 	// ---- Setting up SDL_Rect attributes ----
 
@@ -627,6 +637,22 @@ bool ModuleSceneIntro::Start()
 
 	sensors.add(App->physics->CreatePolygonSensor(0, 0, 4, exit_vec_center, EXIT_TUNNEL));
 
+	int points_start_canon[8] =
+	{
+		472, 624,
+		505, 623,
+		505, 599,
+		471, 599
+	};
+
+	b2Vec2 start_vec_canon[4];
+
+	for (uint i = 0; i < 8 / 2; ++i)
+	{
+		start_vec_canon[i].Set(PIXEL_TO_METERS(points_start_canon[i * 2 + 0]), PIXEL_TO_METERS(points_start_canon[i * 2 + 1]));
+	}
+
+	sensors.add(App->physics->CreatePolygonSensor(0, 0, 4, start_vec_canon, START_CANON));
 
 	balls.add(App->physics->CreateBall(488, 800, 14));
 	balls.getLast()->data->listener = this;
@@ -695,9 +721,7 @@ update_status ModuleSceneIntro::Update()
 
 	App->renderer->Blit(pinball_spritesheet, 0, 27, &rect_rail, 1.0f);
 
-	//Animations
-	App->renderer->Blit(pinball_spritesheet, 210, 722, &m_icon.GetCurrentFrame(), 1.0f);
-
+	
 	//Tunnels
 	if (blit_tunnel_control)
 	{
@@ -749,6 +773,10 @@ update_status ModuleSceneIntro::Update()
 	// Central piece
 	App->renderer->Blit(pinball_spritesheet, 184, 327, &rect_central_piece, 1.0f);
 
+	//Animations
+	App->renderer->Blit(pinball_spritesheet, 210, 722, &m_icon.GetCurrentFrame(), 1.0f);
+	App->renderer->Blit(pinball_spritesheet, 452, 559, &start_canon.GetCurrentFrame(), 1.0f);
+
 	
 
 	// ----- Ball creation -----
@@ -779,28 +807,49 @@ update_status ModuleSceneIntro::Update()
 
 	// All draw functions ------------------------------------------------------
 
+	if (start_canon.GetCurrentFrame().x == 801 && ball_created == false)
+	{
+		balls.add(App->physics->CreateBall(485, 608, 14));
+		ball_created = true;
 
-	if (ball_lost) 
+		for (p2List_item<PhysBody*>* bc = balls.getFirst(); bc != NULL; bc = bc->next)
+		{
+			int x, y;
+			bc->data->GetPosition(x, y);
+			bc->data->body->ApplyLinearImpulse(b2Vec2(-2.2f, -2.8f), b2Vec2(x, y), true);
+		}
+	}
+
+	if (ball_lost || inside_start_canon && (ball_created == false))
 	{
 		for (p2List_item<PhysBody*>* bc = balls.getFirst(); bc != NULL; bc = bc->next) 
 		{
 			App->physics->world->DestroyBody(bc->data->body);
 		}
 		balls.clear();
-
-		balls_left--;
-
-		if (balls_left > 0) {
-			balls.add(App->physics->CreateBall(488, 800, 14));
-			balls.getLast()->data->listener = this;
-		}
 		
-		ball_lost = false;
+		if (inside_start_canon)
+			inside_start_canon = false;
+
+		if (ball_lost)
+		{
+			balls_left--;
+
+			if (balls_left > 0) {
+				balls.add(App->physics->CreateBall(488, 800, 14));
+				balls.getLast()->data->listener = this;
+			}
+
+			ball_lost = false;
+			ball_created = false;
+		}
 	}
 
 	if (balls_left == 0 && App->fade->FadeIsOver()) {
 		App->fade->FadeToBlack(this, this, 7.0f);
 	}
+
+	
 
 	/*c = boxes.getFirst();
 
@@ -961,6 +1010,41 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 				}
 				break;
 			}
+
+			if (bodyB->physType == START_CANON)
+			{
+				for (p2List_item<PhysBody*>* p_w = pinball_walls.getFirst(); p_w != NULL; p_w = p_w->next)
+				{
+					b2Fixture* fixture = p_w->data->body->GetFixtureList();
+
+					while (fixture != NULL)
+					{
+						b2Filter newFilter;
+						newFilter.groupIndex = groupIndex::BALL;
+						fixture->SetFilterData(newFilter);
+						fixture = fixture->GetNext();
+					}
+				}
+
+				for (p2List_item<PhysBody*>* ball_item = balls.getFirst(); ball_item != NULL; ball_item = ball_item->next)
+				{
+					int x, y;
+					bc->data->GetPosition(x, y);
+					bc->data->body->SetGravityScale(0.0f);
+					bc->data->body->SetLinearVelocity(b2Vec2(0, 0));
+					bc->data->body->SetAngularVelocity(0);
+					
+					inside_start_canon = true;
+
+					//Destroy ball, wait for animation canon and create one with diagonal velocity
+					//Rememeber to add entry and exit sensor to rail
+
+					//App->physics->world->DestroyBody(ball_item->data->body);
+				
+					start_canon.speed = 0.06f;
+				}
+			}
+		
 
 			if (bodyB->physType == DEAD_SENSOR) 
 			{

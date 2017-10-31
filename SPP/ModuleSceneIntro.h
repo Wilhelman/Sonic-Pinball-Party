@@ -54,9 +54,12 @@ public:
 	bool sensed;
 	bool ball_lost;
 	bool blit_tunnel_control;
+	bool inside_start_canon;
+	bool ball_created;
 
 	//Animations
 	Animation m_icon;
+	Animation start_canon;
 
 	//Win_Fail_Conditions
 	uint balls_left;

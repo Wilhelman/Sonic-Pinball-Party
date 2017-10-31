@@ -30,6 +30,7 @@ enum PhysBody_Type {
 	ENTRY_TUNNEL,
 	EXIT_TUNNEL,
 	TRIANGLE,
+	START_CANON,
 
 	NO_DEF_
 };
