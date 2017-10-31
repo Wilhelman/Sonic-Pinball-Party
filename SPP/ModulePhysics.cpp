@@ -198,6 +198,7 @@ PhysBody* ModulePhysics::CreateLeftFlipper()
 
 	PhysBody* rbody = new PhysBody();
 	rbody->body = rectangleBody;
+	rbody->joint = jointToReturn;
 	rectangleBody->SetUserData(rbody);
 
 	return rbody;

@@ -33,6 +33,11 @@ bool ModulePlayer::Start()
 	rect_rFlipper.x = 398;
 	rect_rFlipper.y = 1314;
 
+	rect_lFlipper.h = 20;
+	rect_lFlipper.w = 60;
+	rect_lFlipper.x = 398;
+	rect_lFlipper.y = 1342;
+
 	return true;
 }
 
@@ -66,15 +71,13 @@ update_status ModulePlayer::Update()
 
 	
 
+	// BLITTING FLIPPERS
+	b2Vec2 anchorRVec = right_flipper->joint->GetAnchorB();
+	App->renderer->Blit(flippers_tex, 258, 760 ,&rect_rFlipper, 1.0f, right_flipper->GetRotation(), anchorRVec.x + 48, anchorRVec.y-4);
 
+	b2Vec2 anchorLVec = left_flipper->joint->GetAnchorB();
+	App->renderer->Blit(flippers_tex, 166, 760, &rect_lFlipper, 1.0f, left_flipper->GetRotation(), anchorLVec.x, anchorLVec.y - 4);
 
-	//TODO: postions are not well obtained for some reason
-	/*int right_flipper_x, right_flipper_y;
-	right_flipper->GetPosition(right_flipper_x, right_flipper_y);
-	App->renderer->Blit(flippers_tex, 450, 500, &rect_rFlipper);*/
-
-	b2Vec2 anchorVec = right_flipper->joint->GetAnchorB();
-	App->renderer->Blit(flippers_tex, 258, 760 ,&rect_rFlipper, 1.0f, right_flipper->GetRotation(), anchorVec.x + 48, anchorVec.y-4);
 
 
 	//TODO: control sprite according to ball velocity
