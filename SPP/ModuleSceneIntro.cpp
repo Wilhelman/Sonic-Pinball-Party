@@ -8,6 +8,7 @@
 #include "ModulePhysics.h"
 #include "ModulePlayer.h"
 #include "ModuleFadeToBlack.h"
+#include "ModuleUI.h"
 
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -21,6 +22,7 @@ ModuleSceneIntro::~ModuleSceneIntro()
 bool ModuleSceneIntro::Start()
 {
 	balls_left = 3;
+	App->ui->score = 125645;
 	LOG("Loading Intro assets");
 	bool ret = true;
 	ball_lost = false;
@@ -682,6 +684,9 @@ update_status ModuleSceneIntro::Update()
 
 	App->renderer->Blit(pinball_spritesheet, 0, 27, &rect_rail, 1.0f);
 
+	//Animations
+	App->renderer->Blit(pinball_spritesheet, 210, 722, &m_icon.GetCurrentFrame(), 1.0f);
+
 	//Tunnels
 	if (blit_tunnel_control)
 	{
@@ -733,8 +738,7 @@ update_status ModuleSceneIntro::Update()
 	// Central piece
 	App->renderer->Blit(pinball_spritesheet, 184, 327, &rect_central_piece, 1.0f);
 
-	//Animations
-	App->renderer->Blit(pinball_spritesheet, 210, 722, &m_icon.GetCurrentFrame(), 1.0f);
+	
 
 	// ----- Ball creation -----
 	//TODO: balls we'll be created at Start() and every time you lose one
@@ -773,14 +777,18 @@ update_status ModuleSceneIntro::Update()
 		}
 		balls.clear();
 
-		balls.add(App->physics->CreateBall(488, 800, 14));
-		balls.getLast()->data->listener = this;
-		ball_lost = false;
 		balls_left--;
+
+		if (balls_left > 0) {
+			balls.add(App->physics->CreateBall(488, 800, 14));
+			balls.getLast()->data->listener = this;
+		}
+		
+		ball_lost = false;
 	}
 
 	if (balls_left == 0 && App->fade->FadeIsOver()) {
-		App->fade->FadeToBlack(this, this, 4);
+		App->fade->FadeToBlack(this, this, 5.0f);
 	}
 
 	/*c = boxes.getFirst();

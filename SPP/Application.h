@@ -13,6 +13,7 @@ class ModulePlayer;
 class ModuleSceneIntro;
 class ModulePhysics;
 class ModuleFadeToBlack;
+class ModuleUI;
 
 class Application
 {
@@ -26,6 +27,7 @@ public:
 	ModuleSceneIntro* scene_intro;
 	ModulePhysics* physics;
 	ModuleFadeToBlack* fade;
+	ModuleUI* ui;
 
 private:
 

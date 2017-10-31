@@ -9,6 +9,7 @@
 #include "ModulePhysics.h"
 #include "ModuleSceneIntro.h"
 #include "ModuleFadeToBlack.h"
+#include "ModuleUI.h"
 
 #include "Application.h"
 
@@ -23,6 +24,7 @@ Application::Application()
 	scene_intro = new ModuleSceneIntro(this);
 	physics = new ModulePhysics(this);
 	fade = new ModuleFadeToBlack(this);
+	ui = new ModuleUI(this);
 
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
@@ -44,6 +46,7 @@ Application::Application()
 
 	// Last module is always fade :-)
 	AddModule(fade);
+	AddModule(ui); //EXCEPT THIS TIME
 }
 
 Application::~Application()
