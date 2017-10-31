@@ -21,7 +21,6 @@ public:
 public:
 
 	//PhysBody variables
-
 	p2List<PhysBody*> balls;
 	p2List<PhysBody*> pinball_walls;
 	p2List<PhysBody*> tunnel_walls;
@@ -31,7 +30,6 @@ public:
 	PhysBody* triangle_R;
 
 	//Textures and SDL_Rects
-
 	SDL_Texture* pinball_spritesheet;
 
 	SDL_Rect rect_ball;
@@ -56,4 +54,7 @@ public:
 
 	//Animations
 	Animation m_icon;
+
+	//Win_Fail_Conditions
+	uint balls_left;
 };

@@ -7,6 +7,7 @@
 #include "ModuleAudio.h"
 #include "ModulePhysics.h"
 #include "ModulePlayer.h"
+#include "ModuleFadeToBlack.h"
 
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -19,6 +20,7 @@ ModuleSceneIntro::~ModuleSceneIntro()
 
 bool ModuleSceneIntro::Start()
 {
+	balls_left = 3;
 	LOG("Loading Intro assets");
 	bool ret = true;
 	ball_lost = false;
@@ -613,6 +615,9 @@ bool ModuleSceneIntro::Start()
 	sensors.add(App->physics->CreatePolygonSensor(0, 0, 4, exit_vec_center, EXIT_TUNNEL));
 
 
+	balls.add(App->physics->CreateBall(488, 800, 14));
+	balls.getLast()->data->listener = this;
+
 	return ret;
 }
 
@@ -747,10 +752,6 @@ update_status ModuleSceneIntro::Update()
 	}
 
 	// ----- Blitting ------
-	
-	
-	
-
 
 	// Prepare for raycast ------------------------------------------------------
 	
@@ -775,6 +776,11 @@ update_status ModuleSceneIntro::Update()
 		balls.add(App->physics->CreateBall(488, 800, 14));
 		balls.getLast()->data->listener = this;
 		ball_lost = false;
+		balls_left--;
+	}
+
+	if (balls_left == 0 && App->fade->FadeIsOver()) {
+		App->fade->FadeToBlack(this, this, 4);
 	}
 
 	/*c = boxes.getFirst();
