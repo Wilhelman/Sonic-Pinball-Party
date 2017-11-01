@@ -53,13 +53,8 @@ public:
 	uint start_canon_fx;
 
 	// Controls
-	bool sensed;
-	bool ball_lost;
-	bool blit_tunnel_control;
-	bool inside_start_canon;
-	bool ball_in_rail;
-	bool in_mid_rail;
-	bool ball_created;
+	bool sensed, ball_lost, blit_tunnel_control, inside_start_canon, ball_in_rail;
+	bool in_mid_rail, ball_created;
 
 	//Animations
 	Animation m_icon;

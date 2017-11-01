@@ -13,38 +13,6 @@
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 	pinball_spritesheet = NULL;
-}
-
-ModuleSceneIntro::~ModuleSceneIntro()
-{}
-
-bool ModuleSceneIntro::Start()
-{
-	balls_left = 3;
-	App->ui->score = 0;
-	LOG("Loading Intro assets");
-	bool ret = true;
-	blit_tunnel_control = in_mid_rail = ball_lost = inside_start_canon = ball_created = ball_in_rail = false;
-
-	App->renderer->camera.x = App->renderer->camera.y = 0;
-
-	bonus_fx = App->audio->LoadFx("pinball/bonus.wav"); // TODO : this is not being UNLOAD in Cleanup!
-
-	triangle_fx = App->audio->LoadFx("audio/sound_fx/bouncing_triangle.wav");
-
-	start_canon_fx = App->audio->LoadFx("audio/sound_fx/canon_shot.wav");
-
-	if (!App->audio->PlayMusic("audio/music/Nightmaren.ogg"))
-		ret = false;
-
-	pinball_spritesheet = App->textures->Load("pinball/pinball_sonic_spritesheet.png");
-
-	if (pinball_spritesheet == nullptr) 
-	{
-		LOG("Cannot load the animations spritesheet in SceneIntro");
-		ret = false;
-	}
-
 	// Animations settings
 
 	m_icon.PushBack({ 344, 1144, 60, 36 });
@@ -121,6 +89,39 @@ bool ModuleSceneIntro::Start()
 	right_purple_arrow.PushBack({ 28, 1624, 30, 28 });
 	right_purple_arrow.loop = true;
 	right_purple_arrow.speed = 0.07f;
+}
+
+ModuleSceneIntro::~ModuleSceneIntro()
+{}
+
+bool ModuleSceneIntro::Start()
+{
+	balls_left = 3;
+	App->ui->score = 0;
+	LOG("Loading Intro assets");
+	bool ret = true;
+	blit_tunnel_control = in_mid_rail = ball_lost = inside_start_canon = ball_created = ball_in_rail = false;
+
+	App->renderer->camera.x = App->renderer->camera.y = 0;
+
+	bonus_fx = App->audio->LoadFx("pinball/bonus.wav"); // TODO : this is not being UNLOAD in Cleanup!
+
+	triangle_fx = App->audio->LoadFx("audio/sound_fx/bouncing_triangle.wav");
+
+	start_canon_fx = App->audio->LoadFx("audio/sound_fx/canon_shot.wav");
+
+	if (!App->audio->PlayMusic("audio/music/Nightmaren.ogg"))
+		ret = false;
+
+	pinball_spritesheet = App->textures->Load("pinball/pinball_sonic_spritesheet.png");
+
+	if (pinball_spritesheet == nullptr) 
+	{
+		LOG("Cannot load the animations spritesheet in SceneIntro");
+		ret = false;
+	}
+
+	
 
 	// ---- Setting up SDL_Rect attributes ----
 
@@ -170,6 +171,10 @@ bool ModuleSceneIntro::Start()
 	// ----- Creating sensors for the ball -----
 	setSensors();
 
+	App->player->Enable();
+	//App->player->Start();
+	
+
 	spawnBall();
 
 	return ret;
@@ -179,6 +184,8 @@ bool ModuleSceneIntro::Start()
 bool ModuleSceneIntro::CleanUp()
 {
 	LOG("Unloading Intro scene");
+
+	
 
 	for (p2List_item<PhysBody*>* ball_item = balls.getFirst(); ball_item != NULL; ball_item = ball_item->next)
 	{
@@ -193,6 +200,11 @@ bool ModuleSceneIntro::CleanUp()
 	for (p2List_item<PhysBody*>* tunnel_item = tunnel_walls.getFirst(); tunnel_item != NULL; tunnel_item = tunnel_item->next)
 	{
 		App->physics->world->DestroyBody(tunnel_item->data->body);
+	}
+
+	for (p2List_item<PhysBody*>* sensors_item = sensors.getFirst(); sensors_item != NULL; sensors_item = sensors_item->next)
+	{
+		App->physics->world->DestroyBody(sensors_item->data->body);
 	}
 
 	if (triangle_L != NULL)
@@ -219,6 +231,8 @@ bool ModuleSceneIntro::CleanUp()
 		rail_mini_sensor = NULL;
 	}
 
+	App->player->CleanUp();
+	App->player->Disable();
 	balls.clear();
 	pinball_walls.clear();
 	sensors.clear();
@@ -336,12 +350,6 @@ update_status ModuleSceneIntro::Update()
 
 	// Plunge
 	App->renderer->Blit(pinball_spritesheet, 467, 463, &rect_plunge_struct, 1.0f);
-	
-	/*if (!ball_in_rail) {
-		// Rail piece
-		App->renderer->Blit(pinball_spritesheet, 0, 27, &rect_rail, 1.0f);
-		
-	}*/
 
 	// Central piece
 	App->renderer->Blit(pinball_spritesheet, 184, 327, &rect_central_piece, 1.0f);
@@ -350,8 +358,8 @@ update_status ModuleSceneIntro::Update()
 	App->renderer->Blit(pinball_spritesheet, 171, 162, &rect_cave, 1.0f);
 
 	//Animations
-	App->renderer->Blit(pinball_spritesheet, 452, 559, &start_canon.GetCurrentFrame(), 1.0f);
-
+	//if (!start_canon.Finished())
+		App->renderer->Blit(pinball_spritesheet, 452, 559, &start_canon.GetCurrentFrame(), 1.0f);
 	
 
 	// ----- Ball creation -----
@@ -374,8 +382,14 @@ update_status ModuleSceneIntro::Update()
 
 	// All draw functions ------------------------------------------------------
 
-	if (start_canon.GetCurrentFrame().x == 801 && ball_created == false)
+	if (start_canon.GetCurrentFrame().x == 801 && !ball_created && inside_start_canon)
 	{
+		for (p2List_item<PhysBody*>* bc = balls.getFirst(); bc != NULL; bc = bc->next)
+		{
+			App->physics->world->DestroyBody(bc->data->body);
+		}
+		balls.clear();
+
 		balls.add(App->physics->CreateBall(485, 608, 14));
 		balls.getLast()->data->listener = this;
 		ball_created = true;
@@ -387,29 +401,26 @@ update_status ModuleSceneIntro::Update()
 			bc->data->body->ApplyLinearImpulse(b2Vec2(-2.3f, -2.9f), b2Vec2(x, y), true);
 		}
 		App->audio->PlayFx(start_canon_fx);
+
+		if (inside_start_canon)
+			inside_start_canon = false;
 	}
 
-	if (ball_lost || inside_start_canon && (ball_created == false))
+	if (ball_lost)
 	{
 		for (p2List_item<PhysBody*>* bc = balls.getFirst(); bc != NULL; bc = bc->next) 
 		{
 			App->physics->world->DestroyBody(bc->data->body);
 		}
 		balls.clear();
-		
-		if (inside_start_canon)
-			inside_start_canon = false;
 
-		if (ball_lost)
-		{
-			balls_left--;
+		balls_left--;
 
-			if (balls_left > 0) {
-				spawnBall();
-			}
-
-			ball_lost = false;
+		if (balls_left > 0) {
+			spawnBall();
 		}
+
+		ball_lost = false;
 	}
 
 	//Game is over!
@@ -710,6 +721,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 
 			if (bodyB->physType == START_CANON && !ball_created)
 			{
+				start_canon.Reset();
 				for (p2List_item<PhysBody*>* p_w = pinball_walls.getFirst(); p_w != NULL; p_w = p_w->next)
 				{
 					b2Fixture* fixture = p_w->data->body->GetFixtureList();
@@ -733,8 +745,6 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 				}
 
 				inside_start_canon = true;
-				ball_created = false;
-				start_canon.Reset();
 				start_canon.speed = 0.06f;
 
 				b2Fixture* r_flipper_fixture = App->player->right_flipper->body->GetFixtureList();
@@ -1357,10 +1367,10 @@ void ModuleSceneIntro::setSensors() {
 
 	int points_start_canon[8] =
 	{
-		472, 624,
-		505, 623,
-		505, 599,
-		471, 599
+		472, 594,
+		505, 593,
+		505, 569,
+		471, 569
 	};
 
 	b2Vec2 start_vec_canon[4];

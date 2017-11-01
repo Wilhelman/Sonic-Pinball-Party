@@ -126,6 +126,7 @@ PhysBody* ModulePhysics::CreateRightFlipper()
 	
 	PhysBody* rbody = new PhysBody();
 	rbody->body = rectangleBody;
+	rbody->bodyB = circleToRotateBody;
 	rbody->joint = jointToReturn;
 	rectangleBody->SetUserData(rbody);
 
@@ -198,6 +199,7 @@ PhysBody* ModulePhysics::CreateLeftFlipper()
 
 	PhysBody* rbody = new PhysBody();
 	rbody->body = rectangleBody;
+	rbody->bodyB = circleToRotateBody;
 	rbody->joint = jointToReturn;
 	rectangleBody->SetUserData(rbody);
 
@@ -308,6 +310,7 @@ PhysBody* ModulePhysics::CreatePlunge()
 
 	PhysBody* pbody = new PhysBody();
 	pbody->body = b1;
+	pbody->bodyB = b2;
 	b1->SetUserData(pbody);
 
 	return pbody;

@@ -51,12 +51,14 @@ bool ModulePlayer::CleanUp()
 
 	if (left_flipper != NULL)
 	{
+		App->physics->world->DestroyBody(left_flipper->bodyB);
 		App->physics->world->DestroyBody(left_flipper->body);
 		left_flipper = NULL;
 	}
 	
 	if (right_flipper != NULL)
 	{
+		App->physics->world->DestroyBody(right_flipper->bodyB);
 		App->physics->world->DestroyBody(right_flipper->body);
 		right_flipper = NULL;
 	}
@@ -64,6 +66,7 @@ bool ModulePlayer::CleanUp()
 	if (plunge != NULL)
 	{
 		App->physics->world->DestroyBody(plunge->body);
+		App->physics->world->DestroyBody(plunge->bodyB);
 		plunge = NULL;
 	}
 

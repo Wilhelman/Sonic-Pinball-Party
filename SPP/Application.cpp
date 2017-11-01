@@ -43,6 +43,7 @@ Application::Application()
 	
 	// Player
 	AddModule(player);
+	player->Disable();
 
 	// Last module is always fade :-)
 	AddModule(fade);
@@ -79,7 +80,7 @@ bool Application::Init()
 
 	while(item != NULL && ret == true)
 	{
-		if(item->data->IsEnabled())
+		if(item->data->IsEnabled() && item->data != player)
 			ret = item->data->Start();
 		item = item->next;
 	}
