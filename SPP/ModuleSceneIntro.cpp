@@ -867,11 +867,11 @@ update_status ModuleSceneIntro::Update()
 			}
 
 			ball_lost = false;
-			ball_created = false;
 		}
 	}
 
-	if (balls_left == 0 && App->fade->FadeIsOver()) {
+	if (balls_left == 0 && App->fade->FadeIsOver()) 
+	{
 		App->fade->FadeToBlack(this, this, 7.0f);
 	}
 
@@ -937,6 +937,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 
 			if (bodyB->physType == ENTRY_RAIL)
 			{
+
 				b2Fixture* r_flipper_fixture = App->player->right_flipper->body->GetFixtureList();
 
 				while (r_flipper_fixture != NULL)
@@ -1097,10 +1098,12 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 					bc->data->body->SetGravityScale(0.0f);
 					bc->data->body->SetLinearVelocity(b2Vec2(0, 0));
 					bc->data->body->SetAngularVelocity(0);
-					
-					inside_start_canon = true;
-					start_canon.speed = 0.06f;
 				}
+
+				inside_start_canon = true;
+				ball_created = false;
+				start_canon.Reset();
+				start_canon.speed = 0.06f;
 
 				b2Fixture* r_flipper_fixture = App->player->right_flipper->body->GetFixtureList();
 
