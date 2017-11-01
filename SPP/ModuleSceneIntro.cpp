@@ -1509,6 +1509,55 @@ void ModuleSceneIntro::setWalls() {
 	};
 
 	rail_mini_sensor = App->physics->CreateChain(0, 0, points_mini_rail, 8, groupIndex::BALL, 0.01f, EXIT_RAIL);
+
+	int left_U_top_points[36] = 
+	{
+		70, 190,
+		72, 176,
+		78, 166,
+		87, 152,
+		100, 142,
+		109, 135,
+		127, 127,
+		141, 125,
+		142, 121,
+		140, 118,
+		125, 118,
+		104, 126,
+		87, 140,
+		74, 156,
+		67, 168,
+		63, 182,
+		62, 190,
+		64, 193
+	};
+
+	pinball_walls.add(App->physics->CreateChain(0, 0, left_U_top_points, 36, groupIndex::RIGID_PINBALL, 0.01f, NO_DEF_));
+
+	int right_U_top_points[38] =
+	{
+		182, 127,
+		203, 131,
+		219, 137,
+		233, 152,
+		239, 166,
+		242, 184,
+		243, 191,
+		246, 192,
+		250, 189,
+		250, 174,
+		244, 158,
+		237, 144,
+		226, 133,
+		216, 126,
+		204, 122,
+		192, 119,
+		181, 118,
+		176, 120,
+		176, 124
+	};
+
+	pinball_walls.add(App->physics->CreateChain(0, 0, right_U_top_points, 38, groupIndex::RIGID_PINBALL, 0.01f, NO_DEF_));
 }
 
 void ModuleSceneIntro::setSensors() {
