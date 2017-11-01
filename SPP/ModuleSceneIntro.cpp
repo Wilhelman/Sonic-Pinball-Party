@@ -192,6 +192,13 @@ ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Modul
 	orange_bar.PushBack({ 555, 1710, 62, 62 });
 	orange_bar.loop = true;
 	orange_bar.speed = 0.05f;
+
+	ball_anim.PushBack({ 0, 1418, 28, 28 });
+	ball_anim.PushBack({ 38, 1418, 28, 28 });
+	ball_anim.PushBack({ 76, 1418, 28, 28 });
+	ball_anim.PushBack({ 114, 1418, 28, 28 });
+	ball_anim.loop = true;
+	ball_anim.speed = 0.0f;
 }
 
 ModuleSceneIntro::~ModuleSceneIntro()
@@ -245,11 +252,6 @@ bool ModuleSceneIntro::Start()
 	rect_bg.w = SCREEN_WIDTH;
 	rect_bg.x = 0;
 	rect_bg.y = 0;
-
-	rect_ball.h = 28;
-	rect_ball.w = 28;
-	rect_ball.x = 0;
-	rect_ball.y = 1418;
 
 	rect_tunnel.h = 428;
 	rect_tunnel.w = 512;
@@ -398,10 +400,11 @@ update_status ModuleSceneIntro::Update()
 			ball_item->data->GetPosition(x, y);
 
 			//TODO: control sprite according to ball velocity
-			float vel = ball_item->data->body->GetAngularVelocity();
+			float vel = ball_item->data->body->GetLinearVelocity().Length();
+			ball_anim.speed = vel / 15;
 
-			App->renderer->Blit(pinball_spritesheet, x, y, &rect_ball, 1.0f);
-
+			App->renderer->Blit(pinball_spritesheet, x, y, &ball_anim.GetCurrentFrame(), 1.0f);
+			
 			ball_item = ball_item->next;
 		}
 		App->renderer->Blit(pinball_spritesheet, 0, 347, &rect_piece_rail, 1.0f);
@@ -417,9 +420,10 @@ update_status ModuleSceneIntro::Update()
 				ball_item->data->GetPosition(x, y);
 
 				//TODO: control sprite according to ball velocity
-				float vel = ball_item->data->body->GetAngularVelocity();
+				float vel = ball_item->data->body->GetLinearVelocity().Length();
+				ball_anim.speed = vel / 15;
 
-				App->renderer->Blit(pinball_spritesheet, x, y, &rect_ball, 1.0f);
+				App->renderer->Blit(pinball_spritesheet, x, y, &ball_anim.GetCurrentFrame(), 1.0f);
 
 				ball_item = ball_item->next;
 			}
@@ -438,9 +442,10 @@ update_status ModuleSceneIntro::Update()
 				ball_item->data->GetPosition(x, y);
 
 				//TODO: control sprite according to ball velocity
-				float vel = ball_item->data->body->GetAngularVelocity();
+				float vel = ball_item->data->body->GetLinearVelocity().Length();
+				ball_anim.speed = vel / 15;
 
-				App->renderer->Blit(pinball_spritesheet, x, y, &rect_ball, 1.0f);
+				App->renderer->Blit(pinball_spritesheet, x, y, &ball_anim.GetCurrentFrame(), 1.0f);
 
 				ball_item = ball_item->next;
 			}
@@ -454,9 +459,10 @@ update_status ModuleSceneIntro::Update()
 				ball_item->data->GetPosition(x, y);
 
 				//TODO: control sprite according to ball velocity
-				float vel = ball_item->data->body->GetAngularVelocity();
+				float vel = ball_item->data->body->GetLinearVelocity().Length();
+				ball_anim.speed = vel / 15;
 
-				App->renderer->Blit(pinball_spritesheet, x, y, &rect_ball, 1.0f);
+				App->renderer->Blit(pinball_spritesheet, x, y, &ball_anim.GetCurrentFrame(), 1.0f);
 
 				ball_item = ball_item->next;
 			}
