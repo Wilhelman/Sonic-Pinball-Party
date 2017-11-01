@@ -98,6 +98,18 @@ bool ModuleSceneIntro::Start()
 {
 	balls_left = 3;
 	App->ui->score = 0;
+
+	if (!App->audio->IsEnabled()) {
+		App->audio->Enable();
+		App->audio->Init();
+	}
+
+	if (!App->textures->IsEnabled()) {
+		App->textures->Enable();
+		App->textures->Init();
+	}
+		
+
 	LOG("Loading Intro assets");
 	bool ret = true;
 	blit_tunnel_control = in_mid_rail = ball_lost = inside_start_canon = ball_created = ball_in_rail = false;
@@ -120,8 +132,6 @@ bool ModuleSceneIntro::Start()
 		LOG("Cannot load the animations spritesheet in SceneIntro");
 		ret = false;
 	}
-
-	
 
 	// ---- Setting up SDL_Rect attributes ----
 
@@ -172,7 +182,6 @@ bool ModuleSceneIntro::Start()
 	setSensors();
 
 	App->player->Enable();
-	//App->player->Start();
 	
 
 	spawnBall();
@@ -230,9 +239,14 @@ bool ModuleSceneIntro::CleanUp()
 		App->physics->world->DestroyBody(rail_mini_sensor->body);
 		rail_mini_sensor = NULL;
 	}
+	
 
 	App->player->CleanUp();
 	App->player->Disable();
+	App->audio->CleanUp();
+	App->audio->Disable();
+	App->textures->CleanUp();
+	App->textures->Disable();
 	balls.clear();
 	pinball_walls.clear();
 	sensors.clear();
