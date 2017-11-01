@@ -52,7 +52,7 @@ bool ModuleSceneIntro::Start()
 	m_icon.PushBack({ 344, 1144, 60, 36 });
 	m_icon.PushBack({ 1826, 555, 60, 36 });
 	m_icon.loop = true;
-	m_icon.speed = 0.06f;
+	m_icon.speed = 0.07f;
 
 	start_canon.PushBack({ 575, 1499, 62, 64 });
 	start_canon.PushBack({ 676, 1499, 62, 64 });
@@ -70,6 +70,59 @@ bool ModuleSceneIntro::Start()
 	triangle_R_anim.PushBack({ 630, 1100, 42, 80 });
 	triangle_R_anim.loop = true;
 	triangle_R_anim.speed = 0.1f;
+
+	blue_arrow_cave.PushBack({ 163, 1475, 46, 38 });
+	blue_arrow_cave.PushBack({ 163, 1517, 46, 38 });
+	blue_arrow_cave.loop = true;
+	blue_arrow_cave.speed = 0.07f;
+
+	three_red_arrows.PushBack({ 243, 1529, 70, 24 });
+	three_red_arrows.PushBack({ 243, 1555, 70, 24 });
+	three_red_arrows.loop = true;
+	three_red_arrows.speed = 0.07f;
+
+	blue_arrow_top_right.PushBack({ 350, 1456, 18, 24 });
+	blue_arrow_top_right.PushBack({ 350, 1485, 18, 24 });
+	blue_arrow_top_right.loop = true;
+	blue_arrow_top_right.speed = 0.07f;
+
+	yellow_arrow_1.PushBack({ 348, 1590, 24, 36 });
+	yellow_arrow_1.PushBack({ 348, 1630, 24, 36 });
+	yellow_arrow_1.PushBack({ 348, 1630, 24, 36 });
+	yellow_arrow_1.PushBack({ 348, 1630, 24, 36 });
+	yellow_arrow_1.loop = true;
+	yellow_arrow_1.speed = 0.07f;
+
+	yellow_arrow_2.PushBack({ 348, 1630, 24, 36 });
+	yellow_arrow_2.PushBack({ 348, 1590, 24, 36 });
+	yellow_arrow_2.PushBack({ 348, 1630, 24, 36 });
+	yellow_arrow_2.PushBack({ 348, 1630, 24, 36 });
+	yellow_arrow_2.loop = true;
+	yellow_arrow_2.speed = 0.07f;
+
+	yellow_arrow_3.PushBack({ 348, 1630, 24, 36 });
+	yellow_arrow_3.PushBack({ 348, 1630, 24, 36 });
+	yellow_arrow_3.PushBack({ 348, 1590, 24, 36 });
+	yellow_arrow_3.PushBack({ 348, 1630, 24, 36 });
+	yellow_arrow_3.loop = true;
+	yellow_arrow_3.speed = 0.07f;
+
+	yellow_arrow_4.PushBack({ 348, 1630, 24, 36 });
+	yellow_arrow_4.PushBack({ 348, 1630, 24, 36 });
+	yellow_arrow_4.PushBack({ 348, 1630, 24, 36 });
+	yellow_arrow_4.PushBack({ 348, 1590, 24, 36 });
+	yellow_arrow_4.loop = true;
+	yellow_arrow_4.speed = 0.07f;
+
+	left_purple_arrow.PushBack({ 28, 1676, 30, 28 });
+	left_purple_arrow.PushBack({ 28, 1624, 30, 28 });
+	left_purple_arrow.loop = true;
+	left_purple_arrow.speed = 0.07f;
+
+	right_purple_arrow.PushBack({ 382, 1676, 30, 28 });
+	right_purple_arrow.PushBack({ 28, 1624, 30, 28 });
+	right_purple_arrow.loop = true;
+	right_purple_arrow.speed = 0.07f;
 
 	// ---- Setting up SDL_Rect attributes ----
 
@@ -187,6 +240,18 @@ update_status ModuleSceneIntro::Update()
 	// Bouncing triangles
 	App->renderer->Blit(pinball_spritesheet, 113, 621, &triangle_L_anim.GetCurrentFrame(), 1.0f);
 	App->renderer->Blit(pinball_spritesheet, 325, 621, &triangle_R_anim.GetCurrentFrame(), 1.0f);
+
+	// Arrows
+	App->renderer->Blit(pinball_spritesheet, 191, 227, &blue_arrow_cave.GetCurrentFrame(), 1.0f);
+	App->renderer->Blit(pinball_spritesheet, 271, 280, &three_red_arrows.GetCurrentFrame(), 1.0f);
+	App->renderer->Blit(pinball_spritesheet, 378, 208, &blue_arrow_top_right.GetCurrentFrame(), 1.0f);
+	App->renderer->Blit(pinball_spritesheet, 376, 342, &yellow_arrow_1.GetCurrentFrame(), 1.0f);
+	App->renderer->Blit(pinball_spritesheet, 392, 306, &yellow_arrow_2.GetCurrentFrame(), 1.0f);
+	App->renderer->Blit(pinball_spritesheet, 408, 270, &yellow_arrow_3.GetCurrentFrame(), 1.0f);
+	App->renderer->Blit(pinball_spritesheet, 424, 234, &yellow_arrow_4.GetCurrentFrame(), 1.0f);
+	App->renderer->Blit(pinball_spritesheet, 56, 428, &left_purple_arrow.GetCurrentFrame(), 1.0f);
+	App->renderer->Blit(pinball_spritesheet, 410, 428, &right_purple_arrow.GetCurrentFrame(), 1.0f);
+	App->renderer->Blit(pinball_spritesheet, 210, 722, &m_icon.GetCurrentFrame(), 1.0f);
 	
 	//Tunnels
 	if (blit_tunnel_control)//in tunnel
@@ -271,10 +336,6 @@ update_status ModuleSceneIntro::Update()
 			
 	}
 
-	if (!ball_in_rail) {
-		
-	}
-
 	// Plunge
 	App->renderer->Blit(pinball_spritesheet, 467, 463, &rect_plunge_struct, 1.0f);
 	
@@ -291,7 +352,6 @@ update_status ModuleSceneIntro::Update()
 	App->renderer->Blit(pinball_spritesheet, 171, 162, &rect_cave, 1.0f);
 
 	//Animations
-	App->renderer->Blit(pinball_spritesheet, 210, 722, &m_icon.GetCurrentFrame(), 1.0f);
 	App->renderer->Blit(pinball_spritesheet, 452, 559, &start_canon.GetCurrentFrame(), 1.0f);
 
 	
@@ -721,6 +781,26 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 void ModuleSceneIntro::setWalls() {
 	// Bouncing triangles
 
+	int points_triangle_R_sensor[8] =
+	{
+		359, 629,
+		331, 689,
+		340, 688,
+		362, 640
+	};
+
+	triangle_R = App->physics->CreateChain(0, 0, points_triangle_R_sensor, 8, groupIndex::RIGID_PINBALL, 1.5f, TRIANGLE);
+
+	int points_triangle_L_sensor[8] =
+	{
+		121, 628,
+		148, 687,
+		140, 684,
+		119, 639
+	};
+
+	triangle_L = App->physics->CreateChain(0, 0, points_triangle_L_sensor, 8, groupIndex::RIGID_PINBALL, 1.5f, TRIANGLE);
+
 	int points_triangle_L[14] =
 	{
 		114, 679,
@@ -732,7 +812,7 @@ void ModuleSceneIntro::setWalls() {
 		116, 681
 	};
 
-	triangle_L = App->physics->CreateChain(0, 0, points_triangle_L, 14, groupIndex::RIGID_PINBALL, 1.0f, TRIANGLE);
+	pinball_walls.add(App->physics->CreateChain(0, 0, points_triangle_L, 14, groupIndex::RIGID_PINBALL, 0.1f, NO_DEF_));
 
 	int points_triangle_R[14] =
 	{
@@ -745,7 +825,7 @@ void ModuleSceneIntro::setWalls() {
 		362, 624
 	};
 
-	triangle_R = App->physics->CreateChain(0, 0, points_triangle_R, 14, groupIndex::RIGID_PINBALL, 1.0f, TRIANGLE);
+	pinball_walls.add(App->physics->CreateChain(0, 0, points_triangle_R, 14, groupIndex::RIGID_PINBALL, 0.1f, NO_DEF_));
 
 
 	// Static walls
@@ -1359,6 +1439,29 @@ void ModuleSceneIntro::setSensors() {
 	}
 
 	sensors.add(App->physics->CreatePolygonSensor(0, 0, 4, mid_vec_rail, MID_RAIL));
+
+
+	int left_points_side_exit[8] =
+	{
+		420, 750,
+		420, 767,
+		447, 768,
+		446, 752
+	};
+
+	b2Vec2 exit_vec_left_canon[4];
+
+	for (uint i = 0; i < 8 / 2; ++i)
+	{
+		exit_vec_left_canon[i].Set(PIXEL_TO_METERS(left_points_side_exit[i * 2 + 0]), PIXEL_TO_METERS(left_points_side_exit[i * 2 + 1]));
+	}
+	sensors.add(App->physics->CreatePolygonSensor(0, 0, 4, exit_vec_left_canon, EXIT_CANON));
+
+	sensors.add(App->physics->CreatePolygonSensor(0, 0, 4, exit_vec_left_canon, EXIT_CANON));
+	sensors.add(App->physics->CreatePolygonSensor(0, 0, 4, exit_vec_left_canon, EXIT_CANON));
+	sensors.add(App->physics->CreatePolygonSensor(0, 0, 4, exit_vec_left_canon, EXIT_CANON));
+
+
 
 }
 

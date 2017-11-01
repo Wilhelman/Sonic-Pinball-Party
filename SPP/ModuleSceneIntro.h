@@ -68,6 +68,15 @@ public:
 	Animation start_canon;
 	Animation triangle_R_anim;
 	Animation triangle_L_anim;
+	Animation blue_arrow_cave;
+	Animation blue_arrow_top_right;
+	Animation three_red_arrows;
+	Animation yellow_arrow_1;
+	Animation yellow_arrow_2;
+	Animation yellow_arrow_3;
+	Animation yellow_arrow_4;
+	Animation left_purple_arrow;
+	Animation right_purple_arrow;
 
 	//Win_Fail_Conditions
 	uint balls_left;
