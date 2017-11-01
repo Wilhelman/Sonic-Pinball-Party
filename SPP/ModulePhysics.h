@@ -35,6 +35,9 @@ enum PhysBody_Type {
 	ENTRY_RAIL,
 	MID_RAIL,
 	EXIT_RAIL,
+	ENTRY_SIDE_CANON_L,
+	ENTRY_SIDE_CANON_R,
+
 
 	NO_DEF_
 };

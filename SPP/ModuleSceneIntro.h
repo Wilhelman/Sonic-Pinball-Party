@@ -54,7 +54,7 @@ public:
 
 	// Controls
 	bool sensed, ball_lost, blit_tunnel_control, inside_start_canon, ball_in_rail;
-	bool in_mid_rail, ball_created;
+	bool in_mid_rail, ball_created, inside_side_canon, canon_R_done, canon_L_done;
 
 	//Animations
 	Animation m_icon;
@@ -70,6 +70,8 @@ public:
 	Animation yellow_arrow_4;
 	Animation left_purple_arrow;
 	Animation right_purple_arrow;
+	Animation side_canon_L;
+	Animation side_canon_R;
 
 	//Win_Fail_Conditions
 	uint balls_left;
