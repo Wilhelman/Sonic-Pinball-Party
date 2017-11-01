@@ -174,7 +174,6 @@ bool ModuleSceneIntro::CleanUp()
 // Update: draw background
 update_status ModuleSceneIntro::Update()
 {
-
 	//Blitting 
 
 	//BG
@@ -183,18 +182,12 @@ update_status ModuleSceneIntro::Update()
 	// Bouncing triangles
 	App->renderer->Blit(pinball_spritesheet, 113, 621, &triangle_L_anim.GetCurrentFrame(), 1.0f);
 	App->renderer->Blit(pinball_spritesheet, 325, 621, &triangle_R_anim.GetCurrentFrame(), 1.0f);
-
-	if (ball_in_rail) {
-	}
 	
 	//Tunnels
 	if (blit_tunnel_control)//in tunnel
 	{
+		App->renderer->Blit(pinball_spritesheet, 0, 27, &rect_rail, 1.0f);
 		App->renderer->Blit(pinball_spritesheet, 0, 0, &rect_tunnel, 1.0f);
-		if (ball_in_rail) {
-			App->renderer->Blit(pinball_spritesheet, 0, 347, &rect_piece_rail, 1.0f);
-		}
-			
 
 		p2List_item<PhysBody*>* ball_item = balls.getFirst();
 
@@ -210,8 +203,7 @@ update_status ModuleSceneIntro::Update()
 
 			ball_item = ball_item->next;
 		}
-		if (!ball_in_rail)
-			App->renderer->Blit(pinball_spritesheet, 0, 347, &rect_piece_rail, 1.0f);
+		App->renderer->Blit(pinball_spritesheet, 0, 347, &rect_piece_rail, 1.0f);
 	}
 	else //not in tunnel
 	{
