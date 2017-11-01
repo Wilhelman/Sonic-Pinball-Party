@@ -18,6 +18,11 @@ public:
 	bool CleanUp();
 	void OnCollision(PhysBody* bodyA, PhysBody* bodyB);
 
+	//Main functionals calls
+	void spawnBall();
+	void setWalls();
+	void setSensors();
+
 public:
 
 	//PhysBody variables
@@ -48,9 +53,6 @@ public:
 	uint start_canon_fx;
 	uint flipper_hit_fx;
 
-	p2Point<int> ray;
-
-	bool ray_on;
 	bool sensed;
 	bool ball_lost;
 	bool blit_tunnel_control;
