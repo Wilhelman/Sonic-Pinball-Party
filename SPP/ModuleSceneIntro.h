@@ -45,6 +45,7 @@ public:
 	SDL_Rect rect_rail;
 	SDL_Rect rect_piece_rail;
 	SDL_Rect rect_central_piece;
+	SDL_Rect rect_cave;
 	
 	// Controls and other stuff
 

@@ -108,6 +108,11 @@ bool ModuleSceneIntro::Start()
 	rect_central_piece.x = 872;
 	rect_central_piece.y = 1348;
 
+	rect_cave.x = 949;
+	rect_cave.y = 1137;
+	rect_cave.w = 84;
+	rect_cave.h = 44;
+
 	// ------- Setting up wall chains -------
 	setWalls();
 
@@ -281,6 +286,9 @@ update_status ModuleSceneIntro::Update()
 
 	// Central piece
 	App->renderer->Blit(pinball_spritesheet, 184, 327, &rect_central_piece, 1.0f);
+
+	// Cave
+	App->renderer->Blit(pinball_spritesheet, 171, 162, &rect_cave, 1.0f);
 
 	//Animations
 	App->renderer->Blit(pinball_spritesheet, 210, 722, &m_icon.GetCurrentFrame(), 1.0f);
