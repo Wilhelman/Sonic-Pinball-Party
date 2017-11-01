@@ -370,8 +370,12 @@ update_status ModuleSceneIntro::Update()
 {
 	//Blitting 
 
+
+
 	//BG
 	App->renderer->Blit(pinball_spritesheet, 0, 0, &rect_bg, 1.0f);
+
+
 	
 	// Bouncing triangles
 	App->renderer->Blit(pinball_spritesheet, 113, 621, &triangle_L_anim.GetCurrentFrame(), 1.0f);
@@ -388,6 +392,20 @@ update_status ModuleSceneIntro::Update()
 	App->renderer->Blit(pinball_spritesheet, 56, 428, &left_purple_arrow.GetCurrentFrame(), 1.0f);
 	App->renderer->Blit(pinball_spritesheet, 410, 428, &right_purple_arrow.GetCurrentFrame(), 1.0f);
 	App->renderer->Blit(pinball_spritesheet, 210, 722, &m_icon.GetCurrentFrame(), 1.0f);
+
+	// Map Letters
+	App->renderer->Blit(pinball_spritesheet, 68, 480, &map_M.GetCurrentFrame(), 1.0f);
+	App->renderer->Blit(pinball_spritesheet, 68, 512, &map_A.GetCurrentFrame(), 1.0f);
+	App->renderer->Blit(pinball_spritesheet, 68, 544, &map_P.GetCurrentFrame(), 1.0f);
+
+	// Chip letters
+	App->renderer->Blit(pinball_spritesheet, 28, 210, &chip_C.GetCurrentFrame(), 1.0f);
+	App->renderer->Blit(pinball_spritesheet, 34, 246, &chip_H.GetCurrentFrame(), 1.0f);
+	App->renderer->Blit(pinball_spritesheet, 46, 280, &chip_I.GetCurrentFrame(), 1.0f);
+	App->renderer->Blit(pinball_spritesheet, 60, 312, &chip_P.GetCurrentFrame(), 1.0f);
+
+	//Orange bar
+	App->renderer->Blit(pinball_spritesheet, 410, 450, &orange_bar.GetCurrentFrame(), 1.0f);
 	
 	//Tunnels
 	if (blit_tunnel_control)//in tunnel
@@ -480,20 +498,6 @@ update_status ModuleSceneIntro::Update()
 
 	// Cave
 	App->renderer->Blit(pinball_spritesheet, 171, 162, &rect_cave, 1.0f);
-
-	// Map Letters
-	App->renderer->Blit(pinball_spritesheet, 68, 480, &map_M.GetCurrentFrame(), 1.0f);
-	App->renderer->Blit(pinball_spritesheet, 68, 512, &map_A.GetCurrentFrame(), 1.0f);
-	App->renderer->Blit(pinball_spritesheet, 68, 544, &map_P.GetCurrentFrame(), 1.0f);
-
-	// Chip letters
-	App->renderer->Blit(pinball_spritesheet, 28, 210, &chip_C.GetCurrentFrame(), 1.0f);
-	App->renderer->Blit(pinball_spritesheet, 34, 246, &chip_H.GetCurrentFrame(), 1.0f);
-	App->renderer->Blit(pinball_spritesheet, 46, 280, &chip_I.GetCurrentFrame(), 1.0f);
-	App->renderer->Blit(pinball_spritesheet, 60, 312, &chip_P.GetCurrentFrame(), 1.0f);
-
-	//Orange bar
-	App->renderer->Blit(pinball_spritesheet, 410, 450, &orange_bar.GetCurrentFrame(), 1.0f);
 
 	//Cannons
 	App->renderer->Blit(pinball_spritesheet, 452, 559, &start_canon.GetCurrentFrame(), 1.0f);
