@@ -36,11 +36,17 @@ bool ModuleSceneIntro::Start()
 
 	triangle_fx = App->audio->LoadFx("audio/sound_fx/bouncing_triangle.wav");
 
+	start_canon_fx = App->audio->LoadFx("audio/sound_fx/canon_shot.wav");
+
+	flipper_hit_fx = App->audio->LoadFx("audio/sound_fx/flipper_hit.wav");
+
 	if (!App->audio->PlayMusic("audio/music/Nightmaren.ogg"))
 		ret = false;
 
 	pinball_spritesheet = App->textures->Load("pinball/pinball_sonic_spritesheet.png");
-	if (pinball_spritesheet == nullptr) {
+
+	if (pinball_spritesheet == nullptr) 
+	{
 		LOG("Cannot load the animations spritesheet in SceneIntro");
 		ret = false;
 	}
@@ -59,6 +65,16 @@ bool ModuleSceneIntro::Start()
 	start_canon.loop = false;
 	start_canon.speed = 0.0f;
 
+	triangle_L_anim.PushBack({ 474, 1100, 42, 80 });
+	triangle_L_anim.PushBack({ 526, 1100, 42, 80 });
+	triangle_L_anim.loop = true;
+	triangle_L_anim.speed = 0.1f;
+
+	triangle_R_anim.PushBack({ 578, 1100, 42, 80 });
+	triangle_R_anim.PushBack({ 630, 1100, 42, 80 });
+	triangle_R_anim.loop = true;
+	triangle_R_anim.speed = 0.1f;
+
 	// ---- Setting up SDL_Rect attributes ----
 
 	rect_bg.h = SCREEN_HEIGHT;
@@ -70,16 +86,6 @@ bool ModuleSceneIntro::Start()
 	rect_ball.w = 28;
 	rect_ball.x = 0;
 	rect_ball.y = 1418;
-
-	rect_triangle_R.h = 80;
-	rect_triangle_R.w = 42;
-	rect_triangle_R.x = 578;
-	rect_triangle_R.y = 1100;
-
-	rect_triangle_L.h = 80;
-	rect_triangle_L.w = 42;
-	rect_triangle_L.x = 474;
-	rect_triangle_L.y = 1100;
 
 	rect_tunnel.h = 428;
 	rect_tunnel.w = 512;
@@ -654,6 +660,25 @@ bool ModuleSceneIntro::Start()
 
 	sensors.add(App->physics->CreatePolygonSensor(0, 0, 4, start_vec_canon, START_CANON));
 
+
+
+	int points_entry_rail_1[8] = {
+		142, 252,
+		124, 269,
+		136, 282,
+		154, 264
+	};
+
+	b2Vec2 entry_vec_rail[4];
+
+	for (uint i = 0; i < 8 / 2; ++i)
+	{
+		entry_vec_rail[i].Set(PIXEL_TO_METERS(points_entry_rail_1[i * 2 + 0]), PIXEL_TO_METERS(points_entry_rail_1[i * 2 + 1]));
+	}
+
+	sensors.add(App->physics->CreatePolygonSensor(0, 0, 4, entry_vec_rail, ENTRY_RAIL));
+
+
 	balls.add(App->physics->CreateBall(488, 800, 14));
 	balls.getLast()->data->listener = this;
 
@@ -716,8 +741,8 @@ update_status ModuleSceneIntro::Update()
 	App->renderer->Blit(pinball_spritesheet, 0, 0, &rect_bg, 1.0f);
 	
 	// Bouncing triangles
-	App->renderer->Blit(pinball_spritesheet, 113, 621, &rect_triangle_L, 1.0f);
-	App->renderer->Blit(pinball_spritesheet, 325, 621, &rect_triangle_R, 1.0f);
+	App->renderer->Blit(pinball_spritesheet, 113, 621, &triangle_L_anim.GetCurrentFrame(), 1.0f);
+	App->renderer->Blit(pinball_spritesheet, 325, 621, &triangle_R_anim.GetCurrentFrame(), 1.0f);
 
 	App->renderer->Blit(pinball_spritesheet, 0, 27, &rect_rail, 1.0f);
 
@@ -818,6 +843,7 @@ update_status ModuleSceneIntro::Update()
 			bc->data->GetPosition(x, y);
 			bc->data->body->ApplyLinearImpulse(b2Vec2(-2.2f, -2.8f), b2Vec2(x, y), true);
 		}
+		App->audio->PlayFx(start_canon_fx);
 	}
 
 	if (ball_lost || inside_start_canon && (ball_created == false))
@@ -908,6 +934,44 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 				App->ui->score += 200;
 				App->audio->PlayFx(triangle_fx);
 			}
+
+			if (bodyB->physType == ENTRY_RAIL)
+			{
+				b2Fixture* r_flipper_fixture = App->player->right_flipper->body->GetFixtureList();
+
+				while (r_flipper_fixture != NULL)
+				{
+					b2Filter newFilter;
+					newFilter.groupIndex = groupIndex::RIGID_PINBALL;
+					r_flipper_fixture->SetFilterData(newFilter);
+					r_flipper_fixture = r_flipper_fixture->GetNext();
+				}
+
+				b2Fixture* l_flipper_fixture = App->player->left_flipper->body->GetFixtureList();
+
+				while (l_flipper_fixture != NULL)
+				{
+					b2Filter newFilter;
+					newFilter.groupIndex = groupIndex::RIGID_PINBALL;
+					l_flipper_fixture->SetFilterData(newFilter);
+					l_flipper_fixture = l_flipper_fixture->GetNext();
+				}
+
+				for (p2List_item<PhysBody*>* p_w = pinball_walls.getFirst(); p_w != NULL; p_w = p_w->next)
+				{
+					b2Fixture* fixture = p_w->data->body->GetFixtureList();
+
+					while (fixture != NULL)
+					{
+						b2Filter newFilter;
+						newFilter.groupIndex = groupIndex::RIGID_PINBALL;
+						fixture->SetFilterData(newFilter);
+						fixture = fixture->GetNext();
+					}
+				}
+				break;
+			}
+
 
 			if (bodyB->physType == ENTRY_TUNNEL)
 			{
@@ -1035,14 +1099,29 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 					bc->data->body->SetAngularVelocity(0);
 					
 					inside_start_canon = true;
-
-					//Destroy ball, wait for animation canon and create one with diagonal velocity
-					//Rememeber to add entry and exit sensor to rail
-
-					//App->physics->world->DestroyBody(ball_item->data->body);
-				
 					start_canon.speed = 0.06f;
 				}
+
+				b2Fixture* r_flipper_fixture = App->player->right_flipper->body->GetFixtureList();
+
+				while (r_flipper_fixture != NULL)
+				{
+					b2Filter newFilter;
+					newFilter.groupIndex = groupIndex::BALL;
+					r_flipper_fixture->SetFilterData(newFilter);
+					r_flipper_fixture = r_flipper_fixture->GetNext();
+				}
+
+				b2Fixture* l_flipper_fixture = App->player->left_flipper->body->GetFixtureList();
+
+				while (l_flipper_fixture != NULL)
+				{
+					b2Filter newFilter;
+					newFilter.groupIndex = groupIndex::BALL;
+					l_flipper_fixture->SetFilterData(newFilter);
+					l_flipper_fixture = l_flipper_fixture->GetNext();
+				}
+				break;
 			}
 		
 

@@ -34,8 +34,6 @@ public:
 
 	SDL_Rect rect_ball;
 	SDL_Rect rect_bg;
-	SDL_Rect rect_triangle_R;
-	SDL_Rect rect_triangle_L;
 	SDL_Rect rect_tunnel;
 	SDL_Rect rect_plunge_struct;
 	SDL_Rect rect_rail;
@@ -47,6 +45,8 @@ public:
 	//Pinball sounds
 	uint bonus_fx;
 	uint triangle_fx;
+	uint start_canon_fx;
+	uint flipper_hit_fx;
 
 	p2Point<int> ray;
 
@@ -60,6 +60,8 @@ public:
 	//Animations
 	Animation m_icon;
 	Animation start_canon;
+	Animation triangle_R_anim;
+	Animation triangle_L_anim;
 
 	//Win_Fail_Conditions
 	uint balls_left;
