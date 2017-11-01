@@ -1449,20 +1449,6 @@ void ModuleSceneIntro::setSensors() {
 		446, 752
 	};
 
-	b2Vec2 exit_vec_left_canon[4];
-
-	for (uint i = 0; i < 8 / 2; ++i)
-	{
-		exit_vec_left_canon[i].Set(PIXEL_TO_METERS(left_points_side_exit[i * 2 + 0]), PIXEL_TO_METERS(left_points_side_exit[i * 2 + 1]));
-	}
-	sensors.add(App->physics->CreatePolygonSensor(0, 0, 4, exit_vec_left_canon, EXIT_CANON));
-
-	sensors.add(App->physics->CreatePolygonSensor(0, 0, 4, exit_vec_left_canon, EXIT_CANON));
-	sensors.add(App->physics->CreatePolygonSensor(0, 0, 4, exit_vec_left_canon, EXIT_CANON));
-	sensors.add(App->physics->CreatePolygonSensor(0, 0, 4, exit_vec_left_canon, EXIT_CANON));
-
-
-
 }
 
 void ModuleSceneIntro::spawnBall() {
