@@ -103,7 +103,95 @@ ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Modul
 	side_canon_R.loop = false;
 	side_canon_R.speed = 0.0f;
 
+	//MAP LETTERS
 
+	map_M.PushBack({ 40, 1728, 38, 30 });
+	map_M.PushBack({ 91, 1730, 38, 30 });
+	map_M.PushBack({ 91, 1730, 38, 30 });
+	map_M.PushBack({ 91, 1730, 38, 30 });
+	map_M.PushBack({ 40, 1728, 38, 30 });
+	map_M.PushBack({ 91, 1730, 38, 30 });
+	map_M.PushBack({ 40, 1728, 38, 30 });
+	map_M.PushBack({ 91, 1730, 38, 30 });
+	map_M.loop = true;
+	map_M.speed = 0.04f;
+
+	map_A.PushBack({ 91, 1730, 38, 30 });
+	map_A.PushBack({ 40, 1760, 38, 30 });
+	map_A.PushBack({ 91, 1730, 38, 30 });
+	map_A.PushBack({ 91, 1730, 38, 30 });
+	map_A.PushBack({ 40, 1760, 38, 30 });
+	map_A.PushBack({ 91, 1730, 38, 30 });
+	map_A.PushBack({ 40, 1760, 38, 30 });
+	map_A.PushBack({ 91, 1730, 38, 30 });
+	map_A.loop = true;
+	map_A.speed = 0.04f;
+
+	// Chip letters
+
+	map_P.PushBack({ 91, 1730, 38, 30 });
+	map_P.PushBack({ 91, 1730, 38, 30 });
+	map_P.PushBack({ 40, 1792, 38, 30 });
+	map_P.PushBack({ 91, 1730, 38, 30 });
+	map_P.PushBack({ 40, 1792, 38, 30 });
+	map_P.PushBack({ 91, 1730, 38, 30 });
+	map_P.PushBack({ 40, 1792, 38, 30 });
+	map_P.PushBack({ 91, 1730, 38, 30 });
+	map_P.loop = true;
+	map_P.speed = 0.04f;
+
+	chip_C.PushBack({ 0, 1458, 32, 32 });
+	chip_C.PushBack({ 74, 1562, 32, 32 });
+	chip_C.PushBack({ 74, 1562, 32, 32 });
+	chip_C.PushBack({ 74, 1562, 32, 32 });
+	chip_C.PushBack({ 74, 1562, 32, 32 });
+	chip_C.PushBack({ 0, 1458, 32, 32 });
+	chip_C.PushBack({ 74, 1562, 32, 32 });
+	chip_C.PushBack({ 0, 1458, 32, 32 });
+	chip_C.PushBack({ 74, 1562, 32, 32 });
+	chip_C.loop = true;
+	chip_C.speed = 0.04f;
+
+	chip_H.PushBack({ 74, 1562, 32, 32 });
+	chip_H.PushBack({ 6, 1494, 32, 32 });
+	chip_H.PushBack({ 74, 1562, 32, 32 });
+	chip_H.PushBack({ 74, 1562, 32, 32 });
+	chip_H.PushBack({ 74, 1562, 32, 32 });
+	chip_H.PushBack({ 6, 1494, 32, 32 });
+	chip_H.PushBack({ 74, 1562, 32, 32 });
+	chip_H.PushBack({ 6, 1494, 32, 32 });
+	chip_H.PushBack({ 74, 1562, 32, 32 });
+	chip_H.loop = true;
+	chip_H.speed = 0.04f;
+
+	chip_I.PushBack({ 74, 1562, 32, 32 });
+	chip_I.PushBack({ 74, 1562, 32, 32 });
+	chip_I.PushBack({ 18, 1528, 32, 32 });
+	chip_I.PushBack({ 74, 1562, 32, 32 });
+	chip_I.PushBack({ 74, 1562, 32, 32 });
+	chip_I.PushBack({ 18, 1528, 32, 32 });
+	chip_I.PushBack({ 74, 1562, 32, 32 });
+	chip_I.PushBack({ 18, 1528, 32, 32 });
+	chip_I.PushBack({ 74, 1562, 32, 32 });
+	chip_I.loop = true;
+	chip_I.speed = 0.04f;
+
+	chip_P.PushBack({ 74, 1562, 32, 32 });
+	chip_P.PushBack({ 74, 1562, 32, 32 });
+	chip_P.PushBack({ 74, 1562, 32, 32 });
+	chip_P.PushBack({ 32, 1560, 32, 32 });
+	chip_P.PushBack({ 74, 1562, 32, 32 });
+	chip_P.PushBack({ 32, 1560, 32, 32 });
+	chip_P.PushBack({ 74, 1562, 32, 32 });
+	chip_P.PushBack({ 32, 1560, 32, 32 });
+	chip_P.PushBack({ 74, 1562, 32, 32 });
+	chip_P.loop = true;
+	chip_P.speed = 0.04f;
+
+	orange_bar.PushBack({ 453, 1698, 62, 62 });
+	orange_bar.PushBack({ 555, 1710, 62, 62 });
+	orange_bar.loop = true;
+	orange_bar.speed = 0.05f;
 }
 
 ModuleSceneIntro::~ModuleSceneIntro()
@@ -387,6 +475,20 @@ update_status ModuleSceneIntro::Update()
 
 	// Cave
 	App->renderer->Blit(pinball_spritesheet, 171, 162, &rect_cave, 1.0f);
+
+	// Map Letters
+	App->renderer->Blit(pinball_spritesheet, 68, 480, &map_M.GetCurrentFrame(), 1.0f);
+	App->renderer->Blit(pinball_spritesheet, 68, 512, &map_A.GetCurrentFrame(), 1.0f);
+	App->renderer->Blit(pinball_spritesheet, 68, 544, &map_P.GetCurrentFrame(), 1.0f);
+
+	// Chip letters
+	App->renderer->Blit(pinball_spritesheet, 28, 210, &chip_C.GetCurrentFrame(), 1.0f);
+	App->renderer->Blit(pinball_spritesheet, 34, 246, &chip_H.GetCurrentFrame(), 1.0f);
+	App->renderer->Blit(pinball_spritesheet, 46, 280, &chip_I.GetCurrentFrame(), 1.0f);
+	App->renderer->Blit(pinball_spritesheet, 60, 312, &chip_P.GetCurrentFrame(), 1.0f);
+
+	//Orange bar
+	App->renderer->Blit(pinball_spritesheet, 410, 450, &orange_bar.GetCurrentFrame(), 1.0f);
 
 	//Cannons
 	App->renderer->Blit(pinball_spritesheet, 452, 559, &start_canon.GetCurrentFrame(), 1.0f);
