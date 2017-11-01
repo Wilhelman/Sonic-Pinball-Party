@@ -36,8 +36,6 @@ public:
 	PhysBody* triangle_R;
 
 	//Textures and SDL_Rects
-	SDL_Texture* pinball_spritesheet;
-
 	SDL_Rect rect_ball;
 	SDL_Rect rect_bg;
 	SDL_Rect rect_tunnel;
@@ -46,15 +44,15 @@ public:
 	SDL_Rect rect_piece_rail;
 	SDL_Rect rect_central_piece;
 	SDL_Rect rect_cave;
-	
-	// Controls and other stuff
+
+	SDL_Texture* pinball_spritesheet;
 
 	//Pinball sounds
 	uint bonus_fx;
 	uint triangle_fx;
 	uint start_canon_fx;
-	uint flipper_hit_fx;
 
+	// Controls
 	bool sensed;
 	bool ball_lost;
 	bool blit_tunnel_control;
