@@ -24,10 +24,7 @@ bool ModuleSceneIntro::Start()
 	App->ui->score = 0;
 	LOG("Loading Intro assets");
 	bool ret = true;
-	ball_lost = false;
-	blit_tunnel_control = false;
-	inside_start_canon = false;
-	ball_created = false;
+	blit_tunnel_control = in_mid_rail = ball_lost = inside_start_canon = ball_created = ball_in_rail = false;
 
 	App->renderer->camera.x = App->renderer->camera.y = 0;
 
@@ -154,10 +151,16 @@ bool ModuleSceneIntro::CleanUp()
 		triangle_R = NULL;
 	}
 
-	if (rail = NULL)
+	if (rail != NULL)
 	{
 		App->physics->world->DestroyBody(rail->body);
 		rail = NULL;
+	}
+
+	if (rail_mini_sensor!= NULL)
+	{
+		App->physics->world->DestroyBody(rail_mini_sensor->body);
+		rail_mini_sensor = NULL;
 	}
 
 	balls.clear();
@@ -181,56 +184,108 @@ update_status ModuleSceneIntro::Update()
 	App->renderer->Blit(pinball_spritesheet, 113, 621, &triangle_L_anim.GetCurrentFrame(), 1.0f);
 	App->renderer->Blit(pinball_spritesheet, 325, 621, &triangle_R_anim.GetCurrentFrame(), 1.0f);
 
-	App->renderer->Blit(pinball_spritesheet, 0, 27, &rect_rail, 1.0f);
-
+	if (ball_in_rail) {
+	}
 	
 	//Tunnels
-	if (blit_tunnel_control)
+	if (blit_tunnel_control)//in tunnel
 	{
 		App->renderer->Blit(pinball_spritesheet, 0, 0, &rect_tunnel, 1.0f);
-
-		p2List_item<PhysBody*>* ball_item = balls.getFirst();
-
-		while (ball_item != NULL)
-		{
-			int x, y;
-			ball_item->data->GetPosition(x, y);
-
-			//TODO: control sprite according to ball velocity
-			float vel = ball_item->data->body->GetAngularVelocity();
-
-			App->renderer->Blit(pinball_spritesheet, x, y, &rect_ball, 1.0f, ball_item->data->GetRotation());
-
-			ball_item = ball_item->next;
+		if (ball_in_rail) {
+			App->renderer->Blit(pinball_spritesheet, 0, 347, &rect_piece_rail, 1.0f);
 		}
-	}
-	else
-	{
-		p2List_item<PhysBody*>* ball_item = balls.getFirst();
-
-		while (ball_item != NULL)
-		{
-			int x, y;
-			ball_item->data->GetPosition(x, y);
-
-			//TODO: use this to impulse ball at start
-			//ball_item->data->body->ApplyLinearImpulse(b2Vec2(-0.1f, -0.1f), b2Vec2(x, y), true);
 			
+
+		p2List_item<PhysBody*>* ball_item = balls.getFirst();
+
+		while (ball_item != NULL)
+		{
+			int x, y;
+			ball_item->data->GetPosition(x, y);
+
 			//TODO: control sprite according to ball velocity
 			float vel = ball_item->data->body->GetAngularVelocity();
 
-			App->renderer->Blit(pinball_spritesheet, x, y, &rect_ball, 1.0f, ball_item->data->GetRotation());
+			App->renderer->Blit(pinball_spritesheet, x, y, &rect_ball, 1.0f);
 
 			ball_item = ball_item->next;
 		}
-		App->renderer->Blit(pinball_spritesheet, 0, 0, &rect_tunnel, 1.0f);
+		if (!ball_in_rail)
+			App->renderer->Blit(pinball_spritesheet, 0, 347, &rect_piece_rail, 1.0f);
+	}
+	else //not in tunnel
+	{
+		if (ball_in_rail) {
+			App->renderer->Blit(pinball_spritesheet, 0, 27, &rect_rail, 1.0f);
+			p2List_item<PhysBody*>* ball_item = balls.getFirst();
+			while (ball_item != NULL)
+			{
+				int x, y;
+				ball_item->data->GetPosition(x, y);
+
+				//TODO: control sprite according to ball velocity
+				float vel = ball_item->data->body->GetAngularVelocity();
+
+				App->renderer->Blit(pinball_spritesheet, x, y, &rect_ball, 1.0f);
+
+				ball_item = ball_item->next;
+			}
+			App->renderer->Blit(pinball_spritesheet, 0, 0, &rect_tunnel, 1.0f);
+			App->renderer->Blit(pinball_spritesheet, 0, 347, &rect_piece_rail, 1.0f);
+		}
+
+		if (in_mid_rail) {
+			App->renderer->Blit(pinball_spritesheet, 0, 27, &rect_rail, 1.0f);
+			App->renderer->Blit(pinball_spritesheet, 0, 0, &rect_tunnel, 1.0f);
+			App->renderer->Blit(pinball_spritesheet, 0, 347, &rect_piece_rail, 1.0f);
+			p2List_item<PhysBody*>* ball_item = balls.getFirst();
+			while (ball_item != NULL)
+			{
+				int x, y;
+				ball_item->data->GetPosition(x, y);
+
+				//TODO: control sprite according to ball velocity
+				float vel = ball_item->data->body->GetAngularVelocity();
+
+				App->renderer->Blit(pinball_spritesheet, x, y, &rect_ball, 1.0f);
+
+				ball_item = ball_item->next;
+			}
+		}
+
+		if (!ball_in_rail) {
+			p2List_item<PhysBody*>* ball_item = balls.getFirst();
+			while (ball_item != NULL)
+			{
+				int x, y;
+				ball_item->data->GetPosition(x, y);
+
+				//TODO: control sprite according to ball velocity
+				float vel = ball_item->data->body->GetAngularVelocity();
+
+				App->renderer->Blit(pinball_spritesheet, x, y, &rect_ball, 1.0f);
+
+				ball_item = ball_item->next;
+			}
+			App->renderer->Blit(pinball_spritesheet, 0, 27, &rect_rail, 1.0f);
+			App->renderer->Blit(pinball_spritesheet, 0, 0, &rect_tunnel, 1.0f);
+			App->renderer->Blit(pinball_spritesheet, 0, 347, &rect_piece_rail, 1.0f);
+		}
+			
+	}
+
+	if (!ball_in_rail) {
+		
 	}
 
 	// Plunge
 	App->renderer->Blit(pinball_spritesheet, 467, 463, &rect_plunge_struct, 1.0f);
 	
-	// Rail piece
-	App->renderer->Blit(pinball_spritesheet, 0, 347, &rect_piece_rail, 1.0f);
+	/*if (!ball_in_rail) {
+		// Rail piece
+		App->renderer->Blit(pinball_spritesheet, 0, 27, &rect_rail, 1.0f);
+		
+	}*/
 
 	// Central piece
 	App->renderer->Blit(pinball_spritesheet, 184, 327, &rect_central_piece, 1.0f);
@@ -264,13 +319,14 @@ update_status ModuleSceneIntro::Update()
 	if (start_canon.GetCurrentFrame().x == 801 && ball_created == false)
 	{
 		balls.add(App->physics->CreateBall(485, 608, 14));
+		balls.getLast()->data->listener = this;
 		ball_created = true;
 
 		for (p2List_item<PhysBody*>* bc = balls.getFirst(); bc != NULL; bc = bc->next)
 		{
 			int x, y;
 			bc->data->GetPosition(x, y);
-			bc->data->body->ApplyLinearImpulse(b2Vec2(-2.2f, -2.8f), b2Vec2(x, y), true);
+			bc->data->body->ApplyLinearImpulse(b2Vec2(-2.3f, -2.9f), b2Vec2(x, y), true);
 		}
 		App->audio->PlayFx(start_canon_fx);
 	}
@@ -326,7 +382,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 			if (bodyB->physType == ENTRY_RAIL)
 			{
 
-				//blit_tunnel_control = true;
+				ball_in_rail = true;
 			
 				b2Fixture* fixture = rail->body->GetFixtureList();
 
@@ -336,6 +392,16 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 					newFilter.groupIndex = groupIndex::RIGID_PINBALL;
 					fixture->SetFilterData(newFilter);
 					fixture = fixture->GetNext();
+				}
+
+				b2Fixture* fixture_m = rail_mini_sensor->body->GetFixtureList();
+
+				while (fixture_m != NULL)
+				{
+					b2Filter newFilter;
+					newFilter.groupIndex = groupIndex::RIGID_PINBALL;
+					fixture_m->SetFilterData(newFilter);
+					fixture_m = fixture_m->GetNext();
 				}
 				
 
@@ -375,8 +441,75 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 				break;
 			}
 
+			if (bodyB->physType == MID_RAIL)
+			{
+				in_mid_rail = true;
+			}
 
-			if (bodyB->physType == ENTRY_TUNNEL)
+			if (bodyB->physType == EXIT_RAIL)
+			{
+
+				ball_in_rail = in_mid_rail = false;
+
+				b2Fixture* fixture = rail->body->GetFixtureList();
+
+				while (fixture != NULL)
+				{
+					b2Filter newFilter;
+					newFilter.groupIndex = groupIndex::BALL;
+					fixture->SetFilterData(newFilter);
+					fixture = fixture->GetNext();
+				}
+
+				b2Fixture* fixture_m = rail_mini_sensor->body->GetFixtureList();
+
+				while (fixture_m != NULL)
+				{
+					b2Filter newFilter;
+					newFilter.groupIndex = groupIndex::BALL;
+					fixture_m->SetFilterData(newFilter);
+					fixture_m = fixture_m->GetNext();
+				}
+
+
+				b2Fixture* r_flipper_fixture = App->player->right_flipper->body->GetFixtureList();
+
+				while (r_flipper_fixture != NULL)
+				{
+					b2Filter newFilter;
+					newFilter.groupIndex = groupIndex::RIGID_PINBALL;
+					r_flipper_fixture->SetFilterData(newFilter);
+					r_flipper_fixture = r_flipper_fixture->GetNext();
+				}
+
+				b2Fixture* l_flipper_fixture = App->player->left_flipper->body->GetFixtureList();
+
+				while (l_flipper_fixture != NULL)
+				{
+					b2Filter newFilter;
+					newFilter.groupIndex = groupIndex::RIGID_PINBALL;
+					l_flipper_fixture->SetFilterData(newFilter);
+					l_flipper_fixture = l_flipper_fixture->GetNext();
+				}
+
+				for (p2List_item<PhysBody*>* p_w = pinball_walls.getFirst(); p_w != NULL; p_w = p_w->next)
+				{
+					b2Fixture* fixture = p_w->data->body->GetFixtureList();
+
+					while (fixture != NULL)
+					{
+						b2Filter newFilter;
+						newFilter.groupIndex = groupIndex::RIGID_PINBALL;
+						fixture->SetFilterData(newFilter);
+						fixture = fixture->GetNext();
+					}
+				}
+
+				break;
+			}
+
+
+			if (bodyB->physType == ENTRY_TUNNEL && !ball_in_rail)
 			{
 				blit_tunnel_control = true;
 				for (p2List_item<PhysBody*>* t_w = tunnel_walls.getFirst(); t_w != NULL; t_w = t_w->next)
@@ -427,7 +560,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 				break;
 			}
 
-			if (bodyB->physType == EXIT_TUNNEL)
+			if (bodyB->physType == EXIT_TUNNEL && !ball_in_rail)
 			{
 				blit_tunnel_control = false;
 				for (p2List_item<PhysBody*>* t_w = tunnel_walls.getFirst(); t_w != NULL; t_w = t_w->next)
@@ -478,7 +611,46 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 				break;
 			}
 
-			if (bodyB->physType == START_CANON)
+			if (bodyB->physType == EXIT_CANON)
+			{
+				ball_created = false;
+				balls.getLast()->data->listener = this;
+				for (p2List_item<PhysBody*>* p_w = pinball_walls.getFirst(); p_w != NULL; p_w = p_w->next)
+				{
+					b2Fixture* fixture = p_w->data->body->GetFixtureList();
+
+					while (fixture != NULL)
+					{
+						b2Filter newFilter;
+						newFilter.groupIndex = groupIndex::RIGID_PINBALL;
+						fixture->SetFilterData(newFilter);
+						fixture = fixture->GetNext();
+					}
+				}
+
+				b2Fixture* r_flipper_fixture = App->player->right_flipper->body->GetFixtureList();
+
+				while (r_flipper_fixture != NULL)
+				{
+					b2Filter newFilter;
+					newFilter.groupIndex = groupIndex::RIGID_PINBALL;
+					r_flipper_fixture->SetFilterData(newFilter);
+					r_flipper_fixture = r_flipper_fixture->GetNext();
+				}
+
+				b2Fixture* l_flipper_fixture = App->player->left_flipper->body->GetFixtureList();
+
+				while (l_flipper_fixture != NULL)
+				{
+					b2Filter newFilter;
+					newFilter.groupIndex = groupIndex::RIGID_PINBALL;
+					l_flipper_fixture->SetFilterData(newFilter);
+					l_flipper_fixture = l_flipper_fixture->GetNext();
+				}
+				break;
+			}
+
+			if (bodyB->physType == START_CANON && !ball_created)
 			{
 				for (p2List_item<PhysBody*>* p_w = pinball_walls.getFirst(); p_w != NULL; p_w = p_w->next)
 				{
@@ -990,6 +1162,16 @@ void ModuleSceneIntro::setWalls() {
 	};
 
 	rail = App->physics->CreateChain(0, 0, points_rail, 154, groupIndex::BALL, 0.01f, NO_DEF_);
+
+	int points_mini_rail[8] =
+	{
+		78, 650,
+		101, 650,
+		100, 656,
+		77, 655
+	};
+
+	rail_mini_sensor = App->physics->CreateChain(0, 0, points_mini_rail, 8, groupIndex::BALL, 0.01f, EXIT_RAIL);
 }
 
 void ModuleSceneIntro::setSensors() {
@@ -1112,13 +1294,29 @@ void ModuleSceneIntro::setSensors() {
 
 	sensors.add(App->physics->CreatePolygonSensor(0, 0, 4, start_vec_canon, START_CANON));
 
+	int points_exit_canon[8] =
+	{
+		401, 455,
+		344, 511,
+		364, 532,
+		425, 472
+	};
+
+	b2Vec2 exit_vec_canon[4];
+
+	for (uint i = 0; i < 8 / 2; ++i)
+	{
+		exit_vec_canon[i].Set(PIXEL_TO_METERS(points_exit_canon[i * 2 + 0]), PIXEL_TO_METERS(points_exit_canon[i * 2 + 1]));
+	}
+
+	sensors.add(App->physics->CreatePolygonSensor(0, 0, 4, exit_vec_canon, EXIT_CANON));
 
 
 	int points_entry_rail_1[8] = {
-		142, 252,
-		124, 269,
-		136, 282,
-		154, 264
+		113, 260,
+		133, 239,
+		139, 244,
+		117, 266
 	};
 
 	b2Vec2 entry_vec_rail[4];
@@ -1129,6 +1327,39 @@ void ModuleSceneIntro::setSensors() {
 	}
 
 	sensors.add(App->physics->CreatePolygonSensor(0, 0, 4, entry_vec_rail, ENTRY_RAIL));
+
+	int points_exit_rail_1[8] = {
+		137, 294,
+		168, 263,
+		178, 275,
+		141, 304
+	};
+
+	b2Vec2 exit_vec_rail[4];
+
+	for (uint i = 0; i < 8 / 2; ++i)
+	{
+		exit_vec_rail[i].Set(PIXEL_TO_METERS(points_exit_rail_1[i * 2 + 0]), PIXEL_TO_METERS(points_exit_rail_1[i * 2 + 1]));
+	}
+
+	sensors.add(App->physics->CreatePolygonSensor(0, 0, 4, exit_vec_rail, EXIT_RAIL));
+
+	int points_mid_rail_1[8] = {
+		237, 255,
+		256, 270,
+		267, 260,
+		247, 242
+	};
+
+	b2Vec2 mid_vec_rail[4];
+
+	for (uint i = 0; i < 8 / 2; ++i)
+	{
+		mid_vec_rail[i].Set(PIXEL_TO_METERS(points_mid_rail_1[i * 2 + 0]), PIXEL_TO_METERS(points_mid_rail_1[i * 2 + 1]));
+	}
+
+	sensors.add(App->physics->CreatePolygonSensor(0, 0, 4, mid_vec_rail, MID_RAIL));
+
 }
 
 void ModuleSceneIntro::spawnBall() {

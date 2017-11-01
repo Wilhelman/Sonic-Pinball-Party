@@ -31,6 +31,7 @@ public:
 	p2List<PhysBody*> tunnel_walls;
 	p2List<PhysBody*> sensors;
 	PhysBody* rail;
+	PhysBody* rail_mini_sensor;
 	PhysBody* triangle_L;
 	PhysBody* triangle_R;
 
@@ -57,6 +58,8 @@ public:
 	bool ball_lost;
 	bool blit_tunnel_control;
 	bool inside_start_canon;
+	bool ball_in_rail;
+	bool in_mid_rail;
 	bool ball_created;
 
 	//Animations
