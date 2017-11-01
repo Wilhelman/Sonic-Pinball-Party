@@ -199,6 +199,11 @@ ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Modul
 	ball_anim.PushBack({ 114, 1418, 28, 28 });
 	ball_anim.loop = true;
 	ball_anim.speed = 0.0f;
+
+	explosion.PushBack({ 234, 1263, 30, 30 });
+	explosion.PushBack({ 270, 1258, 30, 30 });
+	explosion.loop = false;
+	explosion.speed = 0.05f;
 }
 
 ModuleSceneIntro::~ModuleSceneIntro()
@@ -301,8 +306,6 @@ bool ModuleSceneIntro::CleanUp()
 {
 	LOG("Unloading Intro scene");
 
-	
-
 	for (p2List_item<PhysBody*>* ball_item = balls.getFirst(); ball_item != NULL; ball_item = ball_item->next)
 	{
 		App->physics->world->DestroyBody(ball_item->data->body);
@@ -399,7 +402,6 @@ update_status ModuleSceneIntro::Update()
 			int x, y;
 			ball_item->data->GetPosition(x, y);
 
-			//TODO: control sprite according to ball velocity
 			float vel = ball_item->data->body->GetLinearVelocity().Length();
 			ball_anim.speed = vel / 15;
 
@@ -419,7 +421,6 @@ update_status ModuleSceneIntro::Update()
 				int x, y;
 				ball_item->data->GetPosition(x, y);
 
-				//TODO: control sprite according to ball velocity
 				float vel = ball_item->data->body->GetLinearVelocity().Length();
 				ball_anim.speed = vel / 15;
 
@@ -441,7 +442,6 @@ update_status ModuleSceneIntro::Update()
 				int x, y;
 				ball_item->data->GetPosition(x, y);
 
-				//TODO: control sprite according to ball velocity
 				float vel = ball_item->data->body->GetLinearVelocity().Length();
 				ball_anim.speed = vel / 15;
 
@@ -458,7 +458,6 @@ update_status ModuleSceneIntro::Update()
 				int x, y;
 				ball_item->data->GetPosition(x, y);
 
-				//TODO: control sprite according to ball velocity
 				float vel = ball_item->data->body->GetLinearVelocity().Length();
 				ball_anim.speed = vel / 15;
 
@@ -528,10 +527,12 @@ update_status ModuleSceneIntro::Update()
 			App->physics->world->DestroyBody(bc->data->body);
 		}
 		balls.clear();
-
+		
 		balls.add(App->physics->CreateBall(485, 608, 14));
 		balls.getLast()->data->listener = this;
 		ball_created = true;
+
+		
 
 		for (p2List_item<PhysBody*>* bc = balls.getFirst(); bc != NULL; bc = bc->next)
 		{
@@ -554,6 +555,8 @@ update_status ModuleSceneIntro::Update()
 		}
 		balls.clear();
 
+		App->renderer->Blit(pinball_spritesheet, 30, 743, &explosion.GetCurrentFrame(), 1.0f);
+
 		balls.add(App->physics->CreateBall(45, 807, 14));
 		balls.getLast()->data->listener = this;
 		ball_created = true;
@@ -572,6 +575,8 @@ update_status ModuleSceneIntro::Update()
 	//RIGHT CANNON
 	if (side_canon_R.GetCurrentFrame().x == 39 && !ball_created && inside_side_canon)
 	{
+		App->renderer->Blit(pinball_spritesheet, 420, 743, &explosion.GetCurrentFrame(), 1.0f);
+
 		for (p2List_item<PhysBody*>* bc = balls.getFirst(); bc != NULL; bc = bc->next)
 		{
 			App->physics->world->DestroyBody(bc->data->body);

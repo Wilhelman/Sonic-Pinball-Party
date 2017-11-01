@@ -58,7 +58,7 @@ public:
 	//Animations
 	Animation m_icon, start_canon, triangle_R_anim, triangle_L_anim, blue_arrow_cave;
 	Animation blue_arrow_top_right, three_red_arrows, yellow_arrow_1, yellow_arrow_2;
-	Animation yellow_arrow_3, yellow_arrow_4, left_purple_arrow, right_purple_arrow, ball_anim;
+	Animation yellow_arrow_3, yellow_arrow_4, left_purple_arrow, right_purple_arrow, ball_anim, explosion;
 	Animation side_canon_L, side_canon_R, map_M, map_A, map_P, chip_C, chip_H, chip_I, chip_P, orange_bar;
 
 
