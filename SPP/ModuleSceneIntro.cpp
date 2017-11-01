@@ -34,8 +34,6 @@ bool ModuleSceneIntro::Start()
 
 	start_canon_fx = App->audio->LoadFx("audio/sound_fx/canon_shot.wav");
 
-	flipper_hit_fx = App->audio->LoadFx("audio/sound_fx/flipper_hit.wav");
-
 	if (!App->audio->PlayMusic("audio/music/Nightmaren.ogg"))
 		ret = false;
 

@@ -6,6 +6,7 @@
 #include "ModuleRender.h"
 #include "ModuleInput.h"
 #include "ModuleRender.h"
+#include "ModuleAudio.h"
 
 ModulePlayer::ModulePlayer(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -26,7 +27,9 @@ bool ModulePlayer::Start()
 	plunge = App->physics->CreatePlunge();
 	
 	flippers_tex = App->textures->Load("pinball/pinball_sonic_spritesheet.png");
-	
+
+	flipper_hit_fx = App->audio->LoadFx("audio/sound_fx/flipper_hit.wav");
+	plunge_fx = App->audio->LoadFx("audio/sound_fx/fire_ball.wav");
 
 	rect_rFlipper.h = 20;
 	rect_rFlipper.w = 60;
@@ -46,18 +49,22 @@ bool ModulePlayer::CleanUp()
 {
 	LOG("Unloading player");
 
-	
-
 	if (left_flipper != NULL)
 	{
-		delete left_flipper;
+		App->physics->world->DestroyBody(left_flipper->body);
 		left_flipper = NULL;
 	}
 	
 	if (right_flipper != NULL)
 	{
-		delete right_flipper;
+		App->physics->world->DestroyBody(right_flipper->body);
 		right_flipper = NULL;
+	}
+
+	if (plunge != NULL)
+	{
+		App->physics->world->DestroyBody(plunge->body);
+		plunge = NULL;
 	}
 
 	return true;
@@ -66,12 +73,9 @@ bool ModulePlayer::CleanUp()
 // Update: draw background
 update_status ModulePlayer::Update()
 {
-	//Blitting ball texture
-	//App->renderer->Blit(ball_tex, player_ball->body->GetPosition().x, player_ball->body->GetPosition().y, NULL, 1.0f, player_ball->body->GetAngle());
 
-	
+	// ----- Blitting flippers -----
 
-	// BLITTING FLIPPERS
 	b2Vec2 anchorRVec = right_flipper->joint->GetAnchorB();
 	App->renderer->Blit(flippers_tex, 258, 760 ,&rect_rFlipper, 1.0f, right_flipper->GetRotation(), anchorRVec.x + 48, anchorRVec.y-4);
 
@@ -79,37 +83,32 @@ update_status ModulePlayer::Update()
 	App->renderer->Blit(flippers_tex, 166, 760, &rect_lFlipper, 1.0f, left_flipper->GetRotation(), anchorLVec.x, anchorLVec.y - 4);
 
 
+	// ----- Flippers and plunge audio control -----
 
-	//TODO: control sprite according to ball velocity
+	if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_DOWN)
+		App->audio->PlayFx(flipper_hit_fx);
 
-	if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
-	{
+	if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_DOWN)
+		App->audio->PlayFx(flipper_hit_fx);
+
+	if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_DOWN)
+		App->audio->PlayFx(plunge_fx);
 		
-		plunge->body->ApplyForceToCenter(b2Vec2(0, 250),true);
-	}
-	else {
-	}
 
-	// ----- Flipper input control -----
+	// ----- Flippers and plunge input control -----
 
 	if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
-	{
 		left_flipper->body->ApplyTorque(-60.0f, true);
-	}
-	else {
+	else 
 		left_flipper->body->ApplyTorque(10.0f, true);
-	}
 
 	if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
-	{
 		right_flipper->body->ApplyTorque(60.0f, true);
-	}
-	else {
+	else 
 		right_flipper->body->ApplyTorque(-10.0f, true);
-	}
+
+	if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
+		plunge->body->ApplyForceToCenter(b2Vec2(0, 250), true);
 
 	return UPDATE_CONTINUE;
 }
-
-
-

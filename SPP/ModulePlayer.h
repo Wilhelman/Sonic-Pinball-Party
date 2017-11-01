@@ -27,5 +27,8 @@ public:
 	SDL_Rect rect_lFlipper;
 
 	SDL_Texture * flippers_tex;
+
+	uint flipper_hit_fx;
+	uint plunge_fx;
 	
 };
