@@ -37,6 +37,7 @@ enum PhysBody_Type {
 	EXIT_RAIL,
 	ENTRY_SIDE_CANON_L,
 	ENTRY_SIDE_CANON_R,
+	CAVE_HOLE,
 
 
 	NO_DEF_

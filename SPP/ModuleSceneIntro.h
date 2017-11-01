@@ -44,35 +44,27 @@ public:
 	SDL_Rect rect_piece_rail;
 	SDL_Rect rect_central_piece;
 	SDL_Rect rect_cave;
-
 	SDL_Texture* pinball_spritesheet;
 
 	//Pinball sounds
-	uint bonus_fx;
+	uint hole_in_fx;
+	uint hole_out_fx;
 	uint triangle_fx;
 	uint start_canon_fx;
 
 	// Controls
 	bool sensed, ball_lost, blit_tunnel_control, inside_start_canon, ball_in_rail;
-	bool in_mid_rail, ball_created, inside_side_canon, canon_R_done, canon_L_done;
+	bool in_mid_rail, ball_created, inside_side_canon, canon_R_done, canon_L_done, in_cave_hole;
 
 	//Animations
-	Animation m_icon;
-	Animation start_canon;
-	Animation triangle_R_anim;
-	Animation triangle_L_anim;
-	Animation blue_arrow_cave;
-	Animation blue_arrow_top_right;
-	Animation three_red_arrows;
-	Animation yellow_arrow_1;
-	Animation yellow_arrow_2;
-	Animation yellow_arrow_3;
-	Animation yellow_arrow_4;
-	Animation left_purple_arrow;
-	Animation right_purple_arrow;
-	Animation side_canon_L;
-	Animation side_canon_R;
+	Animation m_icon, start_canon, triangle_R_anim, triangle_L_anim, blue_arrow_cave;
+	Animation blue_arrow_top_right, three_red_arrows, yellow_arrow_1, yellow_arrow_2;
+	Animation yellow_arrow_3, yellow_arrow_4, left_purple_arrow, right_purple_arrow;
+	Animation side_canon_L, side_canon_R;
 
 	//Win_Fail_Conditions
 	uint balls_left;
+
+	//Time controls
+	int current_time, hole_timer;
 };

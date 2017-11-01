@@ -113,6 +113,7 @@ bool ModuleSceneIntro::Start()
 {
 	balls_left = 3;
 	App->ui->score = 0;
+	current_time = hole_timer = 0;
 
 	if (!App->audio->IsEnabled()) {
 		App->audio->Enable();
@@ -127,12 +128,13 @@ bool ModuleSceneIntro::Start()
 	LOG("Loading Intro assets");
 	bool ret = true;
 	blit_tunnel_control = inside_side_canon = canon_R_done = canon_L_done = in_mid_rail
-		= ball_lost = inside_start_canon = ball_created = ball_in_rail = false;
+		= ball_lost = inside_start_canon = ball_created = ball_in_rail = in_cave_hole = false;
 
 
 	App->renderer->camera.x = App->renderer->camera.y = 0;
 
-	bonus_fx = App->audio->LoadFx("pinball/bonus.wav");
+	hole_in_fx = App->audio->LoadFx("audio/sound_fx/hole_in.wav");
+	hole_out_fx = App->audio->LoadFx("audio/sound_fx/hole_out.wav");
 
 	triangle_fx = App->audio->LoadFx("audio/sound_fx/bouncing_triangle.wav");
 
@@ -199,7 +201,6 @@ bool ModuleSceneIntro::Start()
 
 	App->player->Enable();
 	
-
 	spawnBall();
 
 	return ret;
@@ -457,11 +458,10 @@ update_status ModuleSceneIntro::Update()
 		}
 		App->audio->PlayFx(start_canon_fx);
 
-		if (inside_side_canon)
-			inside_side_canon = false;
+		inside_side_canon = false;
 	}
 
-	//LEFT CANNON
+	//RIGHT CANNON
 	if (side_canon_R.GetCurrentFrame().x == 39 && !ball_created && inside_side_canon)
 	{
 		for (p2List_item<PhysBody*>* bc = balls.getFirst(); bc != NULL; bc = bc->next)
@@ -482,8 +482,24 @@ update_status ModuleSceneIntro::Update()
 		}
 		App->audio->PlayFx(start_canon_fx);
 
-		if (inside_side_canon)
-			inside_side_canon = false;
+		inside_side_canon = false;
+	}
+
+	//HOLE TELEPORT
+	if (in_cave_hole && hole_timer + 500 < current_time)
+	{
+		App->audio->PlayFx(hole_out_fx);
+		for (p2List_item<PhysBody*>* bc = balls.getFirst(); bc != NULL; bc = bc->next)
+		{
+			App->physics->world->DestroyBody(bc->data->body);
+		}
+		balls.clear();
+
+		balls.add(App->physics->CreateBall(260, 72, 14));
+		balls.getLast()->data->listener = this;
+		ball_created = true;
+
+		in_cave_hole = false;
 	}
 
 
@@ -510,15 +526,13 @@ update_status ModuleSceneIntro::Update()
 		App->fade->FadeToBlack(this, this, 7.0f);
 	}
 
+	current_time = SDL_GetTicks();
+
 	return UPDATE_CONTINUE;
 }
 
 void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 {
-	int x, y;
-
-	//App->audio->PlayFx(bonus_fx);
-
 	for (p2List_item<PhysBody*>* bc = balls.getFirst(); bc != NULL; bc = bc->next) 
 	{
 		if (bodyA == bc->data)
@@ -881,6 +895,21 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 				side_canon_R.speed = 0.06f;
 				canon_R_done = inside_side_canon = true;
 			}
+
+			if (bodyB->physType == CAVE_HOLE && !in_cave_hole)
+			{
+				App->audio->PlayFx(hole_in_fx);
+				in_cave_hole = true;
+				for (p2List_item<PhysBody*>* ball_item = balls.getFirst(); ball_item != NULL; ball_item = ball_item->next)
+				{
+					int x, y;
+					bc->data->GetPosition(x, y);
+					bc->data->body->SetGravityScale(0.0f);
+					bc->data->body->SetLinearVelocity(b2Vec2(0, 0));
+					bc->data->body->SetAngularVelocity(0);
+				}
+				hole_timer = SDL_GetTicks();
+			}
 		
 
 			if (bodyB->physType == DEAD_SENSOR) 
@@ -890,12 +919,6 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 				//balls.getLast()->data->listener = this;
 			}
 		}
-	}
-
-	if(bodyB)
-	{
-		bodyB->GetPosition(x, y);
-		App->renderer->DrawCircle(x, y, 50, 100, 100, 100);
 	}
 }
 
@@ -996,19 +1019,19 @@ void ModuleSceneIntro::setWalls() {
 		291, 244,
 		284, 244,
 		280, 240,
-		282, 229,
-		284, 226,
-		284, 215,
-		286, 214,
-		286, 187,
-		284, 186,
-		282, 175,
-		278, 158,
-		278, 67,
-		268, 56,
-		252, 56,
-		243, 66,
-		242, 94,
+		281, 234,
+		282, 228,
+		284, 218,
+		285, 211,
+		286, 196,
+		286, 180,
+		285, 164,
+		285, 148,
+		278, 126,
+		267, 116,
+		259, 109,
+		252, 104,
+		244, 99,
 		237, 96,
 		216, 85,
 		175, 77,
@@ -1626,6 +1649,39 @@ void ModuleSceneIntro::setSensors() {
 		exit_vec_left_canon[i].Set(PIXEL_TO_METERS(left_points_side_exit[i * 2 + 0]), PIXEL_TO_METERS(left_points_side_exit[i * 2 + 1]));
 	}
 	sensors.add(App->physics->CreatePolygonSensor(0, 0, 4, exit_vec_left_canon, EXIT_CANON));
+
+
+	int cave_hole[8] =
+	{
+		200, 198,
+		201, 219,
+		221, 219,
+		223, 198
+	};
+
+	b2Vec2 vec_cave_hole[4];
+
+	for (uint i = 0; i < 8 / 2; ++i)
+	{
+		vec_cave_hole[i].Set(PIXEL_TO_METERS(cave_hole[i * 2 + 0]), PIXEL_TO_METERS(cave_hole[i * 2 + 1]));
+	}
+	sensors.add(App->physics->CreatePolygonSensor(0, 0, 4, vec_cave_hole, CAVE_HOLE));
+
+	int points_entry_rail_3[8] = {
+		249, 65,
+		252, 85,
+		274, 85,
+		273, 63
+	};
+
+	b2Vec2 entry_vec_rail2[4];
+
+	for (uint i = 0; i < 8 / 2; ++i)
+	{
+		entry_vec_rail2[i].Set(PIXEL_TO_METERS(points_entry_rail_3[i * 2 + 0]), PIXEL_TO_METERS(points_entry_rail_3[i * 2 + 1]));
+	}
+
+	sensors.add(App->physics->CreatePolygonSensor(0, 0, 4, entry_vec_rail2, ENTRY_RAIL));
 
 
 }
