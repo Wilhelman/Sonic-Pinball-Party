@@ -13,7 +13,7 @@ This project has been done by two catalan students of CITM - UPC (Terrasa, Spain
 ## About the game
 
 We have chosen to emulate one of the levels Sonic Pinball Party game (Game Boy Advance, 2003). The level selected is called Clawtz.
-You can see n original gameplay [here](https://youtu.be/Fh9MWeipSW0?t=1161).
+You can see a gameplay of the original version [here](https://youtu.be/Fh9MWeipSW0?t=1161).
 
 ## Installation instructions
 
