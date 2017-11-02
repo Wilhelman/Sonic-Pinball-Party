@@ -45,6 +45,8 @@ enum PhysBody_Type {
 	DOT_2,
 	DOT_3,
 	DOT_4,
+	RHOMBUS,
+	BOSS,
 
 
 	NO_DEF_

@@ -32,6 +32,7 @@ public:
 	p2List<PhysBody*> sensors;
 	PhysBody* rail;
 	PhysBody* rail_mini_sensor;
+	PhysBody* boss_hitbox;
 	PhysBody* triangle_L;
 	PhysBody* triangle_R;
 
@@ -58,22 +59,23 @@ public:
 	uint win_fx;
 
 	// Controls
-	bool sensed, ball_lost, blit_tunnel_control, inside_start_canon, ball_in_rail, dot_1, dot_2, dot_3, dot_4;
-	bool in_mid_rail, ball_created, inside_side_canon, canon_R_done, canon_L_done, in_cave_hole, in_mid_hole, in_right_hole;
+	bool sensed, ball_lost, blit_tunnel_control, inside_start_canon, ball_in_rail, dot_1, dot_2, dot_3, dot_4, bossAlive, spawned;
+	bool in_mid_rail, ball_created, inside_side_canon, canon_R_done, canon_L_done, in_cave_hole, in_mid_hole, in_right_hole , boss_defeated;
 
 	//Ball position to teleport
 	int ball_x, ball_y;
 
 	//Animations
-	Animation m_icon, start_canon, triangle_R_anim, triangle_L_anim, blue_arrow_cave , yellow_dot, white_circle;
+	Animation m_icon, start_canon, triangle_R_anim, triangle_L_anim, blue_arrow_cave , yellow_dot, white_circle, boss, bossHit, big_explosion;
 	Animation blue_arrow_top_right, three_red_arrows, yellow_arrow_1, yellow_arrow_2, yellow_circle, red_circle, blue_circle, green_circle;
-	Animation yellow_arrow_3, yellow_arrow_4, left_purple_arrow, right_purple_arrow, ball_anim, explosion;
-	Animation side_canon_L, side_canon_R, map_M, map_A, map_P, chip_C, chip_H, chip_I, chip_P, orange_bar;
+	Animation yellow_arrow_3, yellow_arrow_4, left_purple_arrow, right_purple_arrow, ball_anim, explosion, green_rhombus_3;
+	Animation side_canon_L, side_canon_R, map_M, map_A, map_P, chip_C, chip_H, chip_I, chip_P, orange_bar, green_rhombus_1, green_rhombus_2;
 
 
 	//Win_Fail_Conditions
 	uint balls_left;
 
 	//Time controls
-	int current_time, hole_timer, bush_timer, yellow_dots_timer, circle_timer, color_circles;
+	int current_time, hole_timer, bush_timer, yellow_dots_timer, circle_timer, color_circles, rhombus_count, hit_timer,
+		rhombus_timer, boss_live, boss_timer;
 };

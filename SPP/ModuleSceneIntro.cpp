@@ -234,6 +234,38 @@ ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Modul
 	explosion.PushBack({ 270, 1258, 30, 30 });
 	explosion.loop = false;
 	explosion.speed = 0.05f;
+
+	green_rhombus_1.PushBack({ 348, 1630, 32, 30 });
+	green_rhombus_1.PushBack({ 162, 1700, 32, 30 });
+	green_rhombus_1.loop = false;
+	green_rhombus_1.speed = 0.1f;
+
+	green_rhombus_2.PushBack({ 348, 1630, 32, 30 });
+	green_rhombus_2.PushBack({ 162, 1700, 32, 30 });
+	green_rhombus_2.loop = false;
+	green_rhombus_2.speed = 0.1f;
+
+	green_rhombus_3.PushBack({ 348, 1630, 32, 30 });
+	green_rhombus_3.PushBack({ 162, 1700, 32, 30 });
+	green_rhombus_3.loop = false;
+	green_rhombus_3.speed = 0.1f;
+
+	boss.PushBack({ 0, 874, 116, 126 });
+	boss.PushBack({ 116, 874, 116, 126 });
+	boss.PushBack({ 226, 874, 116, 126 });
+	boss.loop = true;
+	boss.speed = 0.1f;
+
+	big_explosion.PushBack({ 662, 1656, 94, 94 });
+	big_explosion.PushBack({ 815, 1656, 94, 94 });
+	big_explosion.PushBack({ 984, 1656, 94, 94 });
+	big_explosion.PushBack({ 1138, 1656, 94, 94 });
+	big_explosion.loop = true;
+	big_explosion.speed = 0.1f;
+
+	bossHit.PushBack({ 352, 874, 116, 126 });
+	bossHit.loop = true;
+	bossHit.speed = 0.1f;
 }
 
 ModuleSceneIntro::~ModuleSceneIntro()
@@ -241,9 +273,10 @@ ModuleSceneIntro::~ModuleSceneIntro()
 
 bool ModuleSceneIntro::Start()
 {
-	balls_left = 3;
+	balls_left = boss_live = 3;
 	App->ui->score = 0;
-	current_time = hole_timer = bush_timer = yellow_dots_timer = circle_timer = color_circles = 0;
+	current_time = hole_timer = bush_timer = yellow_dots_timer = circle_timer = hit_timer
+		= rhombus_count = rhombus_timer = boss_timer = color_circles = 0;
 
 	if (!App->audio->IsEnabled() && App->audio->isAudioDeviceOpened) {
 		App->audio->Enable();
@@ -262,8 +295,8 @@ bool ModuleSceneIntro::Start()
 
 	LOG("Loading Intro assets");
 	bool ret = true;
-	blit_tunnel_control = inside_side_canon = canon_R_done = canon_L_done = in_mid_rail = dot_1 = dot_2 = dot_3 = dot_4
-		= ball_lost = inside_start_canon = ball_created = ball_in_rail = in_cave_hole = in_mid_hole = in_right_hole = false;
+	blit_tunnel_control = inside_side_canon = canon_R_done = canon_L_done = in_mid_rail = dot_1 = dot_2 = dot_3 = dot_4 = bossAlive = spawned
+		= ball_lost = inside_start_canon = ball_created = ball_in_rail = in_cave_hole = in_mid_hole = in_right_hole = boss_defeated = false;
 
 
 	App->renderer->camera.x = App->renderer->camera.y = 0;
@@ -474,6 +507,29 @@ update_status ModuleSceneIntro::Update()
 		yellow_dots_timer = 0;
 	}
 
+	//rhombus
+	switch (rhombus_count)
+	{
+	case 0:
+		break;
+	case 1:
+		App->renderer->Blit(pinball_spritesheet, 190, 452, &green_rhombus_1.GetCurrentFrame(), 1.0f);
+		break;
+	case 2:
+		App->renderer->Blit(pinball_spritesheet, 190, 452, &green_rhombus_1.GetCurrentFrame(), 1.0f);
+		App->renderer->Blit(pinball_spritesheet, 224, 460, &green_rhombus_2.GetCurrentFrame(), 1.0f);
+		break;
+	case 3:
+		App->renderer->Blit(pinball_spritesheet, 190, 452, &green_rhombus_1.GetCurrentFrame(), 1.0f);
+		App->renderer->Blit(pinball_spritesheet, 224, 460, &green_rhombus_2.GetCurrentFrame(), 1.0f);
+		App->renderer->Blit(pinball_spritesheet, 258, 452, &green_rhombus_3.GetCurrentFrame(), 1.0f);
+		break;
+	default:
+		break;
+	}
+
+	
+
 	//circle colors
 
 	switch (color_circles)
@@ -636,6 +692,40 @@ update_status ModuleSceneIntro::Update()
 
 	// Central piece
 	App->renderer->Blit(pinball_spritesheet, 184, 327, &rect_central_piece, 1.0f);
+
+	if (rhombus_count == 3 && rhombus_timer + 2000 < current_time && bossAlive && !(hit_timer + 1000 > current_time)) {
+		App->renderer->Blit(pinball_spritesheet, 188, 326, &boss.GetCurrentFrame(), 1.0f);
+		rhombus_count = 3;
+		rhombus_timer = 0;
+		green_rhombus_1.loop = green_rhombus_2.loop = green_rhombus_3.loop = true;
+		spawned = true;
+	}
+
+	if (hit_timer + 1000 > current_time && bossAlive ){
+
+		App->renderer->Blit(pinball_spritesheet, 188, 326, &bossHit.GetCurrentFrame(), 1.0f);
+	}
+
+	if (rhombus_count == 3 && rhombus_timer + 2000 > current_time) {
+		bossAlive = true;
+		green_rhombus_1.loop = green_rhombus_2.loop = green_rhombus_3.loop = true;
+		App->renderer->Blit(pinball_spritesheet, 190, 452, &green_rhombus_1.GetCurrentFrame(), 1.0f);
+		App->renderer->Blit(pinball_spritesheet, 224, 460, &green_rhombus_2.GetCurrentFrame(), 1.0f);
+		App->renderer->Blit(pinball_spritesheet, 258, 452, &green_rhombus_3.GetCurrentFrame(), 1.0f);
+
+		App->renderer->Blit(pinball_spritesheet, 195, 350, &big_explosion.GetCurrentFrame(), 1.0f);
+		App->renderer->Blit(pinball_spritesheet, 170, 370, &big_explosion.GetCurrentFrame(), 1.0f);
+		App->renderer->Blit(pinball_spritesheet, 220, 370, &big_explosion.GetCurrentFrame(), 1.0f);
+
+	}
+
+	if (boss_timer + 1500 > current_time && boss_defeated) {
+		App->renderer->Blit(pinball_spritesheet, 188, 326, &bossHit.GetCurrentFrame(), 1.0f);
+		App->renderer->Blit(pinball_spritesheet, 195, 350, &big_explosion.GetCurrentFrame(), 1.0f);
+		App->renderer->Blit(pinball_spritesheet, 170, 370, &big_explosion.GetCurrentFrame(), 1.0f);
+		App->renderer->Blit(pinball_spritesheet, 220, 370, &big_explosion.GetCurrentFrame(), 1.0f);
+	}
+	
 
 	// Cave
 	App->renderer->Blit(pinball_spritesheet, 171, 162, &rect_cave, 1.0f);
@@ -1311,6 +1401,28 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 				App->ui->score += 100;
 				App->audio->PlayFx(bonus_fx);
 			}
+
+			if (bodyB->physType == RHOMBUS && rhombus_count < 3)
+			{
+				rhombus_count++;
+				if (rhombus_count == 3) {
+
+					App->ui->score += 2500;
+					rhombus_timer = SDL_GetTicks();
+				}
+			}
+
+			if (bodyB->physType == BOSS && bossAlive && spawned)
+			{
+				boss_live--;
+				hit_timer = SDL_GetTicks();
+				if (boss_live == 0) {
+					boss_defeated = true;
+					bossAlive = false;
+					App->ui->score += 10000;
+					boss_timer = SDL_GetTicks();
+				}
+			}
 		
 
 			if (bodyB->physType == DEAD_SENSOR) 
@@ -1845,6 +1957,7 @@ void ModuleSceneIntro::setWalls() {
 	};
 
 	pinball_walls.add(App->physics->CreateChain(0, 0, right_U_top_points, 38, groupIndex::RIGID_PINBALL, 0.01f, NO_DEF_));
+	
 }
 
 void ModuleSceneIntro::setSensors() {
@@ -2260,6 +2373,44 @@ void ModuleSceneIntro::setSensors() {
 		yellow_vec_dot_4[i].Set(PIXEL_TO_METERS(yellow_dot_4[i * 2 + 0]), PIXEL_TO_METERS(yellow_dot_4[i * 2 + 1]));
 	}
 	sensors.add(App->physics->CreatePolygonSensor(0, 0, 4, yellow_vec_dot_4, DOT_4));
+
+
+	int rhombus_trigger_p[8] =
+	{
+		190, 375,
+		194, 436,
+		286, 437,
+		284, 378
+	};
+
+	b2Vec2 rhombus_vec_dot_4[4];
+
+	for (uint i = 0; i < 8 / 2; ++i)
+	{
+		rhombus_vec_dot_4[i].Set(PIXEL_TO_METERS(rhombus_trigger_p[i * 2 + 0]), PIXEL_TO_METERS(rhombus_trigger_p[i * 2 + 1]));
+	}
+	sensors.add(App->physics->CreatePolygonSensor(0, 0, 4, rhombus_vec_dot_4, RHOMBUS));
+
+	
+	int boss_points[14] =
+	{
+		230, 379,
+		195, 377,
+		190, 421,
+		219, 441,
+		258, 442,
+		281, 422,
+		279, 383
+	};
+
+	b2Vec2 boss_vec_dot_4[7];
+
+	for (uint i = 0; i < 14 / 2; ++i)
+	{
+		boss_vec_dot_4[i].Set(PIXEL_TO_METERS(boss_points[i * 2 + 0]), PIXEL_TO_METERS(boss_points[i * 2 + 1]));
+	}
+
+	boss_hitbox = App->physics->CreatePolygonSensor(0, 0, 7, boss_vec_dot_4, BOSS);
 }
 
 void ModuleSceneIntro::spawnBall() {
