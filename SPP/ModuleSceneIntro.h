@@ -53,7 +53,10 @@ public:
 
 	// Controls
 	bool sensed, ball_lost, blit_tunnel_control, inside_start_canon, ball_in_rail;
-	bool in_mid_rail, ball_created, inside_side_canon, canon_R_done, canon_L_done, in_cave_hole;
+	bool in_mid_rail, ball_created, inside_side_canon, canon_R_done, canon_L_done, in_cave_hole, in_mid_hole, in_right_hole;
+
+	//Ball position to teleport
+	int ball_x, ball_y;
 
 	//Animations
 	Animation m_icon, start_canon, triangle_R_anim, triangle_L_anim, blue_arrow_cave;

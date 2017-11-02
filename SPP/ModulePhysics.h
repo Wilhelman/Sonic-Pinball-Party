@@ -38,6 +38,8 @@ enum PhysBody_Type {
 	ENTRY_SIDE_CANON_L,
 	ENTRY_SIDE_CANON_R,
 	CAVE_HOLE,
+	MID_HOLE,
+	RIGHT_HOLE,
 
 
 	NO_DEF_

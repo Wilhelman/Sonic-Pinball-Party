@@ -2,8 +2,8 @@
 c:\users\guillermogs2\documents\github\sonic-pinball-party\spp\modulesceneintro.cpp(551): warning C4244: 'argument': conversion from 'int' to 'float32', possible loss of data
 c:\users\guillermogs2\documents\github\sonic-pinball-party\spp\modulesceneintro.cpp(578): warning C4244: 'argument': conversion from 'int' to 'float32', possible loss of data
 c:\users\guillermogs2\documents\github\sonic-pinball-party\spp\modulesceneintro.cpp(604): warning C4244: 'argument': conversion from 'int' to 'float32', possible loss of data
+c:\users\guillermogs2\documents\github\sonic-pinball-party\spp\modulesceneintro.cpp(653): warning C4244: 'argument': conversion from 'int' to 'float32', possible loss of data
+c:\users\guillermogs2\documents\github\sonic-pinball-party\spp\modulesceneintro.cpp(681): warning C4244: 'argument': conversion from 'int' to 'float32', possible loss of data
 c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.11.25503\include\limits(211): warning C4577: 'noexcept' used with no exception handling mode specified; termination on exception is not guaranteed. Specify /EHsc
-  ModuleAudio.cpp
-  Generating Code...
   SDL Game.vcxproj -> C:\Users\guillermogs2\Documents\GitHub\Sonic-Pinball-Party\SPP\Debug\2D Physics - class 4.exe
   SDL Game.vcxproj -> C:\Users\guillermogs2\Documents\GitHub\Sonic-Pinball-Party\SPP\Debug\2D Physics - class 4.pdb (Partial PDB)
