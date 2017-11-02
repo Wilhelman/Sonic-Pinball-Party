@@ -12,7 +12,8 @@ This project has been done by two catalan students of CITM - UPC (Terrasa, Spain
 
 ## About the game
 
-We have chosen to emulate one of the levels Sonic Pinball Party game (Game Boy Advance, 2003). The level selected is called Clawtz.  
+We have chosen to emulate one of the levels Sonic Pinball Party game (Game Boy Advance, 2003). The level selected is called Clawtz.
+You can see n original gameplay [here](https://youtu.be/Fh9MWeipSW0?t=1161).
 
 ## Installation instructions
 
@@ -28,7 +29,16 @@ Player controls:
 - LAUNCH BALL: Up arrow key (hold to charge plunger)
 
 General/developer controls:
-- EXIT GAME: ESC key
+- EXIT GAME: ESC key or click close button in window
+- DEBUG MODE**: F1 key
+- CREATE BALL: 1 key
+
+* Show chain and sensors and you can pick and drag the ball around (hold right mouse button).
+** CAUTION: The use of debugging option may break the game severely in certain points as it enters in conflict with the way the ball is destroyed.
+
+## How to play
+
+
 
 ## Team members
 
