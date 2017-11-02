@@ -57,6 +57,8 @@ public:
 	uint five_colors_fx;
 	uint four_dots_fx;
 	uint win_fx;
+	uint monster_roar_fx;
+	uint hit_wall_fx;
 
 	// Controls
 	bool sensed, ball_lost, blit_tunnel_control, inside_start_canon, ball_in_rail, dot_1, dot_2, dot_3, dot_4, bossAlive, spawned;

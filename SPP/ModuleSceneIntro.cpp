@@ -276,7 +276,7 @@ bool ModuleSceneIntro::Start()
 	balls_left = boss_live = 3;
 	App->ui->score = 0;
 	current_time = hole_timer = bush_timer = yellow_dots_timer = circle_timer = hit_timer
-		= rhombus_count = rhombus_timer = boss_timer = color_circles = 0;
+		= rhombus_count = rhombus_timer = boss_timer = color_circles = monster_roar_fx = hit_wall_fx = 0;
 
 	if (!App->audio->IsEnabled() && App->audio->isAudioDeviceOpened) {
 		App->audio->Enable();
@@ -310,6 +310,8 @@ bool ModuleSceneIntro::Start()
 		five_colors_fx = App->audio->LoadFx("audio/sound_fx/five_colors.wav");
 		bonus_fx = App->audio->LoadFx("audio/sound_fx/yellow_dot.wav");
 		win_fx = App->audio->LoadFx("audio/sound_fx/win.wav");
+		monster_roar_fx = App->audio->LoadFx("audio/sound_fx/monster_roar.wav");
+		hit_wall_fx = App->audio->LoadFx("audio/sound_fx/hit_wall.wav");
 		four_dots_fx = App->audio->LoadFx("audio/sound_fx/four_dots.wav");
 		if (!App->audio->PlayMusic("audio/music/Nightmaren.ogg"))
 			ret = false;
@@ -699,6 +701,7 @@ update_status ModuleSceneIntro::Update()
 		rhombus_timer = 0;
 		green_rhombus_1.loop = green_rhombus_2.loop = green_rhombus_3.loop = true;
 		spawned = true;
+		
 	}
 
 	if (hit_timer + 1000 > current_time && bossAlive ){
@@ -716,10 +719,9 @@ update_status ModuleSceneIntro::Update()
 		App->renderer->Blit(pinball_spritesheet, 195, 350, &big_explosion.GetCurrentFrame(), 1.0f);
 		App->renderer->Blit(pinball_spritesheet, 170, 370, &big_explosion.GetCurrentFrame(), 1.0f);
 		App->renderer->Blit(pinball_spritesheet, 220, 370, &big_explosion.GetCurrentFrame(), 1.0f);
-
 	}
 
-	if (boss_timer + 1500 > current_time && boss_defeated) {
+	if (boss_timer + 3000 > current_time && boss_defeated) {
 		App->renderer->Blit(pinball_spritesheet, 188, 326, &bossHit.GetCurrentFrame(), 1.0f);
 		App->renderer->Blit(pinball_spritesheet, 195, 350, &big_explosion.GetCurrentFrame(), 1.0f);
 		App->renderer->Blit(pinball_spritesheet, 170, 370, &big_explosion.GetCurrentFrame(), 1.0f);
@@ -1405,15 +1407,18 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 			if (bodyB->physType == RHOMBUS && rhombus_count < 3)
 			{
 				rhombus_count++;
+				App->audio->PlayFx(hit_wall_fx);
 				if (rhombus_count == 3) {
 
 					App->ui->score += 2500;
 					rhombus_timer = SDL_GetTicks();
+					App->audio->PlayFx(monster_roar_fx);
 				}
 			}
 
-			if (bodyB->physType == BOSS && bossAlive && spawned)
+			if (bodyB->physType == BOSS && bossAlive && spawned && boss_live > 0)
 			{
+				App->audio->PlayFx(hit_wall_fx);
 				boss_live--;
 				hit_timer = SDL_GetTicks();
 				if (boss_live == 0) {
@@ -1421,6 +1426,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 					bossAlive = false;
 					App->ui->score += 10000;
 					boss_timer = SDL_GetTicks();
+					App->audio->PlayFx(monster_roar_fx);
 				}
 			}
 		
