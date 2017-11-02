@@ -188,10 +188,10 @@ ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Modul
 	chip_P.loop = true;
 	chip_P.speed = 0.04f;
 
-	orange_bar.PushBack({ 453, 1698, 62, 62 });
 	orange_bar.PushBack({ 555, 1710, 62, 62 });
+	orange_bar.PushBack({ 453, 1698, 62, 62 });
 	orange_bar.loop = true;
-	orange_bar.speed = 0.05f;
+	orange_bar.speed = 0.07f;
 
 	ball_anim.PushBack({ 0, 1418, 28, 28 });
 	ball_anim.PushBack({ 38, 1418, 28, 28 });
@@ -215,7 +215,7 @@ bool ModuleSceneIntro::Start()
 	App->ui->score = 0;
 	current_time = hole_timer = 0;
 
-	if (!App->audio->IsEnabled()) {
+	if (!App->audio->IsEnabled() && App->audio->isAudioDeviceOpened) {
 		App->audio->Enable();
 		App->audio->Init();
 	}
@@ -223,6 +223,11 @@ bool ModuleSceneIntro::Start()
 	if (!App->textures->IsEnabled()) {
 		App->textures->Enable();
 		App->textures->Init();
+	}
+
+	if (!App->ui->IsEnabled()) {
+		App->ui->Enable();
+		App->ui->Start();
 	}
 
 	LOG("Loading Intro assets");
@@ -233,15 +238,14 @@ bool ModuleSceneIntro::Start()
 
 	App->renderer->camera.x = App->renderer->camera.y = 0;
 
-	hole_in_fx = App->audio->LoadFx("audio/sound_fx/hole_in.wav");
-	hole_out_fx = App->audio->LoadFx("audio/sound_fx/hole_out.wav");
-
-	triangle_fx = App->audio->LoadFx("audio/sound_fx/bouncing_triangle.wav");
-
-	start_canon_fx = App->audio->LoadFx("audio/sound_fx/canon_shot.wav");
-
-	if (!App->audio->PlayMusic("audio/music/Nightmaren.ogg"))
-		ret = false;
+	if (App->audio->isAudioDeviceOpened) {
+		hole_in_fx = App->audio->LoadFx("audio/sound_fx/hole_in.wav");
+		hole_out_fx = App->audio->LoadFx("audio/sound_fx/hole_out.wav");
+		triangle_fx = App->audio->LoadFx("audio/sound_fx/bouncing_triangle.wav");
+		start_canon_fx = App->audio->LoadFx("audio/sound_fx/canon_shot.wav");
+		if (!App->audio->PlayMusic("audio/music/Nightmaren.ogg"))
+			ret = false;
+	}
 
 	pinball_spritesheet = App->textures->Load("pinball/pinball_sonic_spritesheet.png");
 
@@ -353,6 +357,8 @@ bool ModuleSceneIntro::CleanUp()
 
 	App->player->CleanUp();
 	App->player->Disable();
+	App->ui->CleanUp();
+	App->ui->Disable();
 	App->audio->CleanUp();
 	App->audio->Disable();
 	App->textures->CleanUp();
@@ -603,15 +609,19 @@ update_status ModuleSceneIntro::Update()
 	}
 
 	//HOLE TELEPORT
-	if (in_cave_hole && hole_timer + 500 < current_time)
-	{
-		App->audio->PlayFx(hole_out_fx);
+	if (in_cave_hole) {
 		for (p2List_item<PhysBody*>* bc = balls.getFirst(); bc != NULL; bc = bc->next)
 		{
 			App->physics->world->DestroyBody(bc->data->body);
 		}
 		balls.clear();
+	}
 
+	if (in_cave_hole && hole_timer + 500 < current_time)
+	{
+		App->audio->PlayFx(hole_out_fx);
+		App->ui->score += 1000;
+		
 		balls.add(App->physics->CreateBall(260, 72, 14));
 		balls.getLast()->data->listener = this;
 		ball_created = true;
@@ -656,7 +666,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 		{
 			if (bodyB->physType == TRIANGLE)
 			{
-				App->ui->score += 200;
+				App->ui->score += 400;
 				App->audio->PlayFx(triangle_fx);
 			}
 
@@ -1017,14 +1027,6 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 			{
 				App->audio->PlayFx(hole_in_fx);
 				in_cave_hole = true;
-				for (p2List_item<PhysBody*>* ball_item = balls.getFirst(); ball_item != NULL; ball_item = ball_item->next)
-				{
-					int x, y;
-					bc->data->GetPosition(x, y);
-					bc->data->body->SetGravityScale(0.0f);
-					bc->data->body->SetLinearVelocity(b2Vec2(0, 0));
-					bc->data->body->SetAngularVelocity(0);
-				}
 				hole_timer = SDL_GetTicks();
 			}
 		
@@ -1819,10 +1821,10 @@ void ModuleSceneIntro::setSensors() {
 
 	int cave_hole[8] =
 	{
-		200, 198,
-		201, 219,
-		221, 219,
-		223, 198
+		203, 195,
+		203, 214,
+		220, 214,
+		220, 195
 	};
 
 	b2Vec2 vec_cave_hole[4];

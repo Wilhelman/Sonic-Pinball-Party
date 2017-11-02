@@ -28,8 +28,10 @@ bool ModulePlayer::Start()
 	
 	flippers_tex = App->textures->Load("pinball/pinball_sonic_spritesheet.png");
 
-	flipper_hit_fx = App->audio->LoadFx("audio/sound_fx/flipper_hit.wav");
-	plunge_fx = App->audio->LoadFx("audio/sound_fx/fire_ball.wav");
+	if (App->audio->isAudioDeviceOpened) {
+		flipper_hit_fx = App->audio->LoadFx("audio/sound_fx/flipper_hit.wav");
+		plunge_fx = App->audio->LoadFx("audio/sound_fx/fire_ball.wav");
+	}
 
 	rect_rFlipper.h = 20;
 	rect_rFlipper.w = 60;
