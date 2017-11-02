@@ -52,6 +52,9 @@ public:
 	uint triangle_fx;
 	uint start_canon_fx;
 	uint bonus_fx;
+	uint lose_fx;
+	uint five_colors_fx;
+	uint four_dots_fx;
 
 	// Controls
 	bool sensed, ball_lost, blit_tunnel_control, inside_start_canon, ball_in_rail, dot_1, dot_2, dot_3, dot_4;

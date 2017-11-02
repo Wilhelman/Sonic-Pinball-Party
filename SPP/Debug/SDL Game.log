@@ -1,37 +1,21 @@
-﻿  log.cpp
-  ModuleWindow.cpp
+﻿  ModuleSceneIntro.cpp
+j:\github\sonic-pinball-party\spp\modulesceneintro.cpp(685): warning C4244: 'argumento': conversión de 'int' a 'float32'; posible pérdida de datos
+j:\github\sonic-pinball-party\spp\modulesceneintro.cpp(712): warning C4244: 'argumento': conversión de 'int' a 'float32'; posible pérdida de datos
+j:\github\sonic-pinball-party\spp\modulesceneintro.cpp(739): warning C4244: 'argumento': conversión de 'int' a 'float32'; posible pérdida de datos
+j:\github\sonic-pinball-party\spp\modulesceneintro.cpp(792): warning C4244: 'argumento': conversión de 'int' a 'float32'; posible pérdida de datos
+j:\github\sonic-pinball-party\spp\modulesceneintro.cpp(822): warning C4244: 'argumento': conversión de 'int' a 'float32'; posible pérdida de datos
+c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.11.25503\include\limits(211): warning C4577: si se usa 'noexcept' sin ningún modo de control de excepciones especificado, la finalización de la excepción no está garantizada. Especifique /EHsc
+  Generando código...
+  Compilando...
   ModuleUI.cpp
 j:\github\sonic-pinball-party\spp\moduleui.cpp(154): warning C4018: '<': no coinciden signed/unsigned
 c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.11.25503\include\limits(211): warning C4577: si se usa 'noexcept' sin ningún modo de control de excepciones especificado, la finalización de la excepción no está garantizada. Especifique /EHsc
-  ModuleTextures.cpp
-  ModuleSceneIntro.cpp
-j:\github\sonic-pinball-party\spp\modulesceneintro.cpp(681): warning C4244: 'argumento': conversión de 'int' a 'float32'; posible pérdida de datos
-j:\github\sonic-pinball-party\spp\modulesceneintro.cpp(708): warning C4244: 'argumento': conversión de 'int' a 'float32'; posible pérdida de datos
-j:\github\sonic-pinball-party\spp\modulesceneintro.cpp(735): warning C4244: 'argumento': conversión de 'int' a 'float32'; posible pérdida de datos
-j:\github\sonic-pinball-party\spp\modulesceneintro.cpp(788): warning C4244: 'argumento': conversión de 'int' a 'float32'; posible pérdida de datos
-j:\github\sonic-pinball-party\spp\modulesceneintro.cpp(818): warning C4244: 'argumento': conversión de 'int' a 'float32'; posible pérdida de datos
-c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.11.25503\include\limits(211): warning C4577: si se usa 'noexcept' sin ningún modo de control de excepciones especificado, la finalización de la excepción no está garantizada. Especifique /EHsc
-  ModuleRender.cpp
   ModulePlayer.cpp
 j:\github\sonic-pinball-party\spp\moduleplayer.cpp(86): warning C4244: 'argumento': conversión de 'float32' a 'int'; posible pérdida de datos
 j:\github\sonic-pinball-party\spp\moduleplayer.cpp(89): warning C4244: 'argumento': conversión de 'float32' a 'int'; posible pérdida de datos
 c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.11.25503\include\limits(211): warning C4577: si se usa 'noexcept' sin ningún modo de control de excepciones especificado, la finalización de la excepción no está garantizada. Especifique /EHsc
-  ModulePhysics.cpp
-j:\github\sonic-pinball-party\spp\modulephysics.cpp(338): warning C4244: '=': conversión de 'float' a 'int'; posible pérdida de datos
-j:\github\sonic-pinball-party\spp\modulephysics.cpp(339): warning C4244: '=': conversión de 'float' a 'int'; posible pérdida de datos
-j:\github\sonic-pinball-party\spp\modulephysics.cpp(383): warning C4018: '<': no coinciden signed/unsigned
-j:\github\sonic-pinball-party\spp\modulephysics.cpp(616): warning C4244: 'inicializando': conversión de 'int' a 'float'; posible pérdida de datos
-j:\github\sonic-pinball-party\spp\modulephysics.cpp(617): warning C4244: 'inicializando': conversión de 'int' a 'float'; posible pérdida de datos
-j:\github\sonic-pinball-party\spp\modulephysics.cpp(623): warning C4244: 'return': conversión de 'float32' a 'int'; posible pérdida de datos
-c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.11.25503\include\cmath(113): warning C4577: si se usa 'noexcept' sin ningún modo de control de excepciones especificado, la finalización de la excepción no está garantizada. Especifique /EHsc
-  ModuleInput.cpp
-  ModuleAudio.cpp
-  Main.cpp
   Application.cpp
 c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.11.25503\include\limits(211): warning C4577: si se usa 'noexcept' sin ningún modo de control de excepciones especificado, la finalización de la excepción no está garantizada. Especifique /EHsc
   Generando código...
-  Omitiendo... (no se detectaron cambios relevantes)
-  ModuleFadeToBlack.cpp
-  LINK : no se encontró J:\Github\Sonic-Pinball-Party\SPP\Debug\2D Physics - class 4.exe o no lo generó el último vínculo incremental; ejecutando vínculo completo
   SDL Game.vcxproj -> J:\Github\Sonic-Pinball-Party\SPP\Debug\2D Physics - class 4.exe
   SDL Game.vcxproj -> J:\Github\Sonic-Pinball-Party\SPP\Debug\2D Physics - class 4.pdb (Partial PDB)

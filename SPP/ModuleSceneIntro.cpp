@@ -273,7 +273,10 @@ bool ModuleSceneIntro::Start()
 		hole_out_fx = App->audio->LoadFx("audio/sound_fx/hole_out.wav");
 		triangle_fx = App->audio->LoadFx("audio/sound_fx/bouncing_triangle.wav");
 		start_canon_fx = App->audio->LoadFx("audio/sound_fx/canon_shot.wav");
+		lose_fx = App->audio->LoadFx("audio/sound_fx/lose.wav");
+		five_colors_fx = App->audio->LoadFx("audio/sound_fx/five_colors.wav");
 		bonus_fx = App->audio->LoadFx("audio/sound_fx/yellow_dot.wav");
+		four_dots_fx = App->audio->LoadFx("audio/sound_fx/four_dots.wav");
 		if (!App->audio->PlayMusic("audio/music/Nightmaren.ogg"))
 			ret = false;
 	}
@@ -454,6 +457,7 @@ update_status ModuleSceneIntro::Update()
 		yellow_dot.loop = true;
 		yellow_dots_timer = SDL_GetTicks();
 		yellow_dot.speed = 0.01f;
+		App->audio->PlayFx(four_dots_fx);
 	}
 
 	if (yellow_dots_timer + 2000 > current_time && (dot_1 && dot_2 && dot_3 && dot_4)) {
@@ -1232,8 +1236,10 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 				App->audio->PlayFx(hole_in_fx);
 				in_cave_hole = true;
 				hole_timer = SDL_GetTicks();
-				if (color_circles == 5)
+				if (color_circles == 5) {
 					circle_timer = SDL_GetTicks();
+					App->audio->PlayFx(five_colors_fx);
+				}
 			}
 
 			if (bodyB->physType == MID_HOLE && !in_mid_hole && hole_timer + 1500 < current_time)
@@ -1246,8 +1252,10 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 				App->audio->PlayFx(hole_in_fx);
 				in_mid_hole = true;
 				hole_timer = SDL_GetTicks();
-				if (color_circles == 5)
+				if (color_circles == 5) {
 					circle_timer = SDL_GetTicks();
+					App->audio->PlayFx(five_colors_fx);
+				}
 			}
 
 			if (bodyB->physType == RIGHT_HOLE && !in_right_hole && hole_timer + 1500 < current_time)
@@ -1260,8 +1268,10 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 				App->audio->PlayFx(hole_in_fx);
 				in_right_hole = true;
 				hole_timer = SDL_GetTicks();
-				if (color_circles == 5)
+				if (color_circles == 5) {
 					circle_timer = SDL_GetTicks();
+					App->audio->PlayFx(five_colors_fx);
+				}
 			}
 
 			if (bodyB->physType == BUSH && !ball_in_rail)
@@ -1303,9 +1313,8 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 
 			if (bodyB->physType == DEAD_SENSOR) 
 			{
+				App->audio->PlayFx(lose_fx);
 				ball_lost = true;
-
-				//balls.getLast()->data->listener = this;
 			}
 		}
 	}
