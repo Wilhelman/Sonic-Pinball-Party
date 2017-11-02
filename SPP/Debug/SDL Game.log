@@ -1,17 +1,16 @@
 ﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(387,5): warning MSB8028: El directorio intermedio (Debug\) contiene archivos compartidos de otro proyecto (2D Physics - class 4.vcxproj). Esto puede dar lugar a un comportamiento incorrecto de limpieza y recompilación.
-  Omitiendo... (no se detectaron cambios relevantes)
-  ModuleWindow.cpp
-  ModuleUI.cpp
-  ModuleTextures.cpp
-  ModuleSceneIntro.cpp
-  ModuleRender.cpp
   ModulePlayer.cpp
-  ModulePhysics.cpp
-  ModuleInput.cpp
-  ModuleFadeToBlack.cpp
-  ModuleAudio.cpp
-  Main.cpp
-  log.cpp
+c:\users\víctor masó\documents\github\sonic-pinball-party\spp\moduleplayer.cpp(85): warning C4244: 'argumento': conversión de 'float32' a 'int'; posible pérdida de datos
+c:\users\víctor masó\documents\github\sonic-pinball-party\spp\moduleplayer.cpp(88): warning C4244: 'argumento': conversión de 'float32' a 'int'; posible pérdida de datos
+c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.10.25017\include\limits(211): warning C4577: si se usa 'noexcept' sin ningún modo de control de excepciones especificado, la finalización de la excepción no está garantizada. Especifique /EHsc
+  Generando código...
+  Compilando...
   Application.cpp
-  SDL Game.vcxproj -> J:\Github\Sonic-Pinball-Party\SPP\Debug\Sonic Pinball Party.exe
-  SDL Game.vcxproj -> J:\Github\Sonic-Pinball-Party\SPP\Debug\Sonic Pinball Party.pdb (Partial PDB)
+c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.10.25017\include\limits(211): warning C4577: si se usa 'noexcept' sin ningún modo de control de excepciones especificado, la finalización de la excepción no está garantizada. Especifique /EHsc
+  Generando código...
+  Omitiendo... (no se detectaron cambios relevantes)
+  ModuleUI.cpp
+  ModuleSceneIntro.cpp
+  ModuleFadeToBlack.cpp
+  SDL Game.vcxproj -> C:\Users\Víctor Masó\Documents\GitHub\Sonic-Pinball-Party\SPP\Debug\Sonic Pinball Party.exe
+  SDL Game.vcxproj -> C:\Users\Víctor Masó\Documents\GitHub\Sonic-Pinball-Party\SPP\Debug\Sonic Pinball Party.pdb (Partial PDB)

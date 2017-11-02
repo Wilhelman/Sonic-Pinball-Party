@@ -22,7 +22,6 @@ bool ModulePlayer::Start()
 {
 	LOG("Loading player");
 
-	
 	right_flipper = App->physics->CreateRightFlipper();
 	left_flipper = App->physics->CreateLeftFlipper();
 	plunge = App->physics->CreatePlunge();
@@ -79,7 +78,6 @@ bool ModulePlayer::CleanUp()
 // Update: draw background
 update_status ModulePlayer::Update()
 {
-
 	// ----- Blitting flippers -----
 
 	b2Vec2 anchorRVec = right_flipper->joint->GetAnchorB();
@@ -101,9 +99,12 @@ update_status ModulePlayer::Update()
 		App->audio->PlayFx(plunge_fx);
 		
 
-	// ----- Flippers and plunge input control -----
-	if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_DOWN) {
-		if (!(App->scene_intro->dot_1 && App->scene_intro->dot_2 && App->scene_intro->dot_3 && App->scene_intro->dot_4)) {
+	// ----- Flippers, plunge input control and yellow lights functionality -----
+
+	if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_DOWN) 
+	{
+		if (!(App->scene_intro->dot_1 && App->scene_intro->dot_2 && App->scene_intro->dot_3 && App->scene_intro->dot_4)) 
+		{
 			bool last1 = App->scene_intro->dot_1;
 			bool last2 = App->scene_intro->dot_2;
 			bool last3 = App->scene_intro->dot_3;
@@ -115,8 +116,10 @@ update_status ModulePlayer::Update()
 		}
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_DOWN) {
-		if (!(App->scene_intro->dot_1 && App->scene_intro->dot_2 && App->scene_intro->dot_3 && App->scene_intro->dot_4)) {
+	if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_DOWN) 
+	{
+		if (!(App->scene_intro->dot_1 && App->scene_intro->dot_2 && App->scene_intro->dot_3 && App->scene_intro->dot_4)) 
+		{
 			bool last1 = App->scene_intro->dot_1;
 			bool last2 = App->scene_intro->dot_2;
 			bool last3 = App->scene_intro->dot_3;

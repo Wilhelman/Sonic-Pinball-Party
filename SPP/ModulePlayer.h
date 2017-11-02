@@ -30,5 +30,4 @@ public:
 
 	uint flipper_hit_fx;
 	uint plunge_fx;
-	
 };

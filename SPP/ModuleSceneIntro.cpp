@@ -13,12 +13,17 @@
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 	pinball_spritesheet = NULL;
-	// Animations settings
+
+	// Here we set up all animations in the scene
+
+	// M icon
 
 	m_icon.PushBack({ 344, 1144, 60, 36 });
 	m_icon.PushBack({ 1826, 555, 60, 36 });
 	m_icon.loop = true;
 	m_icon.speed = 0.07f;
+
+	//Start canon
 
 	start_canon.PushBack({ 575, 1499, 62, 64 });
 	start_canon.PushBack({ 676, 1499, 62, 64 });
@@ -26,6 +31,8 @@ ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Modul
 	start_canon.PushBack({ 575, 1499, 62, 64 });
 	start_canon.loop = false;
 	start_canon.speed = 0.0f;
+
+	// Bouncing triangles
 
 	triangle_L_anim.PushBack({ 474, 1100, 42, 80 });
 	triangle_L_anim.PushBack({ 526, 1100, 42, 80 });
@@ -36,6 +43,8 @@ ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Modul
 	triangle_R_anim.PushBack({ 630, 1100, 42, 80 });
 	triangle_R_anim.loop = true;
 	triangle_R_anim.speed = 0.1f;
+
+	// Arrows
 
 	blue_arrow_cave.PushBack({ 163, 1475, 46, 38 });
 	blue_arrow_cave.PushBack({ 163, 1517, 46, 38 });
@@ -56,7 +65,6 @@ ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Modul
 	yellow_arrow_1.PushBack({ 348, 1630, 24, 36 });
 	yellow_arrow_1.PushBack({ 348, 1630, 24, 36 });
 	yellow_arrow_1.PushBack({ 348, 1630, 24, 36 });
-
 	yellow_arrow_1.loop = true;
 	yellow_arrow_1.speed = 0.07f;
 
@@ -91,6 +99,8 @@ ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Modul
 	right_purple_arrow.loop = true;
 	right_purple_arrow.speed = 0.07f;
 
+	// Side canons
+
 	side_canon_L.PushBack({ 109, 1246, 34, 42 });
 	side_canon_L.PushBack({ 39, 1246, 34, 42 });
 	side_canon_L.PushBack({ 109, 1246, 34, 42 });
@@ -103,7 +113,7 @@ ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Modul
 	side_canon_R.loop = false;
 	side_canon_R.speed = 0.0f;
 
-	//MAP LETTERS
+	//Map Letters
 
 	map_M.PushBack({ 40, 1728, 38, 30 });
 	map_M.PushBack({ 91, 1730, 38, 30 });
@@ -188,10 +198,14 @@ ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Modul
 	chip_P.loop = true;
 	chip_P.speed = 0.04f;
 
+	// Orange bar
+
 	orange_bar.PushBack({ 555, 1710, 62, 62 });
 	orange_bar.PushBack({ 453, 1698, 62, 62 });
 	orange_bar.loop = true;
 	orange_bar.speed = 0.07f;
+
+	// Ball
 
 	ball_anim.PushBack({ 0, 1418, 28, 28 });
 	ball_anim.PushBack({ 38, 1418, 28, 28 });
@@ -199,6 +213,8 @@ ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Modul
 	ball_anim.PushBack({ 114, 1418, 28, 28 });
 	ball_anim.loop = true;
 	ball_anim.speed = 0.0f;
+
+	// Dots and circles
 
 	yellow_dot.PushBack({ 348, 1630, 21, 22 });
 	yellow_dot.PushBack({ 962, 1050, 21, 22 });
@@ -230,10 +246,14 @@ ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Modul
 	green_circle.loop = false;
 	green_circle.speed = 0.1f;
 
+	// Explosion
+
 	explosion.PushBack({ 234, 1263, 30, 30 });
 	explosion.PushBack({ 270, 1258, 30, 30 });
 	explosion.loop = false;
 	explosion.speed = 0.05f;
+
+	// Green rhombus
 
 	green_rhombus_1.PushBack({ 348, 1630, 32, 30 });
 	green_rhombus_1.PushBack({ 162, 1700, 32, 30 });
@@ -250,11 +270,15 @@ ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Modul
 	green_rhombus_3.loop = false;
 	green_rhombus_3.speed = 0.1f;
 
+	// Boss
+
 	boss.PushBack({ 0, 874, 116, 126 });
 	boss.PushBack({ 116, 874, 116, 126 });
 	boss.PushBack({ 226, 874, 116, 126 });
 	boss.loop = true;
 	boss.speed = 0.1f;
+
+	//Boss explosion
 
 	big_explosion.PushBack({ 662, 1656, 94, 94 });
 	big_explosion.PushBack({ 815, 1656, 94, 94 });
@@ -262,6 +286,8 @@ ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Modul
 	big_explosion.PushBack({ 1138, 1656, 94, 94 });
 	big_explosion.loop = true;
 	big_explosion.speed = 0.1f;
+
+	// Boss hitted
 
 	bossHit.PushBack({ 352, 874, 116, 126 });
 	bossHit.loop = true;
@@ -301,7 +327,8 @@ bool ModuleSceneIntro::Start()
 
 	App->renderer->camera.x = App->renderer->camera.y = 0;
 
-	if (App->audio->isAudioDeviceOpened) {
+	if (App->audio->isAudioDeviceOpened) 
+	{
 		hole_in_fx = App->audio->LoadFx("audio/sound_fx/hole_in.wav");
 		hole_out_fx = App->audio->LoadFx("audio/sound_fx/hole_out.wav");
 		triangle_fx = App->audio->LoadFx("audio/sound_fx/bouncing_triangle.wav");
@@ -313,6 +340,7 @@ bool ModuleSceneIntro::Start()
 		monster_roar_fx = App->audio->LoadFx("audio/sound_fx/monster_roar.wav");
 		hit_wall_fx = App->audio->LoadFx("audio/sound_fx/hit_wall.wav");
 		four_dots_fx = App->audio->LoadFx("audio/sound_fx/four_dots.wav");
+
 		if (!App->audio->PlayMusic("audio/music/Nightmaren.ogg"))
 			ret = false;
 	}
@@ -375,6 +403,7 @@ bool ModuleSceneIntro::Start()
 
 	App->player->Enable();
 	
+	// Spawning ball
 	spawnBall();
 
 	return ret;
@@ -432,12 +461,16 @@ bool ModuleSceneIntro::CleanUp()
 
 	App->player->CleanUp();
 	App->player->Disable();
+
 	App->ui->CleanUp();
 	App->ui->Disable();
+
 	App->audio->CleanUp();
 	App->audio->Disable();
+
 	App->textures->CleanUp();
 	App->textures->Disable();
+
 	balls.clear();
 	pinball_walls.clear();
 	sensors.clear();
@@ -446,21 +479,18 @@ bool ModuleSceneIntro::CleanUp()
 	return true;
 }
 
-// Update: draw background
 update_status ModuleSceneIntro::Update()
 {
-	//Blitting 
+	// Here we update EVERYTHING that happens in scene
 
-
-
-	//BG
+	// Blitting background
 	App->renderer->Blit(pinball_spritesheet, 0, 0, &rect_bg, 1.0f);
 	
-	// Bouncing triangles
+	// Blitting Bouncing triangles
 	App->renderer->Blit(pinball_spritesheet, 113, 621, &triangle_L_anim.GetCurrentFrame(), 1.0f);
 	App->renderer->Blit(pinball_spritesheet, 325, 621, &triangle_R_anim.GetCurrentFrame(), 1.0f);
 
-	// Arrows
+	// Blitting Arrows
 	App->renderer->Blit(pinball_spritesheet, 191, 227, &blue_arrow_cave.GetCurrentFrame(), 1.0f);
 	App->renderer->Blit(pinball_spritesheet, 271, 280, &three_red_arrows.GetCurrentFrame(), 1.0f);
 	App->renderer->Blit(pinball_spritesheet, 378, 208, &blue_arrow_top_right.GetCurrentFrame(), 1.0f);
@@ -472,7 +502,7 @@ update_status ModuleSceneIntro::Update()
 	App->renderer->Blit(pinball_spritesheet, 410, 428, &right_purple_arrow.GetCurrentFrame(), 1.0f);
 	App->renderer->Blit(pinball_spritesheet, 210, 722, &m_icon.GetCurrentFrame(), 1.0f);
 
-	// Dots
+	// Blitting Dots
 	if (dot_1) {
 		App->renderer->Blit(pinball_spritesheet, 38, 606, &yellow_dot.GetCurrentFrame(), 1.0f);
 	}
@@ -509,7 +539,7 @@ update_status ModuleSceneIntro::Update()
 		yellow_dots_timer = 0;
 	}
 
-	//rhombus
+	//Blitting Rhombus
 	switch (rhombus_count)
 	{
 	case 0:
@@ -530,9 +560,7 @@ update_status ModuleSceneIntro::Update()
 		break;
 	}
 
-	
-
-	//circle colors
+	// Blitting Circle Colors
 
 	switch (color_circles)
 	{
@@ -583,24 +611,23 @@ update_status ModuleSceneIntro::Update()
 		white_circle.loop = yellow_circle.loop = red_circle.loop = blue_circle.loop = green_circle.loop = false;
 	}
 
-
-
-	// Map Letters
+	// Blitting Map Letters
 	App->renderer->Blit(pinball_spritesheet, 68, 480, &map_M.GetCurrentFrame(), 1.0f);
 	App->renderer->Blit(pinball_spritesheet, 68, 512, &map_A.GetCurrentFrame(), 1.0f);
 	App->renderer->Blit(pinball_spritesheet, 68, 544, &map_P.GetCurrentFrame(), 1.0f);
 
-	// Chip letters
+	// Blitting Chip letters
 	App->renderer->Blit(pinball_spritesheet, 28, 210, &chip_C.GetCurrentFrame(), 1.0f);
 	App->renderer->Blit(pinball_spritesheet, 34, 246, &chip_H.GetCurrentFrame(), 1.0f);
 	App->renderer->Blit(pinball_spritesheet, 46, 280, &chip_I.GetCurrentFrame(), 1.0f);
 	App->renderer->Blit(pinball_spritesheet, 60, 312, &chip_P.GetCurrentFrame(), 1.0f);
 
-	//Orange bar
+	//Blitting Orange bar
 	App->renderer->Blit(pinball_spritesheet, 410, 450, &orange_bar.GetCurrentFrame(), 1.0f);
 	
-	//Tunnels
-	if (blit_tunnel_control)//in tunnel
+	//Blitting Tunnels
+
+	if (blit_tunnel_control) //in tunnel
 	{
 		App->renderer->Blit(pinball_spritesheet, 0, 27, &rect_rail, 1.0f);
 		App->renderer->Blit(pinball_spritesheet, 0, 0, &rect_tunnel, 1.0f);
@@ -679,7 +706,7 @@ update_status ModuleSceneIntro::Update()
 
 				ball_item = ball_item->next;
 			}
-			//bushes
+			//Blitting bushes
 			App->renderer->Blit(pinball_spritesheet, 74, 162, &rect_bush, 1.0f);
 			App->renderer->Blit(pinball_spritesheet, 104, 130, &rect_bush, 1.0f);
 			App->renderer->Blit(pinball_spritesheet, 0, 27, &rect_rail, 1.0f);
@@ -689,11 +716,13 @@ update_status ModuleSceneIntro::Update()
 			
 	}
 
-	// Plunge
+	// Blitting Plunge
 	App->renderer->Blit(pinball_spritesheet, 467, 463, &rect_plunge_struct, 1.0f);
 
-	// Central piece
+	// Blitting Central piece
 	App->renderer->Blit(pinball_spritesheet, 184, 327, &rect_central_piece, 1.0f);
+
+	// Blitting boss control and green rhombus
 
 	if (rhombus_count == 3 && rhombus_timer + 2000 < current_time && bossAlive && !(hit_timer + 1000 > current_time)) {
 		App->renderer->Blit(pinball_spritesheet, 188, 326, &boss.GetCurrentFrame(), 1.0f);
@@ -701,7 +730,6 @@ update_status ModuleSceneIntro::Update()
 		rhombus_timer = 0;
 		green_rhombus_1.loop = green_rhombus_2.loop = green_rhombus_3.loop = true;
 		spawned = true;
-		
 	}
 
 	if (hit_timer + 1000 > current_time && bossAlive ){
@@ -729,10 +757,10 @@ update_status ModuleSceneIntro::Update()
 	}
 	
 
-	// Cave
+	// Blitting Cave
 	App->renderer->Blit(pinball_spritesheet, 171, 162, &rect_cave, 1.0f);
 
-	//Cannons
+	// Blitting Cannons
 	App->renderer->Blit(pinball_spritesheet, 452, 559, &start_canon.GetCurrentFrame(), 1.0f);
 	App->renderer->Blit(pinball_spritesheet, 29, 788, &side_canon_L.GetCurrentFrame(), 1.0f);
 	App->renderer->Blit(pinball_spritesheet, 419, 788, &side_canon_R.GetCurrentFrame(), 1.0f);
@@ -745,17 +773,7 @@ update_status ModuleSceneIntro::Update()
 		balls.getLast()->data->listener = this;
 	}
 
-	// ----- Blitting ------
-
-	// Prepare for raycast ------------------------------------------------------
-	
-	iPoint mouse;
-	mouse.x = App->input->GetMouseX();
-	mouse.y = App->input->GetMouseY();
-
-	fVector normal(0.0f, 0.0f);
-
-	//MAIN CANNON
+	// Start canon control
 	if (start_canon.GetCurrentFrame().x == 801 && !ball_created && inside_start_canon)
 	{
 		for (p2List_item<PhysBody*>* bc = balls.getFirst(); bc != NULL; bc = bc->next)
@@ -767,8 +785,6 @@ update_status ModuleSceneIntro::Update()
 		balls.add(App->physics->CreateBall(485, 608, 14));
 		balls.getLast()->data->listener = this;
 		ball_created = true;
-
-		
 
 		for (p2List_item<PhysBody*>* bc = balls.getFirst(); bc != NULL; bc = bc->next)
 		{
@@ -782,7 +798,7 @@ update_status ModuleSceneIntro::Update()
 			inside_start_canon = false;
 	}
 
-	//LEFT CANNON
+	//Left Canon control
 	if (side_canon_L.GetCurrentFrame().x == 39 && !ball_created && inside_side_canon)
 	{
 		for (p2List_item<PhysBody*>* bc = balls.getFirst(); bc != NULL; bc = bc->next)
@@ -808,7 +824,7 @@ update_status ModuleSceneIntro::Update()
 		inside_side_canon = false;
 	}
 
-	//RIGHT CANNON
+	// Right Canon control
 	if (side_canon_R.GetCurrentFrame().x == 39 && !ball_created && inside_side_canon)
 	{
 		explosion.loop = false;
@@ -835,7 +851,7 @@ update_status ModuleSceneIntro::Update()
 		inside_side_canon = false;
 	}
 
-	//HOLE TELEPORT CAVE
+	//Hole Teleport Cave control 
 	if (in_cave_hole) {
 		for (p2List_item<PhysBody*>* bc = balls.getFirst(); bc != NULL; bc = bc->next)
 		{
@@ -858,8 +874,7 @@ update_status ModuleSceneIntro::Update()
 		in_cave_hole = false;
 	}
 
-
-	//HOLE TELEPORT MID
+	//Hole Teleport Mid control 
 	if (in_mid_hole) {
 		for (p2List_item<PhysBody*>* bc = balls.getFirst(); bc != NULL; bc = bc->next)
 		{
@@ -889,7 +904,7 @@ update_status ModuleSceneIntro::Update()
 	}
 
 
-	//HOLE TELEPORT RIGHT
+	//Hole Teleport Cave right 
 	if (in_right_hole) {
 		for (p2List_item<PhysBody*>* bc = balls.getFirst(); bc != NULL; bc = bc->next)
 		{
@@ -918,6 +933,7 @@ update_status ModuleSceneIntro::Update()
 		in_right_hole = false;
 	}
 
+	//Blitting explosion bushes
 	if (bush_timer + 500 > current_time) {
 		explosion.loop = true;
 		App->renderer->Blit(pinball_spritesheet, 110, 130, &explosion.GetCurrentFrame(), 1.0f);
@@ -928,7 +944,7 @@ update_status ModuleSceneIntro::Update()
 		App->renderer->Blit(pinball_spritesheet, 101, 174, &explosion.GetCurrentFrame(), 1.0f);
 	}
 
-
+	// Ball lost control
 	if (ball_lost)
 	{
 		for (p2List_item<PhysBody*>* bc = balls.getFirst(); bc != NULL; bc = bc->next) 
@@ -960,6 +976,8 @@ update_status ModuleSceneIntro::Update()
 
 void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 {
+	// Here we control every collision in scene
+
 	for (p2List_item<PhysBody*>* bc = balls.getFirst(); bc != NULL; bc = bc->next) 
 	{
 		if (bodyA == bc->data)
@@ -972,7 +990,6 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 
 			if (bodyB->physType == ENTRY_RAIL)
 			{
-
 				ball_in_rail = true;
 			
 				b2Fixture* fixture = rail->body->GetFixtureList();
@@ -1440,6 +1457,9 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 }
 
 void ModuleSceneIntro::setWalls() {
+
+	// Here we create all chains of the scene
+
 	// Bouncing triangles
 
 	int points_triangle_R_sensor[8] =
@@ -1706,7 +1726,8 @@ void ModuleSceneIntro::setWalls() {
 
 	pinball_walls.add(App->physics->CreateChain(0, 0, points_top_U, 46, groupIndex::RIGID_PINBALL, 0.01f, NO_DEF_));
 
-	int points_left_U[30] = {
+	int points_left_U[30] = 
+	{
 		131, 286,
 		115, 299,
 		108, 305,
@@ -1965,7 +1986,9 @@ void ModuleSceneIntro::setWalls() {
 	
 }
 
-void ModuleSceneIntro::setSensors() {
+void ModuleSceneIntro::setSensors() 
+{
+	// Here we create all sensors in the scene
 
 	sensors.add(App->physics->CreateRectangleSensor(SCREEN_WIDTH / 2 - 20, SCREEN_HEIGHT + 80, 150, 80, DEAD_SENSOR));
 
@@ -2003,7 +2026,8 @@ void ModuleSceneIntro::setSensors() {
 
 	sensors.add(App->physics->CreatePolygonSensor(0, 0, 4, entry_vec_R, ENTRY_TUNNEL));
 
-	int points_entry_left[8] = {
+	int points_entry_left[8] = 
+	{
 		23, 401,
 		56, 393,
 		49, 379,
@@ -2019,7 +2043,8 @@ void ModuleSceneIntro::setSensors() {
 
 	sensors.add(App->physics->CreatePolygonSensor(0, 0, 4, entry_vec_L, ENTRY_TUNNEL));
 
-	int points_exit_left[8] = {
+	int points_exit_left[8] = 
+	{
 		42, 459,
 		104, 435,
 		80, 427,
@@ -2035,7 +2060,8 @@ void ModuleSceneIntro::setSensors() {
 
 	sensors.add(App->physics->CreatePolygonSensor(0, 0, 4, exit_vec_L, EXIT_TUNNEL));
 
-	int points_entry_center[8] = {
+	int points_entry_center[8] = 
+	{
 		378, 124,
 		410, 112,
 		412, 120,
@@ -2052,7 +2078,8 @@ void ModuleSceneIntro::setSensors() {
 	sensors.add(App->physics->CreatePolygonSensor(0, 0, 4, entry_vec_center, ENTRY_TUNNEL));
 
 
-	int points_exit_center[8] = {
+	int points_exit_center[8] = 
+	{
 		381, 168,
 		426, 158,
 		430, 177,
@@ -2103,7 +2130,8 @@ void ModuleSceneIntro::setSensors() {
 	sensors.add(App->physics->CreatePolygonSensor(0, 0, 4, exit_vec_canon, EXIT_CANON));
 
 
-	int points_entry_rail_1[8] = {
+	int points_entry_rail_1[8] = 
+	{
 		113, 260,
 		133, 239,
 		139, 244,
@@ -2119,7 +2147,8 @@ void ModuleSceneIntro::setSensors() {
 
 	sensors.add(App->physics->CreatePolygonSensor(0, 0, 4, entry_vec_rail, ENTRY_RAIL));
 
-	int points_exit_rail_1[8] = {
+	int points_exit_rail_1[8] = 
+	{
 		137, 294,
 		168, 263,
 		178, 275,
@@ -2135,7 +2164,8 @@ void ModuleSceneIntro::setSensors() {
 
 	sensors.add(App->physics->CreatePolygonSensor(0, 0, 4, exit_vec_rail, EXIT_RAIL));
 
-	int points_mid_rail_1[8] = {
+	int points_mid_rail_1[8] = 
+	{
 		237, 255,
 		256, 270,
 		267, 260,
@@ -2151,7 +2181,8 @@ void ModuleSceneIntro::setSensors() {
 
 	sensors.add(App->physics->CreatePolygonSensor(0, 0, 4, mid_vec_rail, MID_RAIL));
 
-	int left_points_side_canon[8] = {
+	int left_points_side_canon[8] = 
+	{
 		28, 847,
 		60, 847,
 		60, 825,
@@ -2234,7 +2265,8 @@ void ModuleSceneIntro::setSensors() {
 	}
 	sensors.add(App->physics->CreatePolygonSensor(0, 0, 4, vec_cave_hole, CAVE_HOLE));
 
-	int points_entry_rail_3[8] = {
+	int points_entry_rail_3[8] = 
+	{
 		249, 65,
 		252, 85,
 		274, 85,
@@ -2418,7 +2450,8 @@ void ModuleSceneIntro::setSensors() {
 	boss_hitbox = App->physics->CreatePolygonSensor(0, 0, 7, boss_vec_dot_4, BOSS);
 }
 
-void ModuleSceneIntro::spawnBall() {
+void ModuleSceneIntro::spawnBall() 
+{
 	balls.add(App->physics->CreateBall(488, 800, 14));
 	balls.getLast()->data->listener = this;
 }

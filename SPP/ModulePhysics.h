@@ -48,7 +48,6 @@ enum PhysBody_Type {
 	RHOMBUS,
 	BOSS,
 
-
 	NO_DEF_
 };
 
@@ -62,7 +61,6 @@ public:
 	float GetRotation() const;
 	bool Contains(int x, int y) const;
 	int RayCast(int x1, int y1, int x2, int y2, float& normal_x, float& normal_y) const;
-
 
 public:
 	int width, height;
@@ -93,8 +91,6 @@ public:
 	PhysBody* CreateRectangleSensor(int x, int y, int width, int height, PhysBody_Type sensor_type);
 	PhysBody* CreateChain(int x, int y, int* points, int size, groupIndex index, float restitution, PhysBody_Type type);
 	PhysBody* CreatePolygonSensor(int x, int y, int size, b2Vec2* vec, PhysBody_Type sensor_type);
-
-
 
 	// b2ContactListener ---
 	void BeginContact(b2Contact* contact);

@@ -31,7 +31,6 @@ bool ModulePhysics::Start()
 	world = new b2World(b2Vec2(GRAVITY_X, -GRAVITY_Y));
 	world->SetContactListener(this);
 
-	// needed to create joints like mouse joint
 	b2BodyDef bd;
 	ground = world->CreateBody(&bd);
 	
@@ -68,7 +67,8 @@ PhysBody* ModulePhysics::CreateRightFlipper()
 
 	b2PolygonShape flipperShape;
 
-	int rightFlipperCoords[10] = {
+	int rightFlipperCoords[10] = 
+	{
 		313, 761,
 		257, 761,
 		258, 766,
@@ -142,7 +142,8 @@ PhysBody* ModulePhysics::CreateLeftFlipper()
 
 	b2PolygonShape rectangleShape;
 
-	int leftFlipperCoords[10] = {
+	int leftFlipperCoords[10] = 
+	{
 		166, 761,
 		223, 761,
 		221, 766,
@@ -238,13 +239,6 @@ PhysBody* ModulePhysics::CreateBall(int x, int y, int radius)
 
 PhysBody* ModulePhysics::CreatePlunge()
 {
-
-	int copyToTest[8] = {
-		472, 819,
-		504, 819,
-		504, 823,
-		472, 823
-	};
 	b2BodyDef bodyA;
 	bodyA.type = b2_dynamicBody;
 	bodyA.position.Set(PIXEL_TO_METERS(487), PIXEL_TO_METERS(830));
@@ -281,13 +275,11 @@ PhysBody* ModulePhysics::CreatePlunge()
 	jointDef.bodyB = b1;
 	jointDef.collideConnected = true;
 
-
 	jointDef.localAxisA.Set(0, 1);
 	jointDef.localAxisA.Normalize();
-	jointDef.localAnchorA.Set(0, 0);//a little outside the bottom right corner
-	jointDef.localAnchorB.Set(0, 0);//bottom left corner
+	jointDef.localAnchorA.Set(0, 0);
+	jointDef.localAnchorB.Set(0, 0);
 
-	
 	jointDef.lowerTranslation = -1.0f;
 	jointDef.upperTranslation = 1.0f;
 	jointDef.enableLimit = true;
@@ -411,8 +403,6 @@ PhysBody* ModulePhysics::CreatePolygonSensor(int x, int y, int size, b2Vec2* vec
 	fixture.isSensor = true;
 	sensorBody->CreateFixture(&fixture);
 	
-	
-
 	PhysBody* rbody = new PhysBody();
 	rbody->body = sensorBody;
 	sensorBody->SetUserData(rbody);
@@ -433,8 +423,6 @@ update_status ModulePhysics::PostUpdate()
 	b2Body* bSelected = nullptr;
 	b2Vec2 vecSelected;
 
-	// Bonus code: this will iterate all objects in the world and draw the circles
-	// You need to provide your own macro to translate meters to pixels
 	for(b2Body* b = world->GetBodyList(); b; b = b->GetNext())
 	{
 		for(b2Fixture* f = b->GetFixtureList(); f; f = f->GetNext())
@@ -516,7 +504,8 @@ update_status ModulePhysics::PostUpdate()
 	}
 
 
-	if (bSelected != nullptr) {
+	if (bSelected != nullptr) 
+	{
 		b2MouseJointDef def;
 		def.bodyA = ground;
 		def.bodyB = bSelected;
@@ -528,14 +517,16 @@ update_status ModulePhysics::PostUpdate()
 		bSelected = nullptr;
 	}
 	
-	if (mouse_joint != nullptr) {
+	if (mouse_joint != nullptr) 
+	{
 		vecSelected.x = PIXEL_TO_METERS(App->input->GetMouseX());
 		vecSelected.y = PIXEL_TO_METERS(App->input->GetMouseY());
 		mouse_joint->SetTarget(vecSelected);
 		App->renderer->DrawLine(METERS_TO_PIXELS(mouse_joint->GetAnchorA().x), METERS_TO_PIXELS(mouse_joint->GetAnchorA().y), METERS_TO_PIXELS(mouse_joint->GetAnchorB().x), METERS_TO_PIXELS(mouse_joint->GetAnchorB().y), 250, 0, 0, 255);
 	}
 
-	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_UP && mouse_joint != nullptr) {
+	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_UP && mouse_joint != nullptr) 
+	{
 		world->DestroyJoint(mouse_joint);
 		mouse_joint = nullptr;
 	}
@@ -599,8 +590,6 @@ int PhysBody::RayCast(int x1, int y1, int x2, int y2, float& normal_x, float& no
 	{
 		if(fixture->GetShape()->RayCast(&output, input, body->GetTransform(), 0) == true)
 		{
-			// do we want the normal ?
-
 			float fx = x2 - x1;
 			float fy = y2 - y1;
 			float dist = sqrtf((fx*fx) + (fy*fy));
@@ -612,7 +601,6 @@ int PhysBody::RayCast(int x1, int y1, int x2, int y2, float& normal_x, float& no
 		}
 		fixture = fixture->GetNext();
 	}
-
 	return ret;
 }
 
