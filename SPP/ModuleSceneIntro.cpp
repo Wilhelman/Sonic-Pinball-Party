@@ -746,6 +746,8 @@ update_status ModuleSceneIntro::Update()
 			App->physics->world->DestroyBody(bc->data->body);
 		}
 		balls.clear();
+		App->renderer->Blit(pinball_spritesheet, 198, 190, &explosion.GetCurrentFrame(), 1.0f);
+		App->renderer->Blit(pinball_spritesheet, 196, 193, &explosion.GetCurrentFrame(), 1.0f);
 	}
 
 	if (in_cave_hole && hole_timer + 500 < current_time)
@@ -768,6 +770,8 @@ update_status ModuleSceneIntro::Update()
 			App->physics->world->DestroyBody(bc->data->body);
 		}
 		balls.clear();
+		App->renderer->Blit(pinball_spritesheet, 292, 248, &explosion.GetCurrentFrame(), 1.0f);
+		App->renderer->Blit(pinball_spritesheet, 292, 248, &explosion.GetCurrentFrame(), 1.0f);
 	}
 
 	if (in_mid_hole && hole_timer + 500 < current_time)
@@ -796,6 +800,8 @@ update_status ModuleSceneIntro::Update()
 			App->physics->world->DestroyBody(bc->data->body);
 		}
 		balls.clear();
+		App->renderer->Blit(pinball_spritesheet, 472, 426, &explosion.GetCurrentFrame(), 1.0f);
+		App->renderer->Blit(pinball_spritesheet, 472, 426, &explosion.GetCurrentFrame(), 1.0f);
 	}
 
 	if (in_right_hole && hole_timer + 500 < current_time)
