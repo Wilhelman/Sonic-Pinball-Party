@@ -37,7 +37,7 @@ public:
 		frames[last_frame++] = rect;
 	}
 
-	SDL_Rect& GetCurrentFrame()//TODO: know why sometimes it breaks here
+	SDL_Rect& GetCurrentFrame()
 	{
 		switch (direction)
 		{

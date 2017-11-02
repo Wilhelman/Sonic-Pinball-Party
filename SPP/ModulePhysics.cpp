@@ -58,7 +58,6 @@ update_status ModulePhysics::PreUpdate()
 
 // ---- Create functions ----
 
-//TODO: flipper functions may recieve some parametres to create new ones in difrerent angles (watch demo yt)
 PhysBody* ModulePhysics::CreateRightFlipper()
 {
 	b2BodyDef bodyDef;
@@ -224,7 +223,6 @@ PhysBody* ModulePhysics::CreateBall(int x, int y, int radius)
 	fixture.restitution = 0.3f;
 	fixture.filter.groupIndex = groupIndex::BALL;
 	
-	//TODO: Set proper density, mass and e
 	fixture.density = 1.0f;
 
 	b->CreateFixture(&fixture);
@@ -277,16 +275,6 @@ PhysBody* ModulePhysics::CreatePlunge()
 	fixture2.filter.groupIndex = groupIndex::BALL;
 
 	b2->CreateFixture(&fixture2);
-
-	/*
-
-	//TODO: here we will create the launcher of the ball
-	PhysBody* testPlunge = CreateRectangle(250, 300, 80, 50);
-	testPlunge->body->SetType(b2_staticBody);
-	PhysBody* testPlunge2 = CreateRectangle(250, 370, 80, 50);
-	testPlunge2->body->SetType(b2_staticBody);
-
-	*/
 
 	b2PrismaticJointDef jointDef;
 	jointDef.bodyA = b2;

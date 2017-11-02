@@ -739,7 +739,6 @@ update_status ModuleSceneIntro::Update()
 	
 
 	// ----- Ball creation -----
-	//TODO: balls we'll be created at Start() and every time you lose one
 	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
 	{
 		balls.add(App->physics->CreateBall(App->input->GetMouseX(), App->input->GetMouseY(), 14));
