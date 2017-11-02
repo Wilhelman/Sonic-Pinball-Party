@@ -39,7 +39,16 @@ General/developer controls:
 
 ## How to play
 
+The goal of the game is score as many points as you can before losing three balls. You can score points in the following ways:
 
+* Impacting one of the two top bushes.
+* Impacting one of the two bounce triangles.
+* Entering the ball through one of the teleport holes.
+* Touching 
+
+You can obtain one exta ball once the ball has reached 5 times one of the teleport holes. Progress is shown in form of 5 colorful lights above flippers. Extra score is obtained here too.
+
+Score and balls left can be seen on window title.
 
 ## Team members
 
