@@ -61,8 +61,8 @@ public:
 	int ball_x, ball_y;
 
 	//Animations
-	Animation m_icon, start_canon, triangle_R_anim, triangle_L_anim, blue_arrow_cave , yellow_dot;
-	Animation blue_arrow_top_right, three_red_arrows, yellow_arrow_1, yellow_arrow_2;
+	Animation m_icon, start_canon, triangle_R_anim, triangle_L_anim, blue_arrow_cave , yellow_dot, white_circle;
+	Animation blue_arrow_top_right, three_red_arrows, yellow_arrow_1, yellow_arrow_2, yellow_circle, red_circle, blue_circle, green_circle;
 	Animation yellow_arrow_3, yellow_arrow_4, left_purple_arrow, right_purple_arrow, ball_anim, explosion;
 	Animation side_canon_L, side_canon_R, map_M, map_A, map_P, chip_C, chip_H, chip_I, chip_P, orange_bar;
 
@@ -71,5 +71,5 @@ public:
 	uint balls_left;
 
 	//Time controls
-	int current_time, hole_timer, bush_timer, yellow_dots_timer;
+	int current_time, hole_timer, bush_timer, yellow_dots_timer, circle_timer, color_circles;
 };

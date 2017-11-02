@@ -7,6 +7,7 @@
 #include "ModuleInput.h"
 #include "ModuleRender.h"
 #include "ModuleAudio.h"
+#include "ModuleSceneIntro.h"
 
 ModulePlayer::ModulePlayer(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -101,6 +102,31 @@ update_status ModulePlayer::Update()
 		
 
 	// ----- Flippers and plunge input control -----
+	if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_DOWN) {
+		if (!(App->scene_intro->dot_1 && App->scene_intro->dot_2 && App->scene_intro->dot_3 && App->scene_intro->dot_4)) {
+			bool last1 = App->scene_intro->dot_1;
+			bool last2 = App->scene_intro->dot_2;
+			bool last3 = App->scene_intro->dot_3;
+			bool last4 = App->scene_intro->dot_4;
+			App->scene_intro->dot_1 = last2;
+			App->scene_intro->dot_2 = last3;
+			App->scene_intro->dot_3 = last4;
+			App->scene_intro->dot_4 = last1;
+		}
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_DOWN) {
+		if (!(App->scene_intro->dot_1 && App->scene_intro->dot_2 && App->scene_intro->dot_3 && App->scene_intro->dot_4)) {
+			bool last1 = App->scene_intro->dot_1;
+			bool last2 = App->scene_intro->dot_2;
+			bool last3 = App->scene_intro->dot_3;
+			bool last4 = App->scene_intro->dot_4;
+			App->scene_intro->dot_1 = last4;
+			App->scene_intro->dot_2 = last1;
+			App->scene_intro->dot_3 = last2;
+			App->scene_intro->dot_4 = last3;
+		}
+	}
 
 	if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
 		left_flipper->body->ApplyTorque(-60.0f, true);

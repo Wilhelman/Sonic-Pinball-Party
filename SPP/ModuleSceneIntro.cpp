@@ -205,6 +205,31 @@ ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Modul
 	yellow_dot.loop = false;
 	yellow_dot.speed = 0.1f;
 
+	white_circle.PushBack({ 348, 1630, 28, 28 });
+	white_circle.PushBack({ 248, 1138, 28, 28 });
+	white_circle.loop = false;
+	white_circle.speed = 0.1f;
+
+	yellow_circle.PushBack({ 348, 1630, 28, 28 });
+	yellow_circle.PushBack({ 292, 1108, 28, 28 });
+	yellow_circle.loop = false;
+	yellow_circle.speed = 0.1f;
+
+	red_circle.PushBack({ 348, 1630, 28, 28 });
+	red_circle.PushBack({ 276, 1150, 28, 28 });
+	red_circle.loop = false;
+	red_circle.speed = 0.1f;
+
+	blue_circle.PushBack({ 348, 1630, 28, 28 });
+	blue_circle.PushBack({ 304, 1138, 28, 28 });
+	blue_circle.loop = false;
+	blue_circle.speed = 0.1f;
+
+	green_circle.PushBack({ 348, 1630, 28, 28 });
+	green_circle.PushBack({ 260, 1108, 28, 28 });
+	green_circle.loop = false;
+	green_circle.speed = 0.1f;
+
 	explosion.PushBack({ 234, 1263, 30, 30 });
 	explosion.PushBack({ 270, 1258, 30, 30 });
 	explosion.loop = false;
@@ -218,7 +243,7 @@ bool ModuleSceneIntro::Start()
 {
 	balls_left = 3;
 	App->ui->score = 0;
-	current_time = hole_timer = bush_timer = yellow_dots_timer = 0;
+	current_time = hole_timer = bush_timer = yellow_dots_timer = circle_timer = color_circles = 0;
 
 	if (!App->audio->IsEnabled() && App->audio->isAudioDeviceOpened) {
 		App->audio->Enable();
@@ -443,6 +468,59 @@ update_status ModuleSceneIntro::Update()
 		yellow_dot.loop = false;
 		yellow_dots_timer = 0;
 	}
+
+	//circle colors
+
+	switch (color_circles)
+	{
+	case 0:
+		break;
+	case 1:
+		App->renderer->Blit(pinball_spritesheet, 198, 672, &white_circle.GetCurrentFrame(), 1.0f);
+		break;
+	case 2:
+		App->renderer->Blit(pinball_spritesheet, 198, 672, &white_circle.GetCurrentFrame(), 1.0f);
+		App->renderer->Blit(pinball_spritesheet, 210, 642, &green_circle.GetCurrentFrame(), 1.0f);
+		break;
+	case 3:
+		App->renderer->Blit(pinball_spritesheet, 198, 672, &white_circle.GetCurrentFrame(), 1.0f);
+		App->renderer->Blit(pinball_spritesheet, 210, 642, &green_circle.GetCurrentFrame(), 1.0f);
+		App->renderer->Blit(pinball_spritesheet, 242, 642, &yellow_circle.GetCurrentFrame(), 1.0f);
+		break;
+	case 4:
+		App->renderer->Blit(pinball_spritesheet, 198, 672, &white_circle.GetCurrentFrame(), 1.0f);
+		App->renderer->Blit(pinball_spritesheet, 210, 642, &green_circle.GetCurrentFrame(), 1.0f);
+		App->renderer->Blit(pinball_spritesheet, 242, 642, &yellow_circle.GetCurrentFrame(), 1.0f);
+		App->renderer->Blit(pinball_spritesheet, 254, 672, &blue_circle.GetCurrentFrame(), 1.0f);
+		break;
+	case 5:
+		App->renderer->Blit(pinball_spritesheet, 198, 672, &white_circle.GetCurrentFrame(), 1.0f);
+		App->renderer->Blit(pinball_spritesheet, 210, 642, &green_circle.GetCurrentFrame(), 1.0f);
+		App->renderer->Blit(pinball_spritesheet, 242, 642, &yellow_circle.GetCurrentFrame(), 1.0f);
+		App->renderer->Blit(pinball_spritesheet, 254, 672, &blue_circle.GetCurrentFrame(), 1.0f);
+		App->renderer->Blit(pinball_spritesheet, 226, 684, &red_circle.GetCurrentFrame(), 1.0f);
+		break;
+	default:
+		break;
+	}
+
+	if (color_circles == 5 && circle_timer + 2000 > current_time) {
+		white_circle.loop = yellow_circle.loop = red_circle.loop = blue_circle.loop = green_circle.loop = true;
+		App->renderer->Blit(pinball_spritesheet, 198, 672, &white_circle.GetCurrentFrame(), 1.0f);
+		App->renderer->Blit(pinball_spritesheet, 210, 642, &green_circle.GetCurrentFrame(), 1.0f);
+		App->renderer->Blit(pinball_spritesheet, 242, 642, &yellow_circle.GetCurrentFrame(), 1.0f);
+		App->renderer->Blit(pinball_spritesheet, 254, 672, &blue_circle.GetCurrentFrame(), 1.0f);
+		App->renderer->Blit(pinball_spritesheet, 226, 684, &red_circle.GetCurrentFrame(), 1.0f);
+	}
+	else if (color_circles == 5 && circle_timer + 2000 < current_time) {
+		balls_left++;
+		App->ui->score += 2500;
+		color_circles = 0;
+		circle_timer = 0;
+		white_circle.loop = yellow_circle.loop = red_circle.loop = blue_circle.loop = green_circle.loop = false;
+	}
+
+
 
 	// Map Letters
 	App->renderer->Blit(pinball_spritesheet, 68, 480, &map_M.GetCurrentFrame(), 1.0f);
@@ -1144,13 +1222,17 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 
 			if (bodyB->physType == CAVE_HOLE && !in_cave_hole)
 			{
+				color_circles++;
 				App->audio->PlayFx(hole_in_fx);
 				in_cave_hole = true;
 				hole_timer = SDL_GetTicks();
+				if (color_circles == 5)
+					circle_timer = SDL_GetTicks();
 			}
 
 			if (bodyB->physType == MID_HOLE && !in_mid_hole && hole_timer + 1500 < current_time)
 			{
+				color_circles++;
 				for (p2List_item<PhysBody*>* ball_item = balls.getFirst(); ball_item != NULL; ball_item = ball_item->next)
 				{
 					bc->data->GetPosition(ball_x, ball_y);
@@ -1158,10 +1240,13 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 				App->audio->PlayFx(hole_in_fx);
 				in_mid_hole = true;
 				hole_timer = SDL_GetTicks();
+				if (color_circles == 5)
+					circle_timer = SDL_GetTicks();
 			}
 
 			if (bodyB->physType == RIGHT_HOLE && !in_right_hole && hole_timer + 1500 < current_time)
 			{
+				color_circles++;
 				for (p2List_item<PhysBody*>* ball_item = balls.getFirst(); ball_item != NULL; ball_item = ball_item->next)
 				{
 					bc->data->GetPosition(ball_x, ball_y);
@@ -1169,6 +1254,8 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 				App->audio->PlayFx(hole_in_fx);
 				in_right_hole = true;
 				hole_timer = SDL_GetTicks();
+				if (color_circles == 5)
+					circle_timer = SDL_GetTicks();
 			}
 
 			if (bodyB->physType == BUSH && !ball_in_rail)
