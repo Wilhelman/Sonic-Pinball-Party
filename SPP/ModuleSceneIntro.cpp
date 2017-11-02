@@ -200,6 +200,11 @@ ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Modul
 	ball_anim.loop = true;
 	ball_anim.speed = 0.0f;
 
+	yellow_dot.PushBack({ 348, 1630, 21, 22 });
+	yellow_dot.PushBack({ 962, 1050, 21, 22 });
+	yellow_dot.loop = false;
+	yellow_dot.speed = 0.1f;
+
 	explosion.PushBack({ 234, 1263, 30, 30 });
 	explosion.PushBack({ 270, 1258, 30, 30 });
 	explosion.loop = false;
@@ -213,7 +218,7 @@ bool ModuleSceneIntro::Start()
 {
 	balls_left = 3;
 	App->ui->score = 0;
-	current_time = hole_timer = 0;
+	current_time = hole_timer = bush_timer = yellow_dots_timer = 0;
 
 	if (!App->audio->IsEnabled() && App->audio->isAudioDeviceOpened) {
 		App->audio->Enable();
@@ -232,7 +237,7 @@ bool ModuleSceneIntro::Start()
 
 	LOG("Loading Intro assets");
 	bool ret = true;
-	blit_tunnel_control = inside_side_canon = canon_R_done = canon_L_done = in_mid_rail
+	blit_tunnel_control = inside_side_canon = canon_R_done = canon_L_done = in_mid_rail = dot_1 = dot_2 = dot_3 = dot_4
 		= ball_lost = inside_start_canon = ball_created = ball_in_rail = in_cave_hole = in_mid_hole = in_right_hole = false;
 
 
@@ -243,6 +248,7 @@ bool ModuleSceneIntro::Start()
 		hole_out_fx = App->audio->LoadFx("audio/sound_fx/hole_out.wav");
 		triangle_fx = App->audio->LoadFx("audio/sound_fx/bouncing_triangle.wav");
 		start_canon_fx = App->audio->LoadFx("audio/sound_fx/canon_shot.wav");
+		bonus_fx = App->audio->LoadFx("audio/sound_fx/yellow_dot.wav");
 		if (!App->audio->PlayMusic("audio/music/Nightmaren.ogg"))
 			ret = false;
 	}
@@ -276,6 +282,11 @@ bool ModuleSceneIntro::Start()
 	rect_rail.w = 308;
 	rect_rail.x = 1248;
 	rect_rail.y = 138;
+
+	rect_bush.h = 40;
+	rect_bush.w = 42;
+	rect_bush.x = 186;
+	rect_bush.y = 1248;
 
 	rect_piece_rail.h = 84;
 	rect_piece_rail.w = 64;
@@ -380,8 +391,6 @@ update_status ModuleSceneIntro::Update()
 
 	//BG
 	App->renderer->Blit(pinball_spritesheet, 0, 0, &rect_bg, 1.0f);
-
-
 	
 	// Bouncing triangles
 	App->renderer->Blit(pinball_spritesheet, 113, 621, &triangle_L_anim.GetCurrentFrame(), 1.0f);
@@ -398,6 +407,42 @@ update_status ModuleSceneIntro::Update()
 	App->renderer->Blit(pinball_spritesheet, 56, 428, &left_purple_arrow.GetCurrentFrame(), 1.0f);
 	App->renderer->Blit(pinball_spritesheet, 410, 428, &right_purple_arrow.GetCurrentFrame(), 1.0f);
 	App->renderer->Blit(pinball_spritesheet, 210, 722, &m_icon.GetCurrentFrame(), 1.0f);
+
+	// Dots
+	if (dot_1) {
+		App->renderer->Blit(pinball_spritesheet, 38, 606, &yellow_dot.GetCurrentFrame(), 1.0f);
+	}
+
+	if (dot_2) {
+		App->renderer->Blit(pinball_spritesheet, 86, 612, &yellow_dot.GetCurrentFrame(), 1.0f);
+	}
+
+	if (dot_3) {
+		App->renderer->Blit(pinball_spritesheet, 374, 612, &yellow_dot.GetCurrentFrame(), 1.0f);
+	}
+
+	if (dot_4) {
+		App->renderer->Blit(pinball_spritesheet, 422, 606, &yellow_dot.GetCurrentFrame(), 1.0f);
+	}
+
+	if (dot_1 && dot_2 && dot_3 && dot_4 && yellow_dots_timer == 0) {
+		yellow_dot.loop = true;
+		yellow_dots_timer = SDL_GetTicks();
+		yellow_dot.speed = 0.01f;
+	}
+
+	if (yellow_dots_timer + 2000 > current_time && (dot_1 && dot_2 && dot_3 && dot_4)) {
+		App->renderer->Blit(pinball_spritesheet, 38, 606, &yellow_dot.GetCurrentFrame(), 1.0f);
+		App->renderer->Blit(pinball_spritesheet, 86, 612, &yellow_dot.GetCurrentFrame(), 1.0f);
+		App->renderer->Blit(pinball_spritesheet, 374, 612, &yellow_dot.GetCurrentFrame(), 1.0f);
+		App->renderer->Blit(pinball_spritesheet, 422, 606, &yellow_dot.GetCurrentFrame(), 1.0f);
+	}
+	else if (yellow_dots_timer + 2000 < current_time && (dot_1 && dot_2 && dot_3 && dot_4)) {
+		App->ui->score += 2500;
+		dot_1 = dot_2 = dot_3 = dot_4 = false;
+		yellow_dot.loop = false;
+		yellow_dots_timer = 0;
+	}
 
 	// Map Letters
 	App->renderer->Blit(pinball_spritesheet, 68, 480, &map_M.GetCurrentFrame(), 1.0f);
@@ -438,6 +483,10 @@ update_status ModuleSceneIntro::Update()
 	else //not in tunnel
 	{
 		if (ball_in_rail) {
+			//bushes
+			App->renderer->Blit(pinball_spritesheet, 74, 162, &rect_bush, 1.0f);
+			App->renderer->Blit(pinball_spritesheet, 104, 130, &rect_bush, 1.0f);
+
 			App->renderer->Blit(pinball_spritesheet, 0, 27, &rect_rail, 1.0f);
 			p2List_item<PhysBody*>* ball_item = balls.getFirst();
 			while (ball_item != NULL)
@@ -489,6 +538,9 @@ update_status ModuleSceneIntro::Update()
 
 				ball_item = ball_item->next;
 			}
+			//bushes
+			App->renderer->Blit(pinball_spritesheet, 74, 162, &rect_bush, 1.0f);
+			App->renderer->Blit(pinball_spritesheet, 104, 130, &rect_bush, 1.0f);
 			App->renderer->Blit(pinball_spritesheet, 0, 27, &rect_rail, 1.0f);
 			App->renderer->Blit(pinball_spritesheet, 0, 0, &rect_tunnel, 1.0f);
 			App->renderer->Blit(pinball_spritesheet, 0, 347, &rect_piece_rail, 1.0f);
@@ -564,7 +616,7 @@ update_status ModuleSceneIntro::Update()
 			App->physics->world->DestroyBody(bc->data->body);
 		}
 		balls.clear();
-
+		explosion.loop = false;
 		App->renderer->Blit(pinball_spritesheet, 30, 743, &explosion.GetCurrentFrame(), 1.0f);
 
 		balls.add(App->physics->CreateBall(45, 807, 14));
@@ -585,6 +637,7 @@ update_status ModuleSceneIntro::Update()
 	//RIGHT CANNON
 	if (side_canon_R.GetCurrentFrame().x == 39 && !ball_created && inside_side_canon)
 	{
+		explosion.loop = false;
 		App->renderer->Blit(pinball_spritesheet, 420, 743, &explosion.GetCurrentFrame(), 1.0f);
 
 		for (p2List_item<PhysBody*>* bc = balls.getFirst(); bc != NULL; bc = bc->next)
@@ -672,17 +725,27 @@ update_status ModuleSceneIntro::Update()
 		App->audio->PlayFx(hole_out_fx);
 		App->ui->score += 1000;
 
-		balls.add(App->physics->CreateBall(ball_x + 30, ball_y + 2, 14));
+		balls.add(App->physics->CreateBall(ball_x + 20, ball_y + 2, 14));
 		balls.getLast()->data->listener = this;
 		for (p2List_item<PhysBody*>* bc = balls.getFirst(); bc != NULL; bc = bc->next)
 		{
 			int x, y;
 			bc->data->GetPosition(x, y);
-			bc->data->body->ApplyLinearImpulse(b2Vec2(0.0f, 0.0f), b2Vec2(x, y), true);
+			bc->data->body->ApplyLinearImpulse(b2Vec2(0.1f, 0.0f), b2Vec2(x, y), true);
 		}
 		ball_created = true;
 
 		in_right_hole = false;
+	}
+
+	if (bush_timer + 500 > current_time) {
+		explosion.loop = true;
+		App->renderer->Blit(pinball_spritesheet, 110, 130, &explosion.GetCurrentFrame(), 1.0f);
+		App->renderer->Blit(pinball_spritesheet, 123, 133, &explosion.GetCurrentFrame(), 1.0f);
+		App->renderer->Blit(pinball_spritesheet, 109, 156, &explosion.GetCurrentFrame(), 1.0f);
+		App->renderer->Blit(pinball_spritesheet, 79, 160, &explosion.GetCurrentFrame(), 1.0f);
+		App->renderer->Blit(pinball_spritesheet, 75, 171, &explosion.GetCurrentFrame(), 1.0f);
+		App->renderer->Blit(pinball_spritesheet, 101, 174, &explosion.GetCurrentFrame(), 1.0f);
 	}
 
 
@@ -1106,6 +1169,42 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 				App->audio->PlayFx(hole_in_fx);
 				in_right_hole = true;
 				hole_timer = SDL_GetTicks();
+			}
+
+			if (bodyB->physType == BUSH && !ball_in_rail)
+			{
+				bush_timer = SDL_GetTicks();
+				App->renderer->Blit(pinball_spritesheet, 420, 743, &explosion.GetCurrentFrame(), 1.0f);
+				App->ui->score += 350;
+				App->audio->PlayFx(hole_in_fx);
+			}
+
+			if (bodyB->physType == DOT_1 && !dot_1)
+			{
+				dot_1 = true;
+				App->ui->score += 100;
+				App->audio->PlayFx(bonus_fx);
+			}
+
+			if (bodyB->physType == DOT_2 && !dot_2)
+			{
+				dot_2 = true;
+				App->ui->score += 100;
+				App->audio->PlayFx(bonus_fx);
+			}
+
+			if (bodyB->physType == DOT_3 && !dot_3)
+			{
+				dot_3 = true;
+				App->ui->score += 100;
+				App->audio->PlayFx(bonus_fx);
+			}
+
+			if (bodyB->physType == DOT_4 && !dot_4)
+			{
+				dot_4 = true;
+				App->ui->score += 100;
+				App->audio->PlayFx(bonus_fx);
 			}
 		
 
@@ -1961,6 +2060,102 @@ void ModuleSceneIntro::setSensors() {
 		vec_right_hole[i].Set(PIXEL_TO_METERS(right_hole[i * 2 + 0]), PIXEL_TO_METERS(right_hole[i * 2 + 1]));
 	}
 	sensors.add(App->physics->CreatePolygonSensor(0, 0, 4, vec_right_hole, RIGHT_HOLE));
+
+	int left_bush[8] =
+	{
+		86, 168,
+		81, 189,
+		115, 189,
+		113, 173
+	};
+
+	b2Vec2 vec_left_bush[4];
+
+	for (uint i = 0; i < 8 / 2; ++i)
+	{
+		vec_left_bush[i].Set(PIXEL_TO_METERS(left_bush[i * 2 + 0]), PIXEL_TO_METERS(left_bush[i * 2 + 1]));
+	}
+	sensors.add(App->physics->CreatePolygonSensor(0, 0, 4, vec_left_bush, BUSH));
+
+	int right_bush[8] =
+	{
+		117, 140,
+		140, 140,
+		141, 162,
+		118, 164
+	};
+
+	b2Vec2 vec_right_bush[4];
+
+	for (uint i = 0; i < 8 / 2; ++i)
+	{
+		vec_right_bush[i].Set(PIXEL_TO_METERS(right_bush[i * 2 + 0]), PIXEL_TO_METERS(right_bush[i * 2 + 1]));
+	}
+	sensors.add(App->physics->CreatePolygonSensor(0, 0, 4, vec_right_bush, BUSH));
+
+	int yellow_dot_1[8] =
+	{
+		36, 611,
+		36, 628,
+		60, 628,
+		60, 609
+	};
+
+	b2Vec2 yellow_vec_dot_1[4];
+
+	for (uint i = 0; i < 8 / 2; ++i)
+	{
+		yellow_vec_dot_1[i].Set(PIXEL_TO_METERS(yellow_dot_1[i * 2 + 0]), PIXEL_TO_METERS(yellow_dot_1[i * 2 + 1]));
+	}
+	sensors.add(App->physics->CreatePolygonSensor(0, 0, 4, yellow_vec_dot_1, DOT_1));
+
+	int yellow_dot_2[8] =
+	{
+		85, 614,
+		85, 634,
+		107, 634,
+		107, 613
+	};
+
+	b2Vec2 yellow_vec_dot_2[4];
+
+	for (uint i = 0; i < 8 / 2; ++i)
+	{
+		yellow_vec_dot_2[i].Set(PIXEL_TO_METERS(yellow_dot_2[i * 2 + 0]), PIXEL_TO_METERS(yellow_dot_2[i * 2 + 1]));
+	}
+	sensors.add(App->physics->CreatePolygonSensor(0, 0, 4, yellow_vec_dot_2, DOT_2));
+
+	int yellow_dot_3[8] =
+	{
+		375, 617,
+		375, 634,
+		394, 634,
+		394, 614
+	};
+
+	b2Vec2 yellow_vec_dot_3[4];
+
+	for (uint i = 0; i < 8 / 2; ++i)
+	{
+		yellow_vec_dot_3[i].Set(PIXEL_TO_METERS(yellow_dot_3[i * 2 + 0]), PIXEL_TO_METERS(yellow_dot_3[i * 2 + 1]));
+	}
+	sensors.add(App->physics->CreatePolygonSensor(0, 0, 4, yellow_vec_dot_3, DOT_3));
+
+	int yellow_dot_4[8] =
+	{
+		422, 607,
+		423, 627,
+		441, 627,
+		441, 608
+	};
+
+	b2Vec2 yellow_vec_dot_4[4];
+
+	for (uint i = 0; i < 8 / 2; ++i)
+	{
+		yellow_vec_dot_4[i].Set(PIXEL_TO_METERS(yellow_dot_4[i * 2 + 0]), PIXEL_TO_METERS(yellow_dot_4[i * 2 + 1]));
+	}
+	sensors.add(App->physics->CreatePolygonSensor(0, 0, 4, yellow_vec_dot_4, DOT_4));
 }
 
 void ModuleSceneIntro::spawnBall() {

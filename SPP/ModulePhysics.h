@@ -40,6 +40,11 @@ enum PhysBody_Type {
 	CAVE_HOLE,
 	MID_HOLE,
 	RIGHT_HOLE,
+	BUSH,
+	DOT_1,
+	DOT_2,
+	DOT_3,
+	DOT_4,
 
 
 	NO_DEF_

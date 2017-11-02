@@ -96,7 +96,7 @@ update_status ModulePlayer::Update()
 	if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_DOWN)
 		App->audio->PlayFx(flipper_hit_fx);
 
-	if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_UP)
 		App->audio->PlayFx(plunge_fx);
 		
 

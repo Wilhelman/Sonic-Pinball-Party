@@ -43,6 +43,7 @@ public:
 	SDL_Rect rect_piece_rail;
 	SDL_Rect rect_central_piece;
 	SDL_Rect rect_cave;
+	SDL_Rect rect_bush;
 	SDL_Texture* pinball_spritesheet;
 
 	//Pinball sounds
@@ -50,16 +51,17 @@ public:
 	uint hole_out_fx;
 	uint triangle_fx;
 	uint start_canon_fx;
+	uint bonus_fx;
 
 	// Controls
-	bool sensed, ball_lost, blit_tunnel_control, inside_start_canon, ball_in_rail;
+	bool sensed, ball_lost, blit_tunnel_control, inside_start_canon, ball_in_rail, dot_1, dot_2, dot_3, dot_4;
 	bool in_mid_rail, ball_created, inside_side_canon, canon_R_done, canon_L_done, in_cave_hole, in_mid_hole, in_right_hole;
 
 	//Ball position to teleport
 	int ball_x, ball_y;
 
 	//Animations
-	Animation m_icon, start_canon, triangle_R_anim, triangle_L_anim, blue_arrow_cave;
+	Animation m_icon, start_canon, triangle_R_anim, triangle_L_anim, blue_arrow_cave , yellow_dot;
 	Animation blue_arrow_top_right, three_red_arrows, yellow_arrow_1, yellow_arrow_2;
 	Animation yellow_arrow_3, yellow_arrow_4, left_purple_arrow, right_purple_arrow, ball_anim, explosion;
 	Animation side_canon_L, side_canon_R, map_M, map_A, map_P, chip_C, chip_H, chip_I, chip_P, orange_bar;
@@ -69,5 +71,5 @@ public:
 	uint balls_left;
 
 	//Time controls
-	int current_time, hole_timer;
+	int current_time, hole_timer, bush_timer, yellow_dots_timer;
 };
