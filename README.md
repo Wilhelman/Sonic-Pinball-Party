@@ -33,8 +33,8 @@ General/developer controls:
 - DEBUG MODE**: F1 key
 - CREATE BALL: 1 key
 
-* Show chain and sensors and you can pick and drag the ball around (hold right mouse button).
-** CAUTION: The use of debugging option may break the game severely in certain points as it enters in conflict with the way the ball is destroyed.
+**Show chain and sensors and you can pick and drag the ball around (hold right mouse button).
+**CAUTION: The use of debugging option may break the game severely in certain points as it enters in conflict with the way the ball is destroyed.
 
 ## How to play
 
