@@ -44,7 +44,8 @@ The goal of the game is score as many points as you can before losing three ball
 * Impacting one of the two top bushes.
 * Impacting one of the two bounce triangles.
 * Entering the ball through one of the teleport holes.
-* Touching 
+* Touching one of the four light in both sides of the flippers (activating all of them gives extra score).
+* Once the ball has passed through the central piece three times a boss appears. If killed score is obtained.
 
 You can obtain one exta ball once the ball has reached 5 times one of the teleport holes. Progress is shown in form of 5 colorful lights above flippers. Extra score is obtained here too.
 
@@ -74,3 +75,5 @@ _Masó Garcia, Víctor's Github account:_
 All sprites showed in the game were obtained [here](https://www.spriters-resource.com/game_boy_advance/sonicpinball/).
 
 ### Music and sound fx
+* The majority of sound effects have been obtained at [Freesound](https://freesound.org/). Authors to be credited.
+* Music has been obtained [here](http://soahcity.com/musicfiles/2003_sonic_pinball_party/).
