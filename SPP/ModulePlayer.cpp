@@ -129,12 +129,12 @@ update_status ModulePlayer::Update()
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
-		left_flipper->body->ApplyTorque(-60.0f, true);
+		left_flipper->body->ApplyTorque(-65.0f, true);
 	else 
 		left_flipper->body->ApplyTorque(10.0f, true);
 
 	if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
-		right_flipper->body->ApplyTorque(60.0f, true);
+		right_flipper->body->ApplyTorque(65.0f, true);
 	else 
 		right_flipper->body->ApplyTorque(-10.0f, true);
 

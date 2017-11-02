@@ -276,6 +276,7 @@ bool ModuleSceneIntro::Start()
 		lose_fx = App->audio->LoadFx("audio/sound_fx/lose.wav");
 		five_colors_fx = App->audio->LoadFx("audio/sound_fx/five_colors.wav");
 		bonus_fx = App->audio->LoadFx("audio/sound_fx/yellow_dot.wav");
+		win_fx = App->audio->LoadFx("audio/sound_fx/win.wav");
 		four_dots_fx = App->audio->LoadFx("audio/sound_fx/four_dots.wav");
 		if (!App->audio->PlayMusic("audio/music/Nightmaren.ogg"))
 			ret = false;
@@ -857,6 +858,7 @@ update_status ModuleSceneIntro::Update()
 	//Game is over!
 	if (balls_left == 0 && App->fade->FadeIsOver()) 
 	{
+		App->audio->PlayFx(win_fx);
 		App->fade->FadeToBlack(this, this, 7.0f);
 	}
 
@@ -1374,14 +1376,14 @@ void ModuleSceneIntro::setWalls() {
 
 	int points_top_wall[160] =
 	{
-		434, 396,
-		431, 404,
-		428, 410,
-		419, 410,
+		431, 396,
+		427, 403,
+		423, 407,
+		418, 407,
 		421, 401,
-		424, 389,
-		440, 384,
-		442, 374,
+		427, 391,
+		434, 385,
+		440, 374,
 		462, 307,
 		465, 291,
 		470, 267,
@@ -1451,19 +1453,19 @@ void ModuleSceneIntro::setWalls() {
 		60, 352,
 		59, 366,
 		74, 411,
-		69, 411,
-		66, 407,
-		63, 399
+		72, 411,
+		69, 406,
+		65, 398
 	};
 
 	pinball_walls.add(App->physics->CreateChain(0, 0, points_top_wall, 160, groupIndex::RIGID_PINBALL, 0.01f, NO_DEF_));
 
 	int points_bottom_wall[108] =
 	{
-		29, 412,
-		37, 428,
-		50, 459,
-		50, 472,
+		24, 415,
+		32, 432,
+		44, 454,
+		48, 467,
 		44, 472,
 		36, 480,
 		36, 559,
@@ -1510,9 +1512,9 @@ void ModuleSceneIntro::setWalls() {
 		504, 433,
 		500, 425,
 		494, 420,
-		482, 417,
-		468, 427,
-		465, 426,
+		481, 418,
+		469, 424,
+		469, 420,
 		475, 411
 	};
 
